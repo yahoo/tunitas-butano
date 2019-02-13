@@ -1,32 +1,57 @@
-# Prerequisites
-*.d
+# editor temporaries
+*~
+\#*#
+.#*
 
-# Compiled Object files
-*.slo
-*.lo
+o.*.out
+o.*.err
+x.*.out
+x.*.err
+
+# should put this into obj/.gitignore, but obj is removed wholesale
 *.o
-*.obj
+*.lo
 
-# Precompiled Headers
-*.gch
-*.pch
+.checked
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+.libs
+.deps
+.dirstamp
+.Tpo
 
-# Fortran module files
-*.mod
-*.smod
+Makefile
+Makefile.in
+aclocal.m4
+ar-lib
+autom4te.cache
+compile
+configure
+config.guess
+config.h
+config.h.in
+config.log
+config.status
+config.sub
+depcomp
+install-sh
+libtool
+ltmain.sh
+m4
+missing
+obj
+stamp-h1
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+j99
+j99.*
+t99
+t99.*
+o99
+o99.*
+j.*
+*.j
+j
 
-# Executables
-*.exe
-*.out
-*.app
+test-driver
+test-suite.log
+
+# end

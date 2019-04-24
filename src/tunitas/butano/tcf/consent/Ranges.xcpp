@@ -1,0 +1,101 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent {
+  struct Ranges;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.consent.ranges.Entry
+#import tunitas.butano.tcf.consent.protocol.Limits
+#import tunitas.butano.tcf.detail.Stringable
+#import tunitas.butano.tcf.id.ALL
+#import cstdint
+#import vector
+#import sstream
+#import algorithm
+class tunitas::butano::tcf::consent::Ranges : public tcf::detail::Stringable {
+  // n.b. the limit on the number of range entries is 4096 (12 bits)
+  //      the limit on the value of a vendor identifier is 65636 (16 bits)
+  using Limits = protocol::Limits<protocol::Datum<protocol::NUMENTRIES>>;
+  using Vendor_Limits = protocol::Limits<id::Vendor>;
+public:
+  using Entry = ranges::Entry;
+  bool defaultConsent;
+  std::size_t numEntries; // WATCHOUT - this IS TOTALLY redundant with vendorRangeEntries.size(), but is respected by the Builder
+  using VendorRangeEntries = std::vector<Entry>;
+  VendorRangeEntries vendorRangeEntries;
+  inline Ranges();
+  inline explicit Ranges(Defaulting);
+  inline explicit Ranges(std::vector<Entry> entries, bool defaultConsent);
+  inline auto getVendorConsent(id::Vendor vendorId) const -> bool;
+  inline auto empty() const -> bool;
+  inline auto size() const -> std::size_t;
+protected:
+  auto dump(std::ostream &outbound) const -> std::ostream & final;
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf::consent {
+  Ranges::Ranges()
+    : defaultConsent(bool())
+    , numEntries(std::size_t())
+  { }
+  Ranges::Ranges(Defaulting)
+    : defaultConsent(bool())
+    , numEntries(std::size_t()) {
+    // Same as consent::Bits, nearby
+    Ranges &self(*this);
+    auto vendor_bulkfill_id = Vendor_Limits::begin(without::NULLID);
+    for (auto i(Limits::begin()), e(Limits::end()); e != i; ++i, ++vendor_bulkfill_id) {
+      Entry noob;
+      noob.isVendorRange = false;
+      noob.singleVendorId = id::Vendor(vendor_bulkfill_id);
+      self.vendorRangeEntries.push_back(noob);
+    }
+  }
+  Ranges::Ranges(std::vector<Entry> entries, bool defaultConsent)
+    : defaultConsent(defaultConsent)
+    , numEntries(entries.size())
+    , vendorRangeEntries(entries)
+  { }
+  auto Ranges::getVendorConsent(id::Vendor vendorId) const -> bool {
+    auto match = [vendorId](Entry const &e) {
+      if (false) {
+        // [[REMOVETHIS]] -- why delegate this to the range entry itself?
+       return e.doesVendorExistInRange(vendorId);
+      } else {
+        if (e.isVendorRange) {
+          if (e.startVendorId <= vendorId && vendorId <= e.endVendorId) {
+            return true;
+          }
+        } else if (vendorId == e.singleVendorId) {
+          return true;
+        }
+        return false;
+      }
+    };
+    auto const &entries = vendorRangeEntries;
+    auto const point = std::find_if(entries.begin(), entries.end(), match);
+    auto const found = entries.end() != point;
+    return found ? !defaultConsent : defaultConsent;
+  }
+  auto Ranges::empty() const -> bool { return vendorRangeEntries.empty(); }
+  auto Ranges::size() const -> std::size_t { return vendorRangeEntries.size(); }
+}
+#endiv
+#divert <cpp>
+auto tunitas::butano::tcf::consent::Ranges::dump(std::ostream &outbound) const -> std::ostream & {
+  outbound << "{ defaultConsent=" << std::boolalpha << defaultConsent
+           << ", numEntries=" << numEntries ;
+  if (numEntries != vendorRangeEntries.size()) {
+    // That numEntries != size() is a data invariant error, but the dumper must be robust against such.
+    outbound<< '(' << "size=" << vendorRangeEntries.size() << ')';
+  }
+  outbound << ", [";
+  for (auto const &entry : vendorRangeEntries) {
+    outbound << "{" << entry << "}";
+  }
+  return outbound << "] }";
+}
+#endiv

@@ -1,0 +1,29 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::format {
+  namespace detail { enum Native { }; }
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.format.detail.Formatter
+#import tunitas.butano.tcf.consent.Object
+namespace tunitas::butano::tcf::format {
+  // ADL will NOT find it
+  inline auto native(consent::Object o) -> detail::Formatter<detail::Native, consent::Object>;
+  namespace detail {
+    // ADL will find it
+    template<> inline auto operator<<(std::ostream &os, Formatter<Native, consent::Object> const &co) -> std::ostream &;
+  }
+}
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf {
+  inline auto format::native(consent::Object o) -> detail::Formatter<detail::Native, consent::Object> {
+    return detail::Formatter<detail::Native, consent::Object>(o);
+  }
+  template<> inline auto format::detail::operator<<(std::ostream &os, Formatter<Native, consent::Object> const &co) -> std::ostream & {
+    return os << co.value; // [[FIXTHIS]] ... ahem, which may be exactly the same as "dump" ... for now, or forever
+  }
+}
+#endiv

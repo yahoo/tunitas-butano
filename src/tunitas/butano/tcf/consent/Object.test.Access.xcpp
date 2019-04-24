@@ -1,0 +1,58 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.tcf.consent.Object
+#endiv
+#divert <hpp>
+#import iostream
+#import cstdint
+#import vector
+struct tunitas::butano::tcf::consent::Object::test::Access {
+  Object &subject;
+  inline Access(Object &subject) : subject(subject) { }
+  inline auto dump() -> void {
+    subject.dump(std::cout);
+  }
+  inline auto maxVendorId() const -> std::uint64_t {
+    return subject.maxVendorId;
+  }
+  auto fill_some_vendors(std::size_t howmany) -> void;
+  // Specializations only
+  // DO NOT put their definitions in definitions.cpp lest they appear in production code.
+  template<std::size_t N> static auto generate() -> Object;
+  template<std::size_t N> static auto generally() -> std::vector<Object>;
+protected:
+  // The downsampling factors must be less than the maximum vendor
+  static auto generally_with_downsampling(std::uintmax_t downsample_factor_1, std::uintmax_t downsample_factor_2) -> std::vector<Object>;
+};
+namespace tunitas::butano::tcf::consent {
+  template<> auto Object::test::Access::generate<0x00>() -> Object;
+  template<> auto Object::test::Access::generate<0x01>() -> Object;
+  template<> auto Object::test::Access::generate<0x02>() -> Object;
+  template<> auto Object::test::Access::generate<0x03>() -> Object;
+  template<> auto Object::test::Access::generate<0x04>() -> Object;
+  template<> auto Object::test::Access::generate<0x05>() -> Object;
+  template<> auto Object::test::Access::generate<0x06>() -> Object;
+  template<> auto Object::test::Access::generate<0x07>() -> Object;
+  template<> auto Object::test::Access::generate<0x08>() -> Object;
+  template<> auto Object::test::Access::generate<0x09>() -> Object;
+  template<> auto Object::test::Access::generate<0x0a>() -> Object;
+  template<> auto Object::test::Access::generate<0x0b>() -> Object;
+  template<> auto Object::test::Access::generate<0x0c>() -> Object;
+  template<> auto Object::test::Access::generate<0x0d>() -> Object;
+  template<> auto Object::test::Access::generate<0x0e>() -> Object;
+  template<> auto Object::test::Access::generate<0x0f>() -> Object;
+  template<> auto Object::test::Access::generate<0x10>() -> Object;
+
+  // At least these.  n.b. if not declared here they may appear in Object.test.Access.cpp
+  template<> inline auto Object::test::Access::generally<0x00>() -> std::vector<Object> {
+    return generally_with_downsampling(17, 37);
+  }
+  template<> inline auto Object::test::Access::generally<0x01>() -> std::vector<Object> {
+    return generally_with_downsampling(19, 31);
+  }
+  template<> inline auto Object::test::Access::generally<0x02>() -> std::vector<Object> {
+    return generally_with_downsampling(23, 29);
+  }
+}  
+#endiv

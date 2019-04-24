@@ -1,0 +1,189 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent {
+  //
+  // The consent Object
+  //
+  // Usage;
+  //
+  //   rly?
+  //
+  class Object;
+}
+#endiv
+#divert <hpp>
+#import std.string
+namespace tunitas::butano::tcf::consent {
+  auto decode(std::string const &encoded) -> Object;
+}
+#forward tunitas.butano.tcf.consent.Builder
+#forward tunitas.butano.tcf.consent.encoding.getter.Field
+#import tunitas.butano.tcf.consent.Bits
+#import tunitas.butano.tcf.consent.Encoding
+#import tunitas.butano.tcf.consent.encode
+#import tunitas.butano.tcf.consent.Ranges
+#import tunitas.butano.tcf.consent.encoding.Invalid
+#import tunitas.butano.tcf.consent.object.Defaultable
+#import tunitas.butano.tcf.consent.object.Limits
+#import tunitas.butano.tcf.consent.protocol.Limits
+#import tunitas.butano.tcf.purpose.ALL
+#import tunitas.butano.tcf.vendor.ALL
+#import tunitas.butano.tcf.detail.Stringable
+#import std.ostream
+#import std.string
+class tunitas::butano::tcf::consent::Object : public object::Defaultable, public tcf::detail::Stringable {
+  using ancestor = object::Defaultable;
+protected:
+  // [[FIXTHIS]] ... replace with purpose::Bitfield
+  purpose::Map purposesAllowed;
+  // [[FIXTHIS]] ... replace with vendor::Bitfield
+  Bits vendorConsentBits;
+  Ranges vendorConsentRanges;
+  // This is an interesting number because the maximum vendor ID is not obviois from 
+  std::uint64_t maxVendorId;
+  //Map<Integer, dao::purpose::Data> purposeMap = new HashMap<>();
+  //Map<Integer, dao::vendor::Data> vendorMap = new HashMap<>();
+  friend class consent::Builder;
+  template<typename> friend class consent::object::Limits;
+  template<typename SOURCE> friend auto consent::detail::encode(SOURCE const &) -> std::string;
+  template<protocol::Field FIELD> friend class consent::encoding::getter::Field;
+public:
+  inline Object();
+  // The C++ way (the Right Way™, wherein exceptions are an error signalling mechanism)
+  //
+  // n.b. this merely returns the purpose, to which consent (or lack thereof) is applied.
+  //      think of this as "consent to purpose" with "consent" being derived in the context of a vendor
+  inline auto get(without::Exceptions, id::Purpose p) const -> bool;
+  // n.b. this merely returns the purpose, to which consent (or lack thereof) is applied.
+  //      think of this as "consent for vendor" which is interpreted relative to "default consent"
+  inline auto get(without::Exceptions, id::Vendor v) const -> bool;
+  // n.b. This returns the consent-to-purpose and consent together
+  inline auto get(without::Exceptions, id::Purpose p, id::Vendor v) const -> bool;
+  // The Java way (difficult), in which there is a three-valued result: true, false, exception(false as well)
+  // These are more difficult to use directly because if the purpose or vendor is out of (object-specific) range
+  // then an exception occurs.  For example, if Oath isn't spanned in the object's maxVendorId then: exception.
+  inline auto get(with::Exceptions, id::Purpose p) const -> bool;
+  inline auto get(with::Exceptions, id::Vendor v) const -> bool;
+  inline auto get(with::Exceptions, id::Purpose p, id::Vendor v) const -> bool;
+  // The Java Way
+  // n.b. they signal invalid identifier with an exception.
+  // So there are three possible results here: true, false, exception (false).
+  auto getSpecificPurposeAllowed(id::Purpose purposeId) const -> bool;
+  auto getVendorConsent(id::Vendor vendorId) const -> bool;
+  inline auto getPurposeVendorConsent(id::Purpose purposeId, id::Vendor vendorId) const -> bool;
+  struct test { struct Access; };
+  struct yuk { struct Access; };
+protected:
+  friend class test::Access;
+  friend class yuk::Access;
+  auto dump(std::ostream &outbound) const -> std::ostream & final;
+};
+#endiv
+#divert <ipp>
+#import tunitas.butano.tcf.consent.Builder.ALL
+#import tunitas.butano.tcf.consent.String
+#import tunitas.butano.tcf.consent.encoding.getter.Field
+namespace tunitas::butano::tcf::consent {
+  Object::Object() : maxVendorId(0) { }
+  // The C++ way (the Right Way™, wherein exceptions are an error signalling mechanism)
+  //
+  // n.b. this merely returns the purpose, to which consent (or lack thereof) is applied.
+  //      think of this as "consent to purpose" with "consent" being derived in the context of a vendor
+  auto Object::get(without::Exceptions, id::Purpose p) const -> bool {
+    try {
+      return getSpecificPurposeAllowed(p);
+    } catch (purpose::Invalid const &) {
+      return false;
+    }
+  }
+  // n.b. this merely returns the purpose, to which consent (or lack thereof) is applied.
+  //      think of this as "consent for vendor" which is interpreted relative to "default consent"
+  auto Object::get(without::Exceptions, id::Vendor v) const -> bool {
+    try {
+      return getVendorConsent(v);
+    } catch (vendor::Invalid const &) {
+      return false;
+    }
+  }
+  // n.b. This returns the consent-to-purpose and consent together
+  auto Object::get(without::Exceptions, id::Purpose p, id::Vendor v) const -> bool {
+    try {
+      return getPurposeVendorConsent(p, v);
+    } catch (purpose::Invalid const &) {
+      return false;
+    } catch (vendor::Invalid const &) {
+      return false;
+    }
+  }
+  // The Java way (difficult), in which there is a three-valued result: true, false, exception(false as well)
+  // These are more difficult to use directly because if the purpose or vendor is out of (object-specific) range
+  // then an exception occurs.  For example, if Oath isn't spanned in the object's maxVendorId then: exception.
+  auto Object::get(with::Exceptions, id::Purpose p) const -> bool { return getSpecificPurposeAllowed(p); }
+  auto Object::get(with::Exceptions, id::Vendor v) const -> bool { return getVendorConsent(v); }
+  auto Object::get(with::Exceptions, id::Purpose p, id::Vendor v) const -> bool { return getPurposeVendorConsent(p, v); }
+  auto Object::getPurposeVendorConsent(id::Purpose purposeId, id::Vendor vendorId) const -> bool {
+    return getSpecificPurposeAllowed(purposeId) && getVendorConsent(vendorId);
+  }
+}
+#endiv
+#divert <cpp>
+#import sys.time.put
+namespace tunitas::butano::tcf::consent {
+  // The Java Way
+  // n.b. they signal invalid identifier with an exception.
+  // So there are three possible results here: true, false, exception (false).
+  auto Object::getSpecificPurposeAllowed(id::Purpose purposeId) const -> bool {
+    using Checker = protocol::Limits<id::Purpose>;
+    if (!Checker::possible(purposeId)) {
+      throw purpose::Invalid(purposeId, Checker::range(without::NULLID));
+    }
+    // There is no "Inappropriateness" problem here.
+    if (Checker::is_null(purposeId)) {
+      throw purpose::Null();
+    }
+    return purposesAllowed.get(purposeId); // [[blik]] these throw in the Java style(?)
+  }
+  auto Object::getVendorConsent(id::Vendor vendorId) const -> bool {
+    object::Limits<id::Vendor> check(*this);
+    if (!check.possible(vendorId)) {
+      throw vendor::Invalid(vendorId, check.range(without::NULLID));
+    }
+    if (!check.valid(vendorId)) {
+      throw vendor::Inappropriate(vendorId, check.range(without::NULLID));
+    }
+    if (check.is_null(vendorId)) {
+      throw vendor::Null();
+    }
+    if (VENDOR_CONSENT_BITS == encodingType) {
+      return vendorConsentBits.get(vendorId); // [[blik]] these throw in the Java style(?)
+    } else if (VENDOR_CONSENT_RANGES == encodingType) {
+      return vendorConsentRanges.getVendorConsent(vendorId); // [[blik]] these throw in the Java style(?)
+    } else {
+      throw encoding::Invalid();
+    }
+  }
+  auto Object::dump(std::ostream &outbound) const -> std::ostream & {
+    outbound << "version=" << version
+             << ", created=" << sys::time::put(created, "%Y-%m-%dT%H:%M:%S")
+             << ", lastUpdated=" << sys::time::put(lastUpdated, "%Y-%m-%dT%H:%M:%S")
+             << ", cmpId=" << cmpId
+             << ", cmpVersion=" << cmpVersion
+             << ", consentScreen=" << consentScreen
+             << ", consentLanguage=" << consentLanguage
+             << ", vendorListVersion=" << vendorListVersion
+             << ", purposesAllowed=" << purposesAllowed
+             << ", maxVendorId=" << maxVendorId
+             << ", encodingType=" << encodingType
+      ;
+    if (VENDOR_CONSENT_BITS == encodingType) {
+      outbound << ", " << vendorConsentBits;
+    } else if (VENDOR_CONSENT_RANGE == encodingType) {
+      outbound << ", " << vendorConsentRanges;
+    } else {
+      outbound << ", unknown encoding" << encodingType;
+    }
+    return outbound;
+  }
+}
+#endiv

@@ -1,0 +1,37 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::parser::prattle {
+  //
+  // The prattle aspect of the parser system.
+  // Descendants only.
+  //
+  // Supports:
+  //    --verbose    Not terse.
+  //    --quiet      Shut. Up.
+  //
+  // Usage:
+  //
+  //  class parse::Something : public parser::Basis, public parser::prattle::Aspect {
+  //    ...other declarations...
+  //  };
+  //
+  class Aspect;
+}
+#endiv
+#divert <hpp>
+#import app.argv.parser.prattle.Options
+class app::argv::parser::prattle::Aspect {
+protected:
+  ~Aspect() = default;
+public:
+  inline auto quiet() const -> bool { return parsing_prattle.quiet; }
+  inline auto verbose() const -> bool { return parsing_prattle.verbose; }
+  // use std::move(pa.prattle()) to move the values out.
+  inline auto prattle() -> Options & { return parsing_prattle; }
+  // use pa.prattle() to copy the values out.
+  inline auto prattle() const -> Options const & { return parsing_prattle; }
+protected:
+  Options parsing_prattle;
+};
+#endiv

@@ -1,0 +1,77 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::detail {
+  //
+  // The bitfield is a 1-based vector<bool>
+  // whereas the standard vector<bool> is a 0-based array.
+  // This becomes significant when encoding & decoding
+  //
+  // The Bitfield is indexable by an identifier (id::Purpose, id::Vendor)
+  // The indexing operators for size_t (unsigned) are occluded.
+  //
+  // Usage: (same as std::vector<bool>)
+  //
+  // Get a Concept!
+  //   IDENTIFIER is id::Purpose or id::Vendor
+  //   NULL_EXCEPTION is the exception class purpose::Null, vendor::Null
+  //   RANGE_EXCEPTION is the exception class purpose::Invalid, vendor::Invalid
+  template<typename IDENTIFIER, typename NULL_EXCEPTION, typename RANGE_EXCEPTION> class Bitfield;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.id.ALL
+#import std.size_t
+#import std.forward
+#import std.vector
+template<typename IDENTIFIER, typename NULL_EXCEPTION, typename RANGE_EXCEPTION> class tunitas::butano::tcf::detail::Bitfield : public std::vector<bool> {
+  using ancestor = std::vector<bool>;
+  using Offset = std::size_t;
+public:
+  using Index = IDENTIFIER;
+  using Vector = ancestor;  // force its ancestry sense ... as ... static_cast<Bitfield::Vector const &>(expression)
+  Bitfield() = default;
+  using ancestor::vector;
+  inline explicit Bitfield(Vector const &other) : ancestor(other) { }
+  inline Bitfield(Vector &&other) : ancestor(std::forward<Vector>(other)) { }
+  inline Bitfield(Bitfield const &) = default;
+  inline Bitfield(Bitfield &&) = default;
+  using ancestor::operator=;
+  inline auto operator=(Bitfield const &) -> Bitfield & = default;
+  inline auto operator=(Bitfield &&) -> Bitfield & = default;
+  // These are rewrapped to guard against (our) Null and Range exceptions
+  inline auto at(Index idee) -> reference { return at_wrapped(*this, idee); }
+  inline auto at(Index idee) const -> const_reference { return at_wrapped(*this, idee); }
+  // These did not throw exceptions on out-of-bounds anyway
+  inline auto operator[](Index idee) -> reference { return ancestor::operator[](debase(idee)); }
+  inline auto operator[](Index idee) const -> const_reference { return ancestor::operator[](debase(idee)); }
+private:
+  using Null_Exception = NULL_EXCEPTION;
+  using Range_Exception = RANGE_EXCEPTION;
+  template<typename BITFIELD> inline static auto at_wrapped(BITFIELD &self, Index idee) -> typename BITFIELD::reference;
+  inline static auto debase(Index idee) -> Offset;
+};
+#endiv
+#divert <ipp>
+#import std.out_of_range
+namespace tunitas::butano::tcf::detail {
+  template<typename I, typename N, typename R> template<typename BITFIELD> auto Bitfield<I,N,R>::at_wrapped(BITFIELD &self, Index idee) -> typename BITFIELD::reference {
+    try {
+      // On invalid index access
+      // vector<...>::at(...) throws
+      // vector<...>::operator[](...) does not throw
+      //     rather, it has undefined behavior (segfault, return a vacuous object, etc.)
+      return self.ancestor::at(debase(idee));
+    } catch (std::out_of_range const &e) {
+      throw Range_Exception(e.what());
+    } 
+  }
+  template<typename I, typename N, typename R> auto Bitfield<I,N,R>::debase(Index idee) -> Offset {
+    auto const index = (Offset) idee;
+    if (0 == idee) {
+      throw Null_Exception();
+    }
+    return index-1;
+  }
+}
+#endiv

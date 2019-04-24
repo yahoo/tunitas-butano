@@ -1,0 +1,46 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::parser::howmany {
+  //
+  // The residual from a "howmany" argv parser.
+  //
+  // Supports
+  //    count of "howmany"
+  //    seed, a container of seeds for the std::seed_seq
+  //
+  // Example:
+  //
+  //    bin/random-rcc 99
+  //    bin/random-rcc --seed=10 --seed=11 99
+  //
+  // Usage:
+  //
+  //   parser::Howmany pa(std:move(av), name, usage)
+  //   auto const residual = pa.residual();
+  //   std::seed_seq seeder(residual.seed().begin(), residual.seed().end())
+  //   for (auto e(residual.count()), i(e-e); e != i; ++i) {
+  //     ...
+  //   }
+  //
+  class Residual;
+}
+#endiv
+#divert <hpp>
+#forward app.argv.parser.Howmany
+#import std.uintmax_t
+#import std.uint32_t
+#import std.vector
+class app::argv::parser::howmany::Residual {
+public:
+  Residual() : iteration_count(0) { }
+  // the iteration count, is expected to be defaulted to 1 with a warning, in the parser
+  inline auto count() const -> std::uintmax_t { return iteration_count; }
+  // as acceptable to std::seed_seq
+  inline auto seed() const -> std::vector<std::uint32_t> const & { return seed_accretion; }
+protected:
+  friend class parser::Howmany;
+  std::uintmax_t iteration_count;
+  std::vector<std::uint32_t> seed_accretion;
+};
+#endiv

@@ -1,0 +1,80 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::parser {
+  //
+  // An argv parser for a dumper program.
+  //
+  // Parse the argv as RAII, offer the results as the constructed object.
+  // Throws Quitting when the parse invariants are not satisfied.
+  //
+  // Scheme:
+  //    The option --ignore meaning ignore errors, still exit 0
+  //    Finally, one (1) or more (2+) words are required.
+  //
+  // Example:
+  //
+  //    bin/dump-iab --ignore bogus BACCABAAAAAA==
+  //
+  // Usage:
+  //
+  //  auto usage(std::ostream &out) -> void { ...emit.usage... }
+  //  auto remain(Argv av) -> int {
+  //     parser::Dumper pa(std::move(argv), "demo", &usage);
+  //     ...parsed on RAII, threw Quitting if not satisfied.
+  //     ...do YOUR stuff...
+  //  }
+  //  auto main(int c, char *v[]) -> int {
+  //    return remain(Argv(c, v))
+  //  }
+  //
+  class Dumper;
+}
+#endiv
+#divert <hpp>
+#import app.argv.parser.Basis
+#import app.argv.parser.residual.Aspect
+#import app.argv.parser.ignore.Aspect
+class app::argv::parser::Dumper : public Basis, public residual::Aspect, public ignore::Aspect {
+  using ancestor = Basis;
+public:
+  inline explicit Dumper(Argv a, Name n, Usage u) { parse(a, n, u); }
+private:
+  auto parse([[inout]] Argv &, Name const &, Usage) -> void;
+};
+#endiv
+#divert <cpp>
+#import app.Quitting
+#import app.argv.among
+#import std.ostream
+#import app.Quitting
+#import std.cerr
+#import std.cout
+#import sys.exits.constants
+auto app::argv::parser::Dumper::parse(Argv &av, Name const &NAME, Usage USAGE) -> void {
+  av.pop_front();
+  for ( ; !av.empty(); av.pop_front()) {
+    auto const first = av.front();
+    if (first == among("-h", "--help", "--usage")) {
+      USAGE(NAME, std::cout);
+      throw Quitting(0);
+    } else if (first == among("-i", "--ignore", "--ignore-error", "--ignore-errors")) {
+      parsing_ignore_errors = true;
+    } else if (first.empty() || '-' != first.front()) {
+      // The first non-option word.
+      break;
+    } else {
+      std::cerr << NAME << COLON_NOTICE_BANNER
+                << NAME << ": error, unknown option " << first << '\n';
+      throw Quitting(sys::exits::USAGE);
+    }
+  }
+  if (av.empty()) {
+    std::cerr << NAME << COLON_NOTICE_BANNER
+              << NAME << ": error, at least one no non-option word is required\n"
+      ;
+    throw Quitting(sys::exits::USAGE);
+  }
+  parsing_residual = std::move(av);
+}
+#endiv

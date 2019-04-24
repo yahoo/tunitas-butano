@@ -1,0 +1,25 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::exception {
+  //
+  // A range, with a minimum and a maximum
+  // Used in the exceptions system to explain that some value was outside of some range
+  //
+  // Usage:
+  //
+  //   rly?
+  //
+  class Range;
+}
+#endiv
+#divert <hpp>
+#import std.uintmax_t
+#import std.pair
+class tunitas::butano::tcf::exception::Range : public std::pair<std::uintmax_t, std::uintmax_t> {
+  using ancestor = std::pair<std::uintmax_t, std::uintmax_t>;
+public:
+  Range () { }
+  using ancestor::pair;
+};
+#endiv

@@ -1,0 +1,27 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace want::lite::base64 {
+  //
+  // An invalid aspect of an individual base64 (value or alphabet)
+  // i.e. a code was too big or too small
+  // i.e. a value was not in the range 0..63
+  //
+  // Usage:
+  //
+  //   throw base64::Code("encode");
+  //
+  class Code;
+}
+#endiv
+#divert <hpp>
+#import std.runtime_error
+#import want.lite.base64.Exception
+class want::lite::base64::Code : public std::runtime_error, public base64::Exception {
+  using ancestor = std::runtime_error;
+public:
+  Code() : ancestor("base64") { }
+  using ancestor::runtime_error;
+  auto what() const noexcept -> char const * { return ancestor::what(); }
+};
+#endiv

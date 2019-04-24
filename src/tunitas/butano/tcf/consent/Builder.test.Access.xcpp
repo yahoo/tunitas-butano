@@ -1,0 +1,11 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <hpp>
+#import tunitas.butano.tcf.consent.Builder
+struct tunitas::butano::tcf::consent::Builder::test::Access {
+  Builder &subject;
+  inline Access(Builder &subject) : subject(subject) { }
+  // The builder's public interface is ... pretty public.
+  // use Builder::set<FIELD>(value).
+};
+#endiv

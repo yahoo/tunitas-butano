@@ -1,0 +1,97 @@
+# A GNU -*- Makefile -*- which is managed by automake
+
+lib_libtunitas_butano_tcf_la = lib/libtunitas-butano-tcf.la
+lib_libtunitas_butano_tcf_la_LIBADD = \
+  $(lib_libtunitas_butano_la) \
+  $(lib_libwant_la) \
+  $(end)
+lib_libtunitas_butano_tcf_la_LDFLAGS = $(PACKAGE_LDFLAGS_SET)
+lib_libtunitas_butano_tcf_la_MODULES = $(call TF_SOURCEStoMODULES, $(lib_libtunitas_butano_tcf_la_SOURCES))
+lib_libtunitas_butano_tcf_la_SOURCES = \
+  obj/src/tunitas/butano/tcf/namespace.cpp \
+  obj/src/tunitas/butano/tcf/ALL.cpp \
+  \
+  obj/src/tunitas/butano/tcf/consent/namespace.cpp \
+  obj/src/tunitas/butano/tcf/consent/ALL.cpp \
+  obj/src/tunitas/butano/tcf/consent/Bitfield.cpp \
+  obj/src/tunitas/butano/tcf/consent/Bits.cpp \
+  obj/src/tunitas/butano/tcf/consent/Builder.accept.cpp \
+  obj/src/tunitas/butano/tcf/consent/builder.Defaultable.cpp \
+  obj/src/tunitas/butano/tcf/consent/Builder.set.cpp \
+  obj/src/tunitas/butano/tcf/consent/Builder.ALL.cpp \
+  obj/src/tunitas/butano/tcf/consent/Builder.cpp \
+  obj/src/tunitas/butano/tcf/consent/decode.cpp \
+  obj/src/tunitas/butano/tcf/consent/encode.cpp \
+  obj/src/tunitas/butano/tcf/consent/encoding.getter.Basis.cpp \
+  obj/src/tunitas/butano/tcf/consent/encoding.getter.field.Prototype.cpp \
+  obj/src/tunitas/butano/tcf/consent/encoding.getter.Field.cpp \
+  obj/src/tunitas/butano/tcf/consent/encoding.Getter.cpp \
+  obj/src/tunitas/butano/tcf/consent/encoding.Invalid.cpp \
+  obj/src/tunitas/butano/tcf/consent/encoding.Invariant.cpp \
+  obj/src/tunitas/butano/tcf/consent/Encoding.cpp \
+  obj/src/tunitas/butano/tcf/consent/Getter.cpp \
+  obj/src/tunitas/butano/tcf/consent/object.Defaultable.cpp \
+  obj/src/tunitas/butano/tcf/consent/object.Invariant.cpp \
+  obj/src/tunitas/butano/tcf/consent/object.Limits.cpp \
+  obj/src/tunitas/butano/tcf/consent/Object.cpp \
+  obj/src/tunitas/butano/tcf/consent/protocol.datum.ALL.cpp \
+  obj/src/tunitas/butano/tcf/consent/protocol.Decode.cpp \
+  obj/src/tunitas/butano/tcf/consent/protocol.Field.cpp \
+  obj/src/tunitas/butano/tcf/consent/protocol.Length.cpp \
+  obj/src/tunitas/butano/tcf/consent/protocol.Limits.cpp \
+  obj/src/tunitas/butano/tcf/consent/protocol.Polished.cpp \
+  obj/src/tunitas/butano/tcf/consent/protocol.Positions.cpp \
+  obj/src/tunitas/butano/tcf/consent/protocol.Time.cpp \
+  obj/src/tunitas/butano/tcf/consent/ranges.Entry.cpp \
+  obj/src/tunitas/butano/tcf/consent/Ranges.cpp \
+  obj/src/tunitas/butano/tcf/consent/String.cpp \
+  obj/src/tunitas/butano/tcf/detail.Bitfield.cpp \
+  obj/src/tunitas/butano/tcf/detail.Stringable.cpp \
+  obj/src/tunitas/butano/tcf/easy.cpp \
+  obj/src/tunitas/butano/tcf/exception.Invariant.cpp \
+  obj/src/tunitas/butano/tcf/exception.Range.cpp \
+  obj/src/tunitas/butano/tcf/exception.detail.Out_Of_Range.cpp \
+  obj/src/tunitas/butano/tcf/Exception.cpp \
+  \
+  obj/src/tunitas/butano/tcf/format/namespace.cpp \
+  obj/src/tunitas/butano/tcf/format/ALL.cpp \
+  obj/src/tunitas/butano/tcf/format/detail.Formatter.cpp \
+  obj/src/tunitas/butano/tcf/format/dump.cpp \
+  obj/src/tunitas/butano/tcf/format/native.cpp \
+  \
+  obj/src/tunitas/butano/tcf/id.ALL.cpp \
+  \
+  obj/src/tunitas/butano/tcf/purpose/namespace.cpp \
+  obj/src/tunitas/butano/tcf/purpose/ALL.cpp \
+  obj/src/tunitas/butano/tcf/purpose/Bitfield.cpp \
+  obj/src/tunitas/butano/tcf/purpose/detail.Out_Of_Range.cpp \
+  obj/src/tunitas/butano/tcf/purpose/Inappropriate.cpp \
+  obj/src/tunitas/butano/tcf/purpose/Invalid.cpp \
+  obj/src/tunitas/butano/tcf/purpose/Map.cpp \
+  obj/src/tunitas/butano/tcf/purpose/Null.cpp \
+  \
+  obj/src/tunitas/butano/tcf/vendor/namespace.cpp \
+  obj/src/tunitas/butano/tcf/vendor/ALL.cpp \
+  obj/src/tunitas/butano/tcf/vendor/Bitfield.cpp \
+  obj/src/tunitas/butano/tcf/vendor/Definition.cpp \
+  obj/src/tunitas/butano/tcf/vendor/detail.Out_Of_Range.cpp \
+  obj/src/tunitas/butano/tcf/vendor/entry.Purpose.cpp \
+  obj/src/tunitas/butano/tcf/vendor/entry.Vendor.cpp \
+  obj/src/tunitas/butano/tcf/vendor/Inappropriate.cpp \
+  obj/src/tunitas/butano/tcf/vendor/Invalid.cpp \
+  obj/src/tunitas/butano/tcf/vendor/Null.cpp \
+  obj/src/tunitas/butano/tcf/vendor/Unknown.cpp \
+  obj/src/tunitas/butano/tcf/vendor/vendors.Purpose.cpp \
+  obj/src/tunitas/butano/tcf/vendor/vendors.Vendor.cpp \
+  obj/src/tunitas/butano/tcf/vendor/Vendors.cpp \
+  \
+  obj/src/tunitas/butano/tcf/version.Invalid.cpp \
+  obj/src/tunitas/butano/tcf/version.Unsupported.cpp \
+  $(end)
+$(scold_cxxdir)/tunitas/butano/tcf/dependencies.mk:
+	$(AM_V_BB1ST) $(call TF_DISAGGREGATE_COMPILE, $(lib_libtunitas_butano_tcf_la_SOURCES))
+	$(AM_V_BB2ND) $(call TF_DEPENDENCIES_COMPILE, $(lib_libtunitas_butano_tcf_la_SOURCES))
+	@test -e $@
+include $(scold_cxxdir)/tunitas/butano/tcf/dependencies.mk
+clean-dependencies::
+	rm -f $(scold_cxxdir)/tunitas/butano/tcf/dependencies.mk

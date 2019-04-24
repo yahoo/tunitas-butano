@@ -1,0 +1,20 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.tcf.detail.Bitfield
+#import tunitas.butano.tcf.id.ALL
+#import tunitas.butano.tcf.purpose.Null
+#import tunitas.butano.tcf.purpose.Invalid
+namespace tunitas::butano::tcf::purpose {
+  //
+  // The purpose bitfield is a 1-based vector<bool>
+  // whereas the standard vector<bool> is a 0-based array.
+  // This becomes significant when encoding & decoding
+  //
+  // Also, the Bitfield is indexable by id::Purpose, not by unsigned size_t
+  //
+  // Usage: (same as std::vector<bool>)
+  //
+  using Bitfield = tcf::detail::Bitfield<id::Purpose, purpose::Null, purpose::Invalid>;
+}
+#endiv

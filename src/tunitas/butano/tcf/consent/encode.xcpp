@@ -1,0 +1,76 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <hpp>
+#forward want.javalike.String
+#forward tunitas.butano.tcf.consent.Builder
+#forward tunitas.butano.tcf.consent.Object
+#import tunitas.butano.tcf.consent.String
+namespace tunitas::butano::tcf::consent {
+  namespace detail {
+    // So we can use a template, because the code is exactly the same for both types
+    // Get a Concept!  SOURCE is either Builder or Object
+    template<typename SOURCE> inline auto encode(SOURCE const &source) -> String;
+  }
+  // So ADL will find it
+  inline auto encode(Object const &) -> String;
+  inline auto encode(Builder const &) -> String;
+}
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf {
+  // So ADL will find it
+  auto consent::encode(Object const &source) -> String { return detail::encode(source); }
+  auto consent::encode(Builder const &source) -> String { return detail::encode(source); }
+}
+#endiv
+#divert <tpp>
+#import tunitas.butano.tcf.consent.Object
+#import tunitas.butano.tcf.consent.Builder.ALL
+#import tunitas.butano.tcf.consent.String
+#import tunitas.butano.tcf.consent.encoding.Invalid
+#import tunitas.butano.tcf.consent.encoding.Getter
+#import tunitas.butano.tcf.consent.protocol.Field
+#import std.string
+#import std.vector
+#import want.lite.base64.Encoder
+template<typename SOURCE> auto tunitas::butano::tcf::consent::detail::encode(SOURCE const &source) -> String {
+  std::string ret;
+  encoding::Getter<SOURCE> get(source);
+  want::lite::base64::Encoder enc;
+  auto const pad8 = want::lite::base64::Encoder::PAD8;
+  using namespace protocol;
+  enc.put(get.template field<VERSION>());
+  enc.put(get.template field<CREATED>());
+  enc.put(get.template field<LASTUPDATED>());
+  enc.put(get.template field<CMPID>());
+  enc.put(get.template field<CMPVERSION>());
+  enc.put(get.template field<CONSENTSCREEN>());
+  enc.put(get.template field<CONSENTLANGUAGE>());
+  enc.put(get.template field<VENDORLISTVERSION>());
+  enc.put(get.template field<PURPOSESALLOWED>());
+  enc.put(get.template field<MAXVENDORID>());
+  enc.put(get.template field<ENCODINGTYPE>());
+  if (VENDOR_CONSENT_BITS == source.encodingType) {
+    std::vector<bool> const &cast = get.template field<BITFIELD>();
+    enc.put(cast);
+  } else if (VENDOR_CONSENT_RANGES == source.encodingType) {
+    enc.put(get.template field<DEFAULTCONSENT>());
+    auto const count = get.template field<NUMENTRIES>();
+    enc.put(count);
+    for (auto e(count.value()), i(e-e); e != i; ++i) {
+      auto const isrange = get.template next<ISRANGE>();
+      enc.put(isrange);
+      if (isrange.value()) {
+        enc.put(get.template next<STARTVENDORID>());
+        enc.put(get.template next<ENDVENDORID>());
+      } else {
+        enc.put(get.template next<SINGLEVENDORID>());
+      }
+    }
+  } else {
+    throw encoding::Invalid();
+  }
+  enc.put(pad8);
+  return enc.finalize();
+}
+#endiv

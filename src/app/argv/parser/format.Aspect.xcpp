@@ -1,0 +1,34 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::parser::format {
+  //
+  // The format aspect of the parser system.
+  // Descendants only.
+  //
+  // Usage:
+  //
+  //  class parse::Something : public parser::Basis, public parser::format::Aspect {
+  //    ...other declarations...
+  //  };
+  //
+  class Aspect;
+}
+#endiv
+#divert <hpp>
+#import app.argv.parser.format.Options
+class app::argv::parser::format::Aspect {
+protected:
+  ~Aspect() = default;
+public:
+  inline auto format_dump() const -> bool { return parsing_format.dump(); }
+  inline auto format_native() const -> bool { return parsing_format.native(); }
+  inline auto format_raw() const -> bool { return parsing_format.raw(); }
+  // use std::move(pa.format()) to move the values out.
+  inline auto format() -> Options & { return parsing_format; }
+  // use pa.format() to copy the values out.
+  inline auto format() const -> Options const & { return parsing_format; }
+protected:
+  Options parsing_format;
+};
+#endiv

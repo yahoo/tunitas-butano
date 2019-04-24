@@ -2,13 +2,18 @@
 
 check_bin_unit = check/bin/unit
 check_bin_unit_LDADD = \
-  $(lib_libtunitas_butano_la) \
+  $(lib_libtunitas_butano_tcf_la) \
   $(lib_libwant_la) \
-  -lunit-bench-module \
+  -lrigging-bench-module \
   $(end)
 check_bin_unit_LDFLAGS = $(CHECK_LDFLAGS_SET)
 check_bin_unit_MODULES = $(call TF_SOURCEStoMODULES, $(check_bin_unit_SOURCES))
 check_bin_unit_SOURCES = \
+  obj/src/tunitas/butano/tcf/consent/Builder.test.Access.cpp \
+  obj/src/tunitas/butano/tcf/consent/Object.test.Access.cpp \
+  obj/src/want/lite/base64/Decoder.test.Access.cpp \
+  obj/src/want/lite/base64/Encoder.test.Access.cpp \
+  \
   obj/src/tests/unit/main.cpp \
   obj/src/tests/unit/namespace.cpp \
   \

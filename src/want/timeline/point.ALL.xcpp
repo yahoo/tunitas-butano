@@ -1,0 +1,30 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import std.chrono.system_clock
+#import std.chrono.time_point
+#import std.false_type
+#import std.enable_if
+#import want.timeline.duration.ALL
+namespace want::timeline {
+  using Clock = std::chrono::system_clock; // choosing this clock
+  template<typename DURATION> using Point = std::chrono::time_point<Clock, DURATION>;
+  namespace noconcept {
+    template<typename> struct is_duration : std::false_type { };
+    template<typename REP, typename PER> struct is_duration<std::chrono::duration<REP, PER>> : std::true_type { };
+  }
+}
+namespace want::timeline::point {
+  using Milliseconds = std::chrono::time_point<Clock, duration::Milliseconds>;
+  using Deciseconds = std::chrono::time_point<Clock, duration::Deciseconds>;
+  using Seconds = std::chrono::time_point<Clock, duration::Seconds>;
+}
+#endiv
+#divert <hpp>
+namespace want::timeline {
+  template<typename RESULT_DUR, typename SOURCE_DUR> constexpr auto point_cast(Point<SOURCE_DUR> const &old) -> typename std::enable_if<noconcept::is_duration<RESULT_DUR>::value, Point<RESULT_DUR>>::type {
+    using Result = Point<RESULT_DUR>;
+    return Result(duration_cast<RESULT_DUR>(old.time_since_epoch()));
+  }
+}
+#endiv

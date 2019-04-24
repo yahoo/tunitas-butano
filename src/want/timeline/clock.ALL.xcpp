@@ -1,0 +1,23 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <hpp>
+#import want.timeline.point.ALL
+namespace want::timeline::clock {
+  namespace milli {
+    inline auto now() -> point::Milliseconds;
+  }
+  namespace deci {
+    inline auto now() -> point::Deciseconds;
+  }
+  namespace unit {
+    inline auto now() -> point::Seconds;
+  }
+}
+#endiv
+#divert <ipp>
+namespace want::timeline::clock {
+  inline auto milli::now() -> point::Milliseconds { return point_cast<duration::Milliseconds>(Clock::now()); }
+  inline auto deci::now() -> point::Deciseconds { return point_cast<duration::Deciseconds>(Clock::now()); }
+  inline auto unit::now() -> point::Seconds { return point_cast<duration::Seconds>(Clock::now()); }
+}
+#endiv

@@ -1,0 +1,36 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf {
+  //
+  // A mixin to allow "all iab.tcf exceptions" to be identified
+  // yet while allowing the individual exceptions to be flavored from
+  // the leaf of the <stdexcept> tree of from any other source.
+  //
+  // Usage:
+  //
+  //     class some::Exception : public std::invalid_argument, public iab::tcf::Exception {
+  //        using ancestor = std::invalid_argument;
+  //     public:
+  //        inline ... Exception(...);
+  //     };
+  //
+  //     try {
+  //         ...
+  //         throw some::Exception(...);
+  //         ...
+  //     } catch (iab::tcf::Exception const &) {
+  //         ...downcast and handle it on your own time...
+  //
+  class Exception;
+}
+#endiv
+#divert <hpp>
+class tunitas::butano::tcf::Exception {
+protected:
+  virtual ~Exception() = default;
+  Exception() = default;
+public:
+  virtual auto what() const noexcept -> char const * = 0;
+};
+#endiv

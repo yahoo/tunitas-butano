@@ -1,0 +1,186 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::parser {
+  //
+  // An argv parser for a "howmany" program.
+  //
+  // Parse the argv as RAII, offer the results as the constructed object.
+  // Throws Quitting when the parse invariants are not satisfied.
+  //
+  // Scheme:
+  //    boilerplate options
+  //    seed sequence initialization options
+  //    one word required, which shall be shaped as a positive integer.
+  //
+  // Example:
+  //
+  //    bin/random-rcc 99
+  //    bin/random-rcc --seed=10 --seed=11 99
+  //
+  // Usage:
+  //
+  //  auto usage(std::ostream &out) -> void { ...emit.usage... }
+  //  auto remain(Argv av) -> int {
+  //     parser::Howmany pa(std::move(argv), "demo", &usage);
+  //     ...parsed on RAII, threw Quitting if not satisfied.
+  //     ...do YOUR stuff...
+  //     auto const residual = pa.residual();
+  //     std::seed_seq seeder(residual.seed().begin(), residual.seed().end())
+  //     for (auto e(residual.count()), i(e-e); e != i; ++i) {
+  //       ...do YOUR stuff...
+  //     }
+  //  }
+  //  auto main(int c, char *v[]) -> int {
+  //    return remain(Argv(c, v))
+  //  }
+  //
+  class Howmany;
+}
+#endiv
+#divert <hpp>
+#import app.argv.Object
+#import app.argv.parser.Basis
+#import app.argv.parser.howmany.Residual
+#import app.argv.parser.format.Aspect
+#import app.argv.parser.prattle.Aspect
+#import std.function
+#import std.uint32_t
+#import std.ostream
+#import std.string
+class app::argv::parser::Howmany : public Basis, public format::Aspect, public prattle::Aspect {
+  using ancestor = Basis;
+public:
+  inline explicit Howmany(Argv a, Name n) { parse(a, n); }
+  using Residual = howmany::Residual;
+  inline auto residual() const -> Residual const & { return parsing_residual; }
+private:
+  struct access {
+    struct format {
+      class Options;
+    };
+  };
+  static auto parse_seed(Name const &, std::string const &) -> std::uint32_t;
+  auto parse([[inout]] Argv &, Name const &) -> void;
+  auto usage(Name const &, std::ostream &) -> void;
+  Residual parsing_residual;
+};
+#endiv
+#divert <cpp>
+auto app::argv::parser::Howmany::usage(Name const &NAME, std::ostream &outbound) -> void {
+  outbound << "usage: " << NAME << " [ --format={dump,native,raw} ] [ --seed=SEED ... ] COUNT\n"
+           << "\n"
+           << "formatting, where FORMAT is one of 'dump', 'native' or 'raw'\n"
+           << "--format=FORMAT\n"
+           << "--format FORMAT\n"
+           << "      -f FORMAT        the formatting of the output\n"
+           << "\n"
+           << "seeding, where SEED is a non-negative integer, and may be repeated\n"
+           << "--seed=SEED\n"
+           << "--seed SEED\n"
+           << "    -s SEED            seed the random number generator, is repeatable\n"
+           << "COUNT                  an iteration count, how many to generate.\n"
+           << "\n"
+           << "options\n"
+           << "--quiet                shut. up.\n"
+      ;
+}
+#import app.Quitting
+#import std.cerr
+#import std.invalid_argument
+#import std.stoi
+auto app::argv::parser::Howmany::parse_seed(Name const &NAME, std::string const &syntax) -> std::uint32_t {
+  try {
+    return std::stoi(syntax);
+  } catch (std::invalid_argument const &) {
+    std::cerr << NAME << ": error, --seed requires an integer argument\n";
+    throw Quitting(exit::USAGE);
+  }
+}
+#import app.argv.among
+#import app.argv.parser.Howmany.access.format.Options
+#import std.cerr
+#import app.Quitting
+#import app.argv.among
+auto app::argv::parser::Howmany::parse(Argv &av, Name const &NAME) -> void {
+  av.pop_front();
+  access::format::Options parsed_format;
+  for ( ; !av.empty(); av.pop_front()) {
+    auto const first = av.front();
+    if (false) {
+    } else if (first == among("-h", "--help", "--usage")) {
+      usage(NAME, std::cout);
+      throw Quitting(0);
+    } else if (first == among("-q", "--quiet")) {
+      parsing_prattle.quiet = true;
+    } else if (first == among("-v", "--verbose")) {
+      parsing_prattle.verbose = true;
+    } else if (0 == first.find("--seed=")) {
+      parsing_residual.seed_accretion.push_back(parse_seed(NAME, first.substr(7)));
+    } else if ("-s" == first || "--seed" == first) {
+      av.pop_front();
+      if (av.empty()) {
+        std::cerr << NAME << ": error, --seed requires a following integer\n";
+        throw Quitting(exit::USAGE);
+      }
+      parsing_residual.seed_accretion.push_back(parse_seed(NAME, av.front()));
+    } else if (first == among("--dump", "--format=dump")) {
+      parsed_format.clear();
+      parsed_format.print_format_dump = true;
+    } else if (first == among("--native", "--format=native")) {
+      parsed_format.clear();
+      parsed_format.print_format_native = true;
+    } else if (first == among("--raw", "--format=raw")) {
+      parsed_format.clear();
+      parsed_format.print_format_raw = true;
+    } else if (first == among("-f", "--format")) {
+      av.pop_front();
+      if (av.empty()) {
+        std::cerr << NAME << ": error, --format requires a following keyword\n";
+        throw Quitting(exit::USAGE);
+      }
+      auto const keyword = av.front();
+      if (false) {
+      } else if ("dump" == keyword) {
+        parsed_format.clear();
+        parsed_format.print_format_dump = true;
+      } else if ("native" == keyword) {
+        parsed_format.clear();
+        parsed_format.print_format_native = true;
+      } else if ("raw" == keyword) {
+        parsed_format.clear();
+        parsed_format.print_format_raw = true;
+      } else {
+        std::cerr << NAME << COLON_NOTICE_BANNER
+                  << NAME << ": error, unknown format keyword " << keyword << '\n';
+        throw Quitting(exit::USAGE);
+      }
+    } else if (0 == first.find("--format=")) {
+      std::cerr << NAME << COLON_NOTICE_BANNER
+                << NAME << ": error, unknown format keyword " << first << '\n';
+      throw Quitting(exit::USAGE);
+    } else if (first.empty() || '-' != first.front()) {
+      // The first non-option word.
+      break;
+    } else {
+      std::cerr << NAME << COLON_NOTICE_BANNER
+                << NAME << ": error, unknown option " << first << '\n';
+      throw Quitting(exit::USAGE);
+    }
+  }
+  this->parsing_format = parsed_format;
+  if (av.empty()) {
+    if (!parsing_prattle.quiet) {
+      std::cerr << NAME << ": notice, the interation count was not specified, using a single iteration\n";
+    }
+    parsing_residual.iteration_count = 1;
+  } else {
+    parsing_residual.iteration_count = parse_seed(NAME, av.back());
+    if (0 == parsing_residual.iteration_count) {
+      std::cerr << NAME << COLON_NOTICE_BANNER
+                << NAME << ": error, the interation count is zero, it must be positive\n";
+      throw Quitting(exit::USAGE);
+    }
+  }
+}
+#endiv

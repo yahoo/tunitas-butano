@@ -1,0 +1,46 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::parser::residual {
+  //
+  // The residual from an argv parser that exhausts is option switches
+  // and finds that there are "words" beyond that as the payload.
+  //
+  // This is the words payload itself.
+  // Nearby is the residual::Aspect, a mixin, that adds the capability to a parser.
+  //
+  // Supports
+  //    the remaining words
+  //
+  // Example:
+  //
+  //    bin/dump-rcc r05000000 r05000001
+  //    bin/dump-eab BOKU6XeOKU6XeAAABAENAAAAAAAAQIA BOKU6XeOKU6XeAAABAENAAAAAAAAoIA
+  //
+  // Usage:
+  //
+  //   parser::Demonstrator pa(std::move(av), name, usage)
+  //   auto const residual = std::move(pa.residual());
+  //   std::seed_seq seeder(residual.seed().begin(), residual.seed().end())
+  //   for (auto e(residual.count()), i(e-e); e != i; ++i) {
+  //     ...
+  //   }
+  //
+  class Words;
+}
+#endiv
+#divert <hpp>
+#import std.deque
+#import std.string
+class app::argv::parser::residual::Words : public std::deque<std::string> {
+  using ancestor = std::deque<std::string>;
+public:
+  Words() = default;
+  using ancestor::deque;
+  using ancestor::operator=;
+  Words(Words const &) = default;
+  Words(Words &&) = default;
+  auto operator=(Words const &) -> Words & = default;
+  auto operator=(Words &&) -> Words & = default;
+};
+#endiv

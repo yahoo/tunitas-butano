@@ -1,0 +1,59 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::version {
+  //
+  // The version is invalid (out of the acceptable range)
+  //
+  // Usage:
+  //
+  //   throw Invalid{};
+  //   throw Invalid{"because"};
+  //   throw Invalid{...other...arguments...};
+  //
+  class Invalid;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.Exception
+#import tunitas.butano.tcf.exception.Range
+#import tunitas.butano.tcf.id.ALL
+#import sstream
+#import stdexcept
+class tunitas::butano::tcf::version::Invalid : public std::out_of_range, public tcf::Exception {
+  using ancestor = std::out_of_range;
+public:
+  inline Invalid();
+  inline explicit Invalid(std::string const &reason);
+  inline Invalid(id::version::Protocol offensive, tcf::exception::Range range);
+  inline auto what() const noexcept -> char const * final;
+private:
+  inline static auto format(id::version::Protocol offensive, tcf::exception::Range range) -> std::string;
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf::version {
+  Invalid::Invalid()
+    : ancestor("invalid version")
+  { }
+  Invalid::Invalid(std::string const &reason)
+    : ancestor(reason)
+  { }
+  Invalid::Invalid(id::version::Protocol offensive, tcf::exception::Range range)
+    : ancestor(format(offensive, range))
+  { }
+  auto Invalid::what() const noexcept -> char const * {
+    return ancestor::what();
+  }
+}
+#import std.ostringstream
+namespace tunitas::butano::tcf::version {
+  auto Invalid::format(id::version::Protocol offensive, tcf::exception::Range range) -> std::string {
+    std::ostringstream buf;
+    buf << "Version id: " << offensive << " is invalid."
+        << ' '
+        << "It should be between " << range.first << " and " << range.second;
+    return buf.str();
+  }
+}
+#endiv

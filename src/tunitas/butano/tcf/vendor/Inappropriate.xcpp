@@ -1,0 +1,40 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::vendor {
+  //
+  // The vendor is inappropriate for the current semantic context.
+  // See the commentariat in detail::Out_Of_Range for semantic fitness and purpose.
+  //
+  // The vendor is valid, yet not appropriate for the current context.
+  // For example, the vendorId is greater than the current object's maxVendorId
+  // The null vendor is an "appropriate" vendor.  Instead throw Null for the null vendor.
+  //
+  // Usage:
+  //
+  //   throw Inappropriate{};
+  //   throw Inappropriate{"that"};
+  //
+  class Inappropriate;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.vendor.detail.Out_Of_Range
+class tunitas::butano::tcf::vendor::Inappropriate : public detail::Out_Of_Range {
+  using ancestor = detail::Out_Of_Range;
+public:
+  inline Inappropriate();
+  using ancestor::Out_Of_Range;
+  inline Inappropriate(Identifier offending_id, tcf::exception::Range range);
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf::vendor {
+  tunitas::butano::tcf::vendor::Inappropriate::Inappropriate()
+    : ancestor("invalid vendor")
+  { }
+  tunitas::butano::tcf::vendor::Inappropriate::Inappropriate(Identifier offending_id, tcf::exception::Range range)
+    : ancestor(format("Vendor", "inappropriate", offending_id, range))
+  { }
+}
+#endiv

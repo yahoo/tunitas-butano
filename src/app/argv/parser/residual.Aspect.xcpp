@@ -1,0 +1,33 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::parser::residual {
+  //
+  // The residual aspect of the parser system.
+  // The remaining words after the switches have been parsed.
+  // Descendants only.
+  //
+  // Usage:
+  //
+  //  class parse::Something : public parser::Basis, public parser::residual::Aspect {
+  //    ...other declarations...
+  //  };
+  //
+  class Aspect;
+}
+#endiv
+#divert <hpp>
+#import app.argv.parser.residual.Words
+class app::argv::parser::residual::Aspect {
+protected:
+  ~Aspect() = default;
+public:
+  using Residual = Words;
+  // use std::move(pa.residual()) to move the values out.
+  inline auto residual() -> Residual & { return parsing_residual; }
+  // use pa.residual() to copy the values out.
+  inline auto residual() const -> Residual const & { return parsing_residual; }
+protected:
+  Words parsing_residual;
+};
+#endiv

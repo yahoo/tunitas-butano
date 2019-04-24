@@ -1,0 +1,31 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::format {
+  namespace detail { enum Dump { }; }
+}
+#endiv
+#divert <hpp>
+#forward tunitas.butano.tcf.format.detail.Formatter
+#import tunitas.butano.tcf.consent.Object
+#import std.ostream
+namespace tunitas::butano::tcf::format {
+  // ADL will NOT find it
+  inline auto dump(consent::Object o) -> detail::Formatter<detail::Dump, consent::Object>;
+  namespace detail {
+    // ADL will find it
+    template<> inline auto operator<<(std::ostream &os, Formatter<Dump, consent::Object> const &co) -> std::ostream &;
+  }
+}
+#endiv
+#divert <ipp>
+#import tunitas.butano.tcf.format.detail.Formatter
+namespace tunitas::butano::tcf {
+  inline auto format::dump(consent::Object o) -> detail::Formatter<detail::Dump, consent::Object> {
+    return detail::Formatter<detail::Dump, consent::Object>(o);
+  }
+  template<> inline auto format::detail::operator<<(std::ostream &os, Formatter<Dump, consent::Object> const &co) -> std::ostream & {
+    return static_cast<tcf::detail::Stringable const &>(co.value).dump(os); // [[FIXTHIS]] this will add that extra unexpected newline.
+  }
+}
+#endiv

@@ -1,0 +1,93 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace want::lite::base64::sloppy::packaging::decode_function {
+  //
+  // Decode sloppily-encoded base64.
+  // Append '=' or '==' until the decode is works.
+  //
+  // If a decoding exception is thrown, then append the '=' and try again.
+  // Also, the number of '=' appended is returned in the result package.
+  //
+  // This decode, thus does not signal error via exceptions, but rather
+  // returns a result package indicating (success-state, append-count, decoded-bytes)
+  //
+  // Usage:
+  //
+  //   auto r = decode(sloppy_string);
+  //   if (ok(r)) {
+  //      std::size_t appended = count(r);
+  //      std::string decoded = value(r);
+  //   } else {
+  //      ... that's all you get ... the failure indication.
+  //   }
+  //
+  class Result;
+}
+#endiv
+#divert <hpp>
+#import std.string
+namespace want::lite::base64::sloppy {
+  namespace packaging::decode_function {
+    class Result; 
+    inline auto decode(std::string) -> Result;
+    inline auto howmany_remediations(std::string const &) -> std::size_t;
+  }
+  using packaging::decode_function::decode;
+}
+#endiv
+#divert <ipp>
+#import want.lite.base64.decode
+#import want.lite.base64.sloppy.decode.Result
+#import want.lite.base64.Exception
+#import std.size_t
+namespace want::lite::base64::sloppy::packaging {
+  auto decode_function::decode(std::string sloppy) -> Result {
+    auto const possible = howmany_remediations(sloppy);
+    auto potential = possible;
+    auto redeemable = false;
+    try {
+      base64::decode(sloppy);
+      redeemable = true;
+    } catch (Exception const &e) {
+      try {
+        if (potential) {
+          potential--; // WATCHOUT for underflow to -1(sic)
+          sloppy += '=';
+          base64::decode(sloppy);
+          redeemable = true;
+        }
+      } catch (Exception const &e) {
+        try {
+          if (potential) {
+            potential--; // ibidem (don't underflow).
+            sloppy += '=';
+            base64::decode(sloppy);
+            redeemable = true;
+          }
+        } catch (Exception const &e) {
+          redeemable = false;
+        }
+      }
+    }
+    return Result(redeemable, possible - potential, std::move(sloppy));
+  }
+  auto decode_function::howmany_remediations(std::string const &specimen) -> std::size_t {
+    // Returns a number in the range 0..2
+    // indicating how many '=' are reasonably appendable t a base64 string to "correct" it.
+    std::size_t length = specimen.size();
+    if (0 == length) {
+      return 2;
+    } else if (1 == length) {
+      return '=' == specimen.back() ? 1 : 2;
+    } else {
+      auto last = specimen.rbegin();
+      if ('=' == *last) {
+        return '=' == *++last ? 0 : 1;
+      } else {
+        return 2;
+      }
+    }
+  }
+}
+#endiv

@@ -1,0 +1,15 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.tcf.vendor.Bitfield
+#import tunitas.butano.tcf.vendor.entry.Purpose
+#import tunitas.butano.tcf.vendor.entry.Vendor
+#import tunitas.butano.tcf.vendor.Definition
+#import tunitas.butano.tcf.vendor.Null
+#import tunitas.butano.tcf.vendor.Invalid
+#import tunitas.butano.tcf.vendor.Inappropriate
+#import tunitas.butano.tcf.vendor.Unknown
+#import tunitas.butano.tcf.vendor.Vendors
+#import tunitas.butano.tcf.vendor.vendors.Purpose
+#import tunitas.butano.tcf.vendor.vendors.Vendor
+#endiv

@@ -1,0 +1,39 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::parser::ignore {
+  //
+  // The ignore aspect of the parser system.
+  // The 'ignore errors' flag is provided.
+  // Descendants only.
+  //
+  // Usage:
+  //
+  //  class parse::Something : public parser::Basis, public parser::ignore::Aspect {
+  //    ...other declarations...
+  //  };
+  //
+  //  auto remain(...) -> void {
+  //    parse::Something pa(...)
+  //    ...do something might establishe 'there_are_errors'
+  //    if (there_are_errors) {
+  //      if (!pa.ignore_errors()) {
+  //        throw Quitting(1);
+  //      }
+  //    }
+  //  }
+  //
+  class Aspect;
+}
+#endiv
+#divert <hpp>
+class app::argv::parser::ignore::Aspect {
+protected:
+  ~Aspect() = default;
+  Aspect() : parsing_ignore_errors(false) { }
+public:
+  inline auto ignore_errors() -> bool { return parsing_ignore_errors; }
+protected:
+  bool parsing_ignore_errors;
+};
+#endiv

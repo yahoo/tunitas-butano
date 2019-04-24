@@ -1,0 +1,25 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace want::lite::base64::decoder {
+  //
+  // An invalid seek(...) in the base64 decoder.
+  //
+  // Usage:
+  //
+  //   throw decoder::Seek("past end");
+  //
+  class Seek;
+}
+#endiv
+#divert <hpp>
+#import std.out_of_range
+#import want.lite.base64.Exception
+class want::lite::base64::decoder::Seek : public std::out_of_range, public base64::Exception {
+  using ancestor = std::out_of_range;
+public:
+  inline Seek() : ancestor("seek") { }
+  using ancestor::out_of_range;
+  auto what() const noexcept -> char const * { return ancestor::what(); }
+};
+#endiv

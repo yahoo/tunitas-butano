@@ -1,0 +1,19 @@
+// This is -*- c++ -*- in the S.C.O.L.D. stylings that are so popular these days.
+#divert <hpp>
+#import app.grammar.A_Noun
+namespace app::grammar {
+  //
+  // (English) Grammar is quirky & pesky.
+  // ... but feels low quality if you don't get it right in the UX.
+  //
+  // Usage:
+  //
+  //     std::cout << "I ate " << a_noun("pickle") << '\n';
+  //     std::cout << "I ate " << a_noun("apple") << '\n';
+  //
+  // Get a Concept!  STRINGY is something operator<< can handle and has a first or zeroth element as a character
+  template<typename STRINGY> inline auto a_noun(STRINGY const &noun) -> A_Noun<STRINGY> {
+    return A_Noun<STRINGY>(noun);
+  }
+}
+#endiv

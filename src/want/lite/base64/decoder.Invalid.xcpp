@@ -1,0 +1,27 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace want::lite::base64::decoder {
+  //
+  // An invalid aspect of the base64 decoder job itself.
+  // Or an invalid date of the Decoder,
+  //    (ahem) the Decoder being an argument operations upon itself.
+  //
+  // Usage:
+  //
+  //   throw decoder::Invalid("cannot");
+  //
+  class Invalid;
+}
+#endiv
+#divert <hpp>
+#import std.runtime_error
+#import want.lite.base64.Exception
+class want::lite::base64::decoder::Invalid : public std::runtime_error, public base64::Exception {
+  using ancestor = std::runtime_error;
+public:
+  inline Invalid() : ancestor("seek") { }
+  using ancestor::runtime_error;
+  auto what() const noexcept -> char const * { return ancestor::what(); }
+};
+#endiv

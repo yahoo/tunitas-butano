@@ -1,0 +1,26 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::purpose::detail {
+  //
+  // The prototype of the out-of-range exception for the purpose.
+  // Descendants only.
+  //
+  // Out_Of_Range       -> the purpose id is out of the valid range 1..24
+  // Inappropriate -> the purpose id is inappropriate for this semantic context.  i.e. "we don't do that."
+  // Null          -> The purpose id is null.  Null is a valid purpose.
+  //
+  class Out_Of_Range;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.exception.detail.Out_Of_Range
+#import tunitas.butano.tcf.id.ALL
+class tunitas::butano::tcf::purpose::detail::Out_Of_Range : public tcf::exception::detail::Out_Of_Range<id::Purpose> {
+  using ancestor = tcf::exception::detail::Out_Of_Range<id::Purpose>;
+protected:
+  ~Out_Of_Range() = default; // still descendants only
+public:
+  using ancestor::Out_Of_Range;
+};
+#endiv

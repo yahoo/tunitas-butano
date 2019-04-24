@@ -1,0 +1,17 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import std.string
+namespace tunitas::butano::tcf::consent {
+  //
+  // These are "base64url" encoded strings.
+  // Other than that, there is nothing special about them.
+  //
+  // Usage:
+  //
+  //   String = ...something...
+  //   auto conts obj = decode(some_string);
+  //
+  using String = std::string;
+}
+#endiv

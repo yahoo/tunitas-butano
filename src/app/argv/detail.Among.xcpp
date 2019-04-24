@@ -1,0 +1,54 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::detail {
+  //
+  // Supporting set containment via operator==
+  //
+  // Usage:
+  //
+  //    bool is = candidate == among("a", "b", "c");
+  //
+  class Among;
+}
+#endiv
+#divert <hpp>
+#import std.string
+namespace app::argv::detail {
+  inline auto operator==(std::string const &candidate, Among const &) -> bool;
+  inline auto operator!=(std::string const &candidate, Among const &) -> bool;
+  inline auto operator==(Among const &, std::string const &candidate) -> bool;
+  inline auto operator!=(Among const &, std::string const &candidate) -> bool;
+}
+#import std.string
+#import std.deque
+class app::argv::detail::Among : private std::deque<std::string> {
+  using ancestor = std::deque<std::string>;
+public:
+  template<typename... STRINGS> inline explicit Among(std::string const &first, STRINGS const &...rest);
+  inline friend auto detail::operator==(std::string const &candidate, Among const &corpus) -> bool;
+};
+#endiv
+#divert <ipp>
+#import std.find
+#import std.is_constructible
+namespace app::argv {
+  template<typename... STRINGS> detail::Among::Among(std::string const &first, STRINGS const &...rest)
+    : ancestor{first, rest...} {
+    constexpr auto ALL_STRINGS = (true && ... && std::is_constructible<std::string, STRINGS>::value);
+    static_assert(ALL_STRINGS);
+  }
+  auto detail::operator==(std::string const &candidate, Among const &corpus) -> bool {
+    return corpus.end() != std::find(corpus.begin(), corpus.end(), candidate);
+  }
+  auto detail::operator!=(std::string const &candidate, Among const &corpus) -> bool {
+    return !operator==(candidate, corpus);
+  }
+  auto detail::operator==(Among const &corpus, std::string const &candidate) -> bool {
+    return operator==(corpus, candidate);
+  }
+  auto detail::operator!=(Among const &corpus, std::string const &candidate) -> bool {
+    return !operator==(corpus, candidate);
+  }
+}
+#endiv

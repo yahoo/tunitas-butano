@@ -1,0 +1,44 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::parser {
+  //
+  // The basis of an argv parser.
+  // Commonalities among them all.
+  // Descendants only.
+  //
+  // Parse the argv as RAII, offer the results as the constructed object.
+  // Throws Quitting when the parse invariants and self-checks fail to be satisfied.
+  //
+  // Usage:
+  //
+  //  auto usage(std::ostrema &out) -> void { ...emit.usage... }
+  //  auto remain(Argv av) -> int {
+  //     parser::Descendant pa(std::move(argv), &usage);
+  //     ...parsed on RAII, threw Quitting it not satisfied.
+  //     ...do YOUR stuff...
+  //  }
+  //  auto main(int c, char *v[]) -> int {
+  //    return remain(Argv(c, v))
+  //  }
+  class Basis;
+}
+#endiv
+#divert <hpp>
+#import app.argv.Object
+#import std.function
+#import std.ostream
+class app::argv::parser::Basis {
+protected:
+  ~Basis() = default;
+public:
+  using Argv = Object;
+  using Name = std::string;
+  using Usage = std::function<void (Name const &, std::ostream &)>;
+  //
+  // All the real work will happen in the descendant's constructor
+  //
+protected:
+  inline constexpr static auto COLON_NOTICE_BANNER = ": notice, use --usage to show the range of options\n";
+};
+#endiv

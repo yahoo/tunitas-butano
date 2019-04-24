@@ -1,0 +1,47 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::exception {
+  //
+  // An invariant has failed in the TCF some subsystem.
+  // Descendants only.  Each sub-sub-system provides its own more precise final variant
+  //
+  // Policies:
+  //   DO NOT use assert(...) in production code.
+  //   The reason should state the invariant's truth (not what failed; we already know it has failed)
+  //
+  // Usage:
+  //
+  //   throw Invariant{};
+  //   throw Invariant{"1 == 1"};
+  //
+  class Invariant;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.Exception
+#import std.runtime_error
+#import std.string
+class tunitas::butano::tcf::exception::Invariant : public std::runtime_error, public tcf::Exception {
+  struct ancestors {
+    using Exception = std::runtime_error;
+    using Aspect = tcf::Exception;
+  };
+protected:
+  ~Invariant() = default;
+  Invariant() = default;
+  inline explicit Invariant(std::string const &reason);
+public:
+  auto what() const noexcept -> char const * override;
+};
+#endiv
+#divert <ipp>
+tunitas::butano::tcf::exception::Invariant::Invariant(std::string const &reason)
+  : ancestors::Exception{reason}
+{ }
+#endiv
+#divert <cpp>
+auto tunitas::butano::tcf::exception::Invariant::what() const noexcept -> char const * {
+  return ancestors::Exception::what();
+}
+#endiv

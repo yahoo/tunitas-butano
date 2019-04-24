@@ -1,0 +1,132 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import std.uint64_t
+#import tunitas.butano.tcf.consent.protocol.Field
+namespace tunitas::butano::tcf::consent::protocol {
+  using Offset = std::uint64_t;
+  template<Field> struct Positions;
+  template<> struct Positions<VERSION>;
+  template<> struct Positions<CREATED>;
+  template<> struct Positions<LASTUPDATED>;
+  template<> struct Positions<CMPID>;
+  template<> struct Positions<CMPVERSION>;
+  template<> struct Positions<CONSENTSCREEN>;
+  template<> struct Positions<CONSENTLANGUAGE>;
+  template<> struct Positions<VENDORLISTVERSION>;
+  template<> struct Positions<PURPOSESALLOWED>;
+  template<> struct Positions<MAXVENDORID>;
+  template<> struct Positions<ENCODINGTYPE>;
+  template<> struct Positions<BITFIELD>;
+  template<> struct Positions<DEFAULTCONSENT>;
+  template<> struct Positions<NUMENTRIES>;
+  template<> struct Positions<ISRANGE>;
+  template<> struct Positions<SINGLEVENDORID>;
+  template<> struct Positions<STARTVENDORID>;
+  template<> struct Positions<ENDVENDORID>;
+}
+#endiv
+#divert <hpp>
+#import std.uint8_t
+#import std.uint32_t
+#import std.uint64_t
+#import tunitas.butano.tcf.id.ALL
+#import tunitas.butano.tcf.consent.protocol.Limits
+#import std.vector
+namespace tunitas::butano::tcf::consent::protocol {
+  template<> struct Positions<VERSION> {
+    using Type = std::uint8_t;
+    inline static constexpr auto offset() -> Offset { return 0; }
+    inline static constexpr auto length() -> Size { return Limits<Datum<VERSION>>::width(); }
+  };
+  template<> struct Positions<CREATED> {
+    using Type = std::uint64_t;
+    inline static constexpr auto offset() -> Offset { return 6; }
+    inline static constexpr auto length() -> Size { return 36; }
+  };
+  template<> struct Positions<LASTUPDATED> {
+    using Type = std::uint64_t;
+    inline static constexpr auto offset() -> Offset { return 42; }
+    inline static constexpr auto length() -> Size { return 36; }
+  };
+  template<> struct Positions<CMPID> {
+    using Type = std::uint16_t;
+    inline static constexpr auto offset() -> Offset { return 78; }
+    inline static constexpr auto length() -> Size {  return 12; }
+  };
+  template<> struct Positions<CMPVERSION> {
+    using Type = std::uint16_t;
+    inline static constexpr auto offset() -> Offset { return 90; }
+    inline static constexpr auto length() -> Size {  return 12; }
+  };
+  template<> struct Positions<CONSENTSCREEN> {
+    using Type = std::uint8_t;
+    inline static constexpr auto offset() -> Offset { return 102; }
+    inline static constexpr auto length() -> Size { return 6; }
+  };
+  template<> struct Positions<CONSENTLANGUAGE> {
+    using Type = std::uint16_t;
+    inline static constexpr auto offset() -> Offset { return 108; }
+    inline static constexpr auto length() -> Size { return 12; }
+  };
+  template<> struct Positions<VENDORLISTVERSION> {
+    using Type = std::uint16_t;
+    inline static constexpr auto offset() -> Offset { return 120; }
+    inline static constexpr auto length() -> Size { return 12; }
+  };
+  template<> struct Positions<PURPOSESALLOWED> {
+    using Type = std::uint32_t;
+    inline static constexpr auto offset() -> Offset { return 132; }
+    inline static constexpr auto length() -> Size { return Limits<id::Purpose>::max(); }
+  };
+  template<> struct Positions<MAXVENDORID> {
+    using Type = std::uint16_t;
+    inline static constexpr auto offset() -> Offset { return 156; }
+    inline static constexpr auto length() -> Size { return 16; }
+  };
+  template<> struct Positions<ENCODINGTYPE> {
+    using Type = bool;
+    inline static constexpr auto offset() -> Offset { return 172; }
+    inline static constexpr auto length() -> Size { return 1; }
+  };
+  template<> struct Positions<BITFIELD> {
+    using Type = std::vector<bool>; // the actual length must bound at the call site.
+    inline static constexpr auto offset() -> Offset { return 173; }
+    inline static constexpr auto length() -> Size { return 9999; }
+  };
+  template<> struct Positions<DEFAULTCONSENT> {
+    using Type = bool;
+    inline static constexpr auto offset() -> Offset { return 173; }
+    inline static constexpr auto length() -> Size { return 1; }
+  };
+  template<> struct Positions<NUMENTRIES> {
+    using Type = std::uint16_t;
+    inline static constexpr auto offset() -> Offset { return 174; }
+    inline static constexpr auto length() -> Size { return 12; }
+  };
+  template<> struct Positions<ISRANGE> {
+    using Type = bool;
+    // NO SUCH constexpr auto offset() -> Offset, instead use next<ISRANGE>()
+    // DELETE--> { return 186; }
+    inline static constexpr auto length() -> Size { return 1; }
+  };
+  template<> struct Positions<SINGLEVENDORID> {
+    using Type = std::uint16_t;
+    // NO SUCH constexpr auto offset() -> Offset, instead use next<SINGLEVENDORID>()
+    // DELETE--> { return 187; }
+    inline static constexpr auto length() -> Size { return 16; }
+  };
+  template<> struct Positions<STARTVENDORID> {
+    using Type = std::uint16_t;
+    // NO SUCH constexpr auto offset() -> Offset, instead use next<STARTVENDORID>()
+    // DELETE--> { return 187; }
+    inline static constexpr auto length() -> Size { return 16; }
+  };
+  template<> struct Positions<ENDVENDORID > {
+    using Type = std::uint16_t;
+    // NO SUCH constexpr auto offset() -> Offset, instead use next<ENDVENDORID>()
+    // DELETE---> { return 203; }
+    inline static constexpr auto length() -> Size { return 16; }
+  };
+}
+#endiv

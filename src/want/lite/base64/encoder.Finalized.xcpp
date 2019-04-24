@@ -1,0 +1,35 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace want::lite::base64::encoder {
+  //
+  // An invalid argument to the base64 encoder job itself.
+  //
+  // Usage:
+  //
+  //   throw encoder::Finalized("cannot");
+  //
+  class Finalized;
+}
+#endiv
+#divert <hpp>
+#import std.invalid_argument
+#import want.lite.base64.Exception
+class want::lite::base64::encoder::Finalized : public std::invalid_argument, public base64::Exception {
+  using ancestor = std::invalid_argument;
+public:
+  inline Finalized();
+  using ancestor::invalid_argument;
+  auto what() const noexcept -> char const * final;
+};
+#endiv
+#divert <ipp>
+want::lite::base64::encoder::Finalized::Finalized()
+  : ancestor("finalized")
+{ }
+#endiv
+#divert <cpp>
+auto want::lite::base64::encoder::Finalized::what() const noexcept -> char const * {
+  return ancestor::what();
+}
+#endiv

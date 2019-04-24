@@ -1,0 +1,15 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import want.javalike.Boolean
+#import want.javalike.Date
+#import want.javalike.detail.Integral
+#import want.javalike.integer.Enum
+#import want.javalike.integer.Signed
+#import want.javalike.integer.Unsigned
+#import want.javalike.List
+#import want.javalike.Map
+#import want.javalike.Optional
+#import want.javalike.String
+#import want.javalike.Time
+#endiv

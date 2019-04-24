@@ -1,0 +1,43 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::vendor {
+  //
+  // The vendor is valid, being in the acceptable range.
+  // but it is not known;
+  // e.g. it is unspecified in the range-of-vendor expressions.
+  //
+  // Usage:
+  //
+  //     throw Unknown();
+  //
+  // [[currently]] not used.
+  //
+  class Unknown;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.Exception
+#import std.runtime_error
+#import std.string
+class tunitas::butano::tcf::vendor::Unknown : public std::runtime_error, public tcf::Exception {
+  using ancestor = std::runtime_error;
+public:
+  inline Unknown();
+  inline explicit Unknown(std::string const &reason);
+  inline auto what() const noexcept -> char const * final;
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf::vendor {
+  Unknown::Unknown()
+    : ancestor("unknown vendor")
+  { }
+  Unknown::Unknown(std::string const &reason)
+    : ancestor(reason)
+  { }
+  auto Unknown::what() const noexcept -> char const * {
+    return ancestor::what();
+  }
+}
+#endiv

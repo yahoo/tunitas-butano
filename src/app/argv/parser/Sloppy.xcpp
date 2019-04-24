@@ -1,0 +1,111 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::parser {
+  //
+  // An argv parser for a demonstration program some rcc syntax sloppiness flags.
+  //
+  // Scheme:
+  //   the standard boilerplate options
+  //   --sloppy   - try to look for decimal numbers
+  //                and or the rcc syntax without the 'r' prefix on rXXXXXXXX
+  //   --pedantic - the inverse of sloppy, parse with format::rinteger only
+  //   --decimal  - same as --sloppy
+  //    one (1) or more (2+) words are required.
+  //
+  // Example:
+  //
+  //    bin/demo --sloppy this that the other
+  //
+  // Usage:
+  //
+  //  auto usage(std::ostream &out) -> void { ...emit.usage... }
+  //  auto remain(Argv av) -> int {
+  //     parser::sloppy pa(std::move(argv), "demo", &usage);
+  //     ...parsed on RAII, threw Quitting if not satisfied.
+  //     ...do YOUR stuff...
+  //     if (pa.be_sloppy()) {
+  //     } else {
+  //       assert(pa.be_pedantic());
+  //     }
+  //  }
+  //  auto main(int c, char *v[]) -> int {
+  //    return remain(Argv(c, v))
+  //  }
+  //
+  class Sloppy;
+}
+#endiv
+#divert <hpp>
+#import app.argv.parser.Basis
+#import app.argv.parser.residual.Aspect
+class app::argv::parser::Sloppy : public Basis, public residual::Aspect {
+  using ancestor = Basis;
+public:
+  inline explicit Sloppy(Argv a, Name n, Usage u)
+    : ancestor(), sloppy_mode(true), current_mode(true) { parse(a, n, u); }
+  inline auto parse_sloppy() -> bool { return sloppy_mode; }
+  inline auto parse_strict() -> bool { return !sloppy_mode; }
+  inline auto promote_current() -> bool { return current_mode; }
+  inline auto promote_nop() -> bool { return !current_mode; }
+  // --parse-sloppy contra --parse-strict
+  // --make-current contra --version-remains
+  // --pedantic is a fiction of the command line: no parse sloppy, remain-old
+protected:
+  bool sloppy_mode;
+  bool current_mode;
+private:
+  auto parse([[inout]] Argv &, Name const &, Usage) -> void;
+};
+#endiv
+#divert <cpp>
+#import app.argv.among
+#import app.Quitting
+#import std.cerr
+#import std.cout
+#import std.move
+auto app::argv::parser::Sloppy::parse(Argv &av, Name const &NAME, Usage USAGE) -> void {
+  av.pop_front();
+  for ( ; !av.empty(); av.pop_front()) {
+    auto const first = av.front();
+    if (false) {
+    } else if (first == among("-h", "--help", "--usage")) {
+      USAGE(NAME, std::cout);
+      throw Quitting(0);
+    } else if (first == among("-y", "--sloppy", "--decimal",
+                              "--parse-sloppy",
+                              "--parse=sloppy")) {
+      sloppy_mode = true;
+    } else if (first == among("-s", "--strict",
+                              "--parse-strict",
+                              "--parse=strict")) {
+      sloppy_mode = false;
+    } else if (first == among("-c", "--current",
+                              "--promote-current",
+                              "--promote=current")) {
+      current_mode = true;
+    } else if (first == among("-n",
+                              "--promote-no", "--promote-nop", "--promote-noop", "--promote-no-op",
+                              "--promote=no", "--promote=nop", "--promote=noop", "--promote=no-op")) {
+      current_mode = false;
+    } else if (first == among("-p", "--pedantic")) {
+      sloppy_mode = false;
+      current_mode = false;
+    } else if (first.empty() || '-' != first.front()) {
+      // The first non-option word.
+      break;
+    } else {
+      std::cerr << NAME << COLON_NOTICE_BANNER
+                << NAME << ": error, unknown option " << first << '\n';
+      throw Quitting(sys::exits::USAGE);
+    }
+  }
+  if (av.empty()) {
+    std::cerr << NAME << COLON_NOTICE_BANNER
+              << NAME << ": error, at least one no non-option word is required\n"
+      ;
+    throw Quitting(sys::exits::USAGE);
+  }
+  parsing_residual = std::move(av);
+}
+#endiv

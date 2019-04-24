@@ -1,0 +1,41 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent::protocol {
+  //
+  // An exception
+  // The consent::protocol is decode has failed. Here's why.
+  //
+  // Usage:
+  //
+  //   throw Decode{}
+  //
+  class Decode;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.Exception
+#import tunitas.butano.tcf.exception.Range
+#import sstream
+#import stdexcept
+class tunitas::butano::tcf::consent::protocol::Decode : public std::runtime_error, public tcf::Exception {
+  using ancestor = std::runtime_error;
+public:
+  inline Decode();
+  inline explicit Decode(std::string const &reason);
+  inline auto what() const noexcept -> char const * final;
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf::consent::protocol {
+  Decode::Decode()
+    : ancestor("decode")
+  { }
+  Decode::Decode(std::string const &reason)
+    : ancestor(reason)
+  { }
+  auto Decode::what() const noexcept -> char const * {
+    return ancestor::what();
+  }
+}
+#endiv

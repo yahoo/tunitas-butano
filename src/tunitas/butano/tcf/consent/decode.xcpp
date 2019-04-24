@@ -1,0 +1,77 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <hpp>
+#forward tunitas.butano.tcf.consent.Object
+#import std.string
+namespace tunitas::butano::tcf::consent {
+  auto decode(std::string const &encoded) -> Object;
+}
+#endiv
+#divert <ipp>
+#import tunitas.butano.tcf.consent.Object
+#endiv
+#divert <cpp>
+#import want.lite.base64.Decoder
+#import tunitas.butano.tcf.consent.Builder.ALL
+#import tunitas.butano.tcf.consent.Getter
+namespace tunitas::butano::tcf {
+  auto consent::decode(std::string const &encoded) -> Object {
+    want::lite::base64::Decoder dec(encoded);
+    Getter get(dec);
+    Builder bob;
+    using namespace protocol;
+    bob.set<VERSION>(get.field<VERSION>());
+    bob.set<CREATED>(get.field<CREATED>());
+    bob.set<LASTUPDATED>(get.field<LASTUPDATED>());
+    bob.set<CMPID>(get.field<CMPID>());
+    bob.set<CMPVERSION>(get.field<CMPVERSION>());
+    bob.set<CONSENTSCREEN>(get.field<CONSENTSCREEN>());
+    bob.set<CONSENTLANGUAGE>(get.field<CONSENTLANGUAGE>());
+    bob.set<VENDORLISTVERSION>(get.field<VENDORLISTVERSION>());
+    bob.set<PURPOSESALLOWED>(get.field<PURPOSESALLOWED>());
+    auto const max_vendor_id = get.field<MAXVENDORID>();
+    bob.set<MAXVENDORID>(max_vendor_id); 
+    bob.set<ENCODINGTYPE>(get.field<ENCODINGTYPE>());
+    if (VENDOR_CONSENT_BITS == bob.encodingType) {
+      using Limits = protocol::Limits<Datum<BITFIELD>>;
+      bob.set<BITFIELD>(get.array<Limits::Type>(max_vendor_id));
+    } else if (VENDOR_CONSENT_RANGES == bob.encodingType) {
+      bob.set<DEFAULTCONSENT>(get.field<DEFAULTCONSENT>());
+      auto const count = get.field<NUMENTRIES>();
+      using Count = std::remove_const<decltype(count)>::type;
+      bob.set<NUMENTRIES>(count);
+      // we are now at the bit position of the first range entry
+      // The protocol into the builder repeatedly clears and fills a builder-resident temporary
+      // Then that temporary is moved into place in the vector of range-of-consents.
+      // repeat: ( ISRANGE ( START END | SINGLE ) )*
+      for (Count i(0), e(count); e != i; ++i) {
+        auto const isrange = get.next<ISRANGE>();
+        bob.set<ISRANGE>(isrange);
+        if (isrange) {
+          bob.set<STARTVENDORID>(get.next<STARTVENDORID>());
+          bob.set<ENDVENDORID>(get.next<ENDVENDORID>());
+        } else {
+          bob.set<SINGLEVENDORID>(get.next<SINGLEVENDORID>());
+        }
+      }
+    } else {
+      throw encoding::Invalid("invalid encoding type" + to_string(bob.encodingType));
+    }
+    // There can be extra 0 padding bits at the end, up to the next octet
+    // There MUST NOT be extra garbage at the end; a covert chanel payload.
+    // This is a security thing ... allow no ability for the aversary infiltrate data.
+    // Allow no ability for the adversary to pass on data to others.
+    //
+    auto throw_extra_if = [](bool test) {
+                            if (test) {
+                              throw encoding::Invalid("extra garbage at the end");
+                            }
+                          };
+    for (auto i(0), e(8); !dec.eof() && e != i; ++i) {
+      throw_extra_if(false != dec.get<bool>());
+    }
+    throw_extra_if(!dec.eof());
+    return bob.build();
+  }
+}
+#endiv

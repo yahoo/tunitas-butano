@@ -1,0 +1,25 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace want::lite::base64::decoder {
+  //
+  // An underflow condition (out of bits) in the decoder
+  //
+  // Usage:
+  //
+  //   throw decoder::Underflow("off the end");
+  //
+  class Underflow;
+}
+#endiv
+#divert <hpp>
+#import std.underflow_error
+#import want.lite.base64.Exception
+class want::lite::base64::decoder::Underflow : public std::underflow_error, public base64::Exception {
+  using ancestor = std::underflow_error;
+public:
+  inline Underflow() : ancestor("underflow") { }
+  using ancestor::underflow_error;
+  auto what() const noexcept -> char const * { return ancestor::what(); }
+};
+#endiv

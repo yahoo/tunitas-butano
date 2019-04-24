@@ -1,0 +1,144 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.tcf.consent.protocol.Field
+namespace tunitas::butano::tcf::consent::protocol {
+  template<Field> struct Polished;
+  template<> struct Polished<VERSION>;
+  template<> struct Polished<CREATED>;
+  template<> struct Polished<LASTUPDATED>;
+  template<> struct Polished<CMPID>;
+  template<> struct Polished<CMPVERSION>;
+  template<> struct Polished<CONSENTSCREEN>;
+  template<> struct Polished<CONSENTLANGUAGE>;
+  template<> struct Polished<VENDORLISTVERSION>;
+  template<> struct Polished<PURPOSESALLOWED>;
+  template<> struct Polished<MAXVENDORID>;
+  template<> struct Polished<ENCODINGTYPE>;
+  template<> struct Polished<BITFIELD>;
+  template<> struct Polished<DEFAULTCONSENT>;
+  template<> struct Polished<NUMENTRIES>;
+  template<> struct Polished<ISRANGE>;
+  template<> struct Polished<SINGLEVENDORID>;
+  template<> struct Polished<STARTVENDORID>;
+  template<> struct Polished<ENDVENDORID>;
+}
+#endiv
+#divert <hpp>
+#import std.uint16_t
+#import std.uint32_t
+#import std.vector
+#import tunitas.butano.tcf.id.ALL
+#import tunitas.butano.tcf.consent.protocol.Field
+#import tunitas.butano.tcf.consent.protocol.Time
+#import tunitas.butano.tcf.consent.protocol.Limits
+namespace tunitas::butano::tcf::consent::protocol {
+  template<> struct Polished<VERSION> {
+    using Type = id::version::Protocol;
+    using Limits = protocol::Limits<Datum<VERSION>>;
+    inline static constexpr auto min() -> Type { return Type(Limits::min()); }
+    inline static constexpr auto max() -> Type { return Type(Limits::max()); }
+  };
+  template<> struct Polished<CREATED> {
+    using Type = Time;
+    using Limits = protocol::Limits<Datum<CREATED>>;
+    inline static constexpr auto min() -> Type { return protocol::time::Point(protocol::time::Duration(Limits::min())); }
+    inline static constexpr auto max() -> Type { return protocol::time::Point(protocol::time::Duration(Limits::max())); }
+  };
+  template<> struct Polished<LASTUPDATED> {
+    using Type = Time;
+    using Limits = protocol::Limits<Datum<LASTUPDATED>>;
+    inline static constexpr auto min() -> Type { return protocol::time::Point(protocol::time::Duration(Limits::min())); }
+    inline static constexpr auto max() -> Type { return protocol::time::Point(protocol::time::Duration(Limits::max())); }
+  };
+  template<> struct Polished<CMPID> {
+    using Type = id::Platform;
+    using Limits = protocol::Limits<Datum<CMPID>>;
+    inline static constexpr auto min() -> Type { return Type(Limits::min()); }
+    inline static constexpr auto max() -> Type { return Type(Limits::max()); }
+  };
+  template<> struct Polished<CMPVERSION> {
+    using Type = id::version::Platform;
+    using Limits = protocol::Limits<Datum<CMPVERSION>>;
+    inline static constexpr auto min() -> Type { return Type(Limits::min()); }
+    inline static constexpr auto max() -> Type { return Type(Limits::max()); }
+  };
+  template<> struct Polished<CONSENTSCREEN> {
+    using Type = id::Screen;
+    using Limits = protocol::Limits<Datum<CONSENTSCREEN>>;
+    inline static constexpr auto min() -> Type { return Type(Limits::min()); }
+    inline static constexpr auto max() -> Type { return Type(Limits::max()); }
+  };
+  template<> struct Polished<CONSENTLANGUAGE> {
+    using Type = id::Language;
+    using Limits = protocol::Limits<Datum<CONSENTLANGUAGE>>;
+    inline static constexpr auto min() -> Type { return Type(Limits::min()); }
+    inline static constexpr auto max() -> Type { return Type(Limits::max()); }
+  };
+  template<> struct Polished<VENDORLISTVERSION> {
+    using Type = id::version::VendorList;
+    using Limits = protocol::Limits<Datum<VENDORLISTVERSION>>;
+    inline static constexpr auto min() -> Type { return Type(Limits::min()); }
+    inline static constexpr auto max() -> Type { return Type(Limits::max()); }
+  };
+  template<> struct Polished<PURPOSESALLOWED> {
+    using Type = std::uint32_t;
+    using Limits = protocol::Limits<Datum<PURPOSESALLOWED>>;
+    inline static constexpr auto min() -> Type { return Type(Limits::min()); }
+    inline static constexpr auto max() -> Type { return Type(Limits::max()); }
+  };
+  template<> struct Polished<MAXVENDORID> {
+    using Type = std::uint16_t;
+    using Limits = protocol::Limits<Datum<MAXVENDORID>>;
+    inline static constexpr auto min() -> Type { return Limits::min(); }
+    inline static constexpr auto max() -> Type { return Limits::max(); }
+  };
+  template<> struct Polished<ENCODINGTYPE> {
+    using Type = Encoding;
+    using Limits = protocol::Limits<Datum<ENCODINGTYPE>>;
+    inline static constexpr auto min() -> Type { return Type(Limits::min()); }
+    inline static constexpr auto max() -> Type { return Type(Limits::max()); }
+  };
+  template<> struct Polished<BITFIELD> {
+    using Type = consent::Bitfield; // 1-based vector indexing
+    using Limits = protocol::Limits<Datum<BITFIELD>>;
+    // a bitfield has a "width" not a sense of min & max.
+  };
+  template<> struct Polished<DEFAULTCONSENT> {
+    using Type = bool;
+    using Limits = protocol::Limits<Datum<DEFAULTCONSENT>>;
+    inline static constexpr auto min() -> Type { return Limits::min(); }
+    inline static constexpr auto max() -> Type { return Limits::max(); }
+  };
+  template<> struct Polished<NUMENTRIES> {
+    using Type = std::uint16_t;
+    using Limits = protocol::Limits<Datum<NUMENTRIES>>;
+    inline static constexpr auto min() -> Type { return Limits::min(); }
+    inline static constexpr auto max() -> Type { return Limits::max(); }
+  };
+  template<> struct Polished<ISRANGE> {
+    using Type = bool;
+    using Limits = protocol::Limits<Datum<ISRANGE>>;
+    inline static constexpr auto min() -> Type { return Limits::min(); }
+    inline static constexpr auto max() -> Type { return Limits::max(); }
+  };
+  template<> struct Polished<SINGLEVENDORID> {
+    using Type = id::Vendor;
+    using Limits = protocol::Limits<Datum<SINGLEVENDORID>>;
+    inline static constexpr auto min() -> Type { return Type(Limits::min()); }
+    inline static constexpr auto max() -> Type { return Type(Limits::max()); }
+  };
+  template<> struct Polished<STARTVENDORID> {
+    using Type = id::Vendor;
+    using Limits = protocol::Limits<Datum<STARTVENDORID>>;
+    inline static constexpr auto min() -> Type { return Type(Limits::min()); }
+    inline static constexpr auto max() -> Type { return Type(Limits::max()); }
+  };
+  template<> struct Polished<ENDVENDORID > {
+    using Type = id::Vendor;
+    using Limits = protocol::Limits<Datum<ENDVENDORID>>;
+    inline static constexpr auto min() -> Type { return Type(Limits::min()); }
+    inline static constexpr auto max() -> Type { return Type(Limits::max()); }
+  };
+}
+#endiv

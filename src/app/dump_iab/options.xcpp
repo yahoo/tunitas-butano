@@ -1,0 +1,9 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.app.options
+namespace app::dump_iab::options {
+  // Cascade the namespaces
+  using namespace tunitas::app::options;
+}
+#endiv

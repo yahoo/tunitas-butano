@@ -1,0 +1,22 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import want.lite.base64.Decoder
+#endiv
+#divert <hpp>
+template<typename UNSIGNED> struct want::lite::base64::Decoder::Shaver {
+  //
+  // Shave out the bits, little endian out first.
+  //
+  using Value = UNSIGNED;
+  Value value;
+  Shaver(Value value) : value(value) { }
+  auto operator*() const -> bool { return value & 01; }
+  auto operator++() -> Shaver & { value >>= 1;  return *this; }
+  auto operator++(int) -> Shaver {
+    Shaver old(*this);
+    operator++();
+    return old;
+  }
+};
+#endiv

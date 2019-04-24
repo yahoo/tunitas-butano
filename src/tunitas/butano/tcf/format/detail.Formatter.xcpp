@@ -1,0 +1,36 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::format::detail {
+  template<typename UNIQUENESS, typename TYPE, typename ARGUMENT = /*by const reference*/ TYPE const &> struct Formatter;
+}
+#endiv
+#divert <hpp>
+#import std.ostream
+namespace tunitas::butano::tcf::format::detail {
+  template<typename UNIQUENESS, typename TYPE, typename ARGUMENT> inline auto operator<<(std::ostream &, Formatter<UNIQUENESS, TYPE, ARGUMENT> const &) -> std::ostream &;
+}
+namespace tunitas::butano::tcf::format {
+  template<typename UNIQUENESS, typename TYPE, typename ARGUMENT> struct detail::Formatter {
+  public:
+    using Value = TYPE;
+    using Argument = ARGUMENT;
+    inline explicit Formatter(ARGUMENT);
+    Value value;
+  };
+}
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf::format {
+  template<typename UNIQUENESS, typename TYPE, typename ARGUMENT> auto detail::operator<<(std::ostream &os, Formatter<UNIQUENESS, TYPE, ARGUMENT> const &fo) -> std::ostream & {
+    return os << fo.value; // do whatever the "native" operator<< did
+  }
+}
+// All the magic happens in the operator<<, which are declared and defined near the functions that create them.
+// But in case there is no magic then an attempt is made to use the ADL-discovered operator<<
+namespace tunitas::butano::tcf::format::detail {
+  template<typename U, typename T, typename A> Formatter<U,T,A>::Formatter(Argument value)
+    : value(value)
+  { }
+}
+#endiv

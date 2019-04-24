@@ -1,0 +1,46 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app {
+  //
+  // A simple application-specific quitting
+  //
+  // Usage:
+  //
+  //   throw Quitting{exit_code};
+  //
+  class Quitting;
+}
+#endiv
+#divert <hpp>
+#import std.ostream
+namespace app {
+  inline auto operator<<(std::ostream &, Quitting const &) -> std::ostream &;
+}
+#import std.runtime_error
+class app::Quitting : public std::runtime_error {
+  using ancestor = std::runtime_error;
+public:
+  inline explicit Quitting(int);
+  inline Quitting(std::string const &reason, int exit_code);
+  inline auto exit_code() const -> int;
+protected:
+  int _exit_code;
+};
+#endiv
+#divert <ipp>
+#include <ostream>
+auto app::operator<<(std::ostream &os, Quitting const &qu) -> std::ostream & {
+  return os << qu.what();
+}
+namespace app {
+  Quitting::Quitting(int exit_code)
+    : ancestor("quitting"), _exit_code(exit_code)
+  { }
+  Quitting::Quitting(std::string const &reason, int exit_code)
+    : ancestor(reason), _exit_code(exit_code)
+  { }
+  auto Quitting::exit_code() const -> int
+  { return _exit_code; }
+}
+#endiv

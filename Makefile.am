@@ -20,25 +20,26 @@ include @temerarious_flagship_datadir@/am/build.mk
 
 # These match with HGTW_WITH_MODULE in configure.ac
 DEVELOPMENT_AREAS = \
-  @module_json_prefix@ \
-  @module_options_prefix@ \
-  @module_posix_prefix@ \
-  @module_std_prefix@ \
-  @module_string_prefix@ \
-  @module_sys_prefix@ \
-  @tunitas_basics_prefix@ \
+  $(module_json_prefix) \
+  $(module_options_prefix) \
+  $(module_nonstd_prefix) \
+  $(module_posix_prefix) \
+  $(module_std_prefix) \
+  $(module_string_prefix) \
+  $(module_sys_prefix) \
+  $(tunitas_basics_prefix) \
   $(end)
 TESTING_AREAS = \
-  @module_cppunit_prefix@ \
-  @module_rigging_prefix@ \
+  $(module_cppunit_prefix) \
+  $(module_rigging_prefix) \
   $(end)
 INSTALLATION_AREAS = \
-  @nonstd_cppunit_prefix@ \
-  @nonstd_gcc_prefix@ \
-  @nonstd_jsoncpp_prefix@ \
-  @nonstd_libhttpserver_prefix@ \
-  @std_scold_prefix@ \
-  @std_tunitas_prefix@ \
+  $(nonstd_cppunit_prefix) \
+  $(nonstd_gcc_prefix) \
+  $(nonstd_jsoncpp_prefix) \
+  $(nonstd_libhttpserver_prefix) \
+  $(std_scold_prefix) \
+  $(std_tunitas_prefix) \
   $(end)
 
 default: all
@@ -54,9 +55,11 @@ clean-local mostlyclean-local distclean-local::
 clean-dependencies::
 clean-local:: clean-dependencies
 
-include src/app/dump/Makefrag.am
+include src/app/Makefrag.am
+include src/app/dump_iab/Makefrag.am
 include src/tests/unit/Makefrag.am
 include src/tunitas/butano/Makefrag.am
+include src/tunitas/butano/tcf/Makefrag.am
 include src/want/Makefrag.am
 
 bin_PROGRAMS = \
@@ -64,9 +67,11 @@ bin_PROGRAMS = \
   $(end)
 lib_LTLIBRARIES = \
   $(lib_libtunitas_butano_la) \
+  $(lib_libtunitas_butano_tcf_la) \
   $(end)
 noinst_LTLIBRARIES = \
   $(lib_libwant_la) \
+  $(lib_libapp_la) \
   $(end)
 check_PROGRAMS = \
   $(check_bin_unit) \

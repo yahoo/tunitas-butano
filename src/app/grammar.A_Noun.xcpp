@@ -1,0 +1,41 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::grammar {
+  //
+  // Handle the "a" vs "an" thing in English Grammar.
+  //
+  // Usage (with the helper function)
+  //
+  //   std::cout << a_noun("apple") << " per day keeps the docor at bay\n";
+  //
+  template<typename STRINGY> struct A_Noun;
+}
+#endiv
+#divert <hpp>
+#import std.ostream
+namespace app::grammar {
+  template<typename STRINGY> inline auto operator<<(std::ostream &, A_Noun<STRINGY> const &) -> std::ostream &;
+}
+#import std.string
+template<typename STRINGY> struct app::grammar::A_Noun {
+public:
+  A_Noun(STRINGY const &noun) : noun(noun), article(choose(noun)) { }
+  STRINGY const &noun;
+  char const *article; // either 'a' or 'an' (lower case)
+private:
+  inline static std::string const VOWELS = "aeiou";
+  inline static auto const ARTICLE_CONSONANT = "a";
+  inline static auto const ARTICLE_VOWEL = "an";
+  inline static auto choose(STRINGY const &candidate) -> char const *;
+};
+#endiv
+#divert <ipp>
+template<typename STRINGY> inline auto app::grammar::operator<<(std::ostream &os, A_Noun<STRINGY> const &an) -> std::ostream & {
+  return os << an.article << ' ' << an.noun;
+}
+template<typename STRINGY> auto app::grammar::A_Noun<STRINGY>::choose(STRINGY const &candidate) -> char const * {
+  auto vowely = std::string::npos != VOWELS.find(candidate[0]);
+  return vowely ? ARTICLE_VOWEL : ARTICLE_CONSONANT;
+}
+#endiv

@@ -1,0 +1,32 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::vendor::detail {
+  //
+  // The vendor is out of range somehow: null, inappropriate, invalid.
+  // Descendants only.
+  //
+  // Invalid       -> the vendor id is totally invalid (out of the acceptable range of 16 bits).
+  // Inappropriate -> the vendor id is outside of maxVendorId.
+  // Null          -> The null vendor is a "valid" vendor.
+  //
+  // Usage:
+  //
+  //   throw Inappropriate();
+  //   throw Invalid();
+  //   throw Null();
+  //
+  class Out_Of_Range;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.exception.detail.Out_Of_Range
+#import tunitas.butano.tcf.id.ALL
+class tunitas::butano::tcf::vendor::detail::Out_Of_Range : public tcf::exception::detail::Out_Of_Range<id::Vendor> { 
+  using ancestor = tcf::exception::detail::Out_Of_Range<id::Vendor>;
+protected:
+  ~Out_Of_Range() = default; // still descendants only
+public:
+  using ancestor::Out_Of_Range;
+};
+#endiv

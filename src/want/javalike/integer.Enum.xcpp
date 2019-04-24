@@ -1,0 +1,27 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace want::javalike::integer {
+  //
+  // An enum
+  // boxed
+  // with an initializer, a constructor
+  //
+  // In C++17, you can do this with an enum declaration, almost.
+  //
+  template<typename ENUM, typename UNIQUENESS = ENUM> class Enum;
+}
+#endiv
+#divert <hpp>
+template<typename ENUM, typename UNIQUENESS> struct want::javalike::integer::Enum {
+public:
+  using Value = ENUM;
+  inline constexpr Enum() : value(Value()) { }
+  inline constexpr Enum(Value value) : value(value) { }
+  inline auto operator=(Value other) -> Enum & { value = other; return *this; }
+  inline auto operator=(Enum const &other) -> Enum & { value = other.value; return *this; }
+  inline constexpr operator Value() const { return value; }
+private:
+  Value value;
+};
+#endiv

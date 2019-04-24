@@ -1,0 +1,60 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import std.size_t
+#import std.vector
+namespace tunitas::butano::tcf::consent::protocol {
+  using Size = std::size_t;
+  template<typename TYPE> struct Limits;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.id.ALL
+#import tunitas.butano.tcf.exception.Range
+#import tunitas.butano.tcf.consent.protocol.datum.ALL
+#import tunitas.butano.tcf.consent.protocol.Field
+#import tunitas.butano.tcf.consent.protocol.Time
+#import tunitas.butano.tcf.consent.Encoding
+#import tunitas.butano.tcf.consent.Bitfield
+#import tunitas.butano.tcf.consent.protocol.datum.ALL // datum::Deciseconds, datum::Purpose
+namespace tunitas::butano::tcf::consent::protocol {
+  template<> struct Limits<id::Purpose> : public datum::Purpose {
+    class Set : std::vector<bool> { Set() : std::vector<bool>(max()) { } };
+  };
+  template<> struct Limits<id::Vendor> : public datum::Vendor {
+    using Set = std::vector<bool>; // a set of vendors 0..65535, with length chosen at point of use.
+  };
+  template<Field FIELD> struct Datum { inline static constexpr auto value = FIELD; };
+  template<> struct Limits<Datum<VERSION>> : public datum::version::Protocol { };
+  // NOT using Type = protocol::Time; (if you need that then use Polished<CREATED>::Type)
+  template<> struct Limits<Datum<CREATED>> : public datum::Deciseconds { };
+  template<> struct Limits<Datum<LASTUPDATED>> : public datum::Deciseconds { };
+  template<> struct Limits<Datum<CMPID>> : public datum::Platform { };
+  template<> struct Limits<Datum<CMPVERSION>> : public datum::version::Platform { };
+  template<> struct Limits<Datum<CONSENTSCREEN>> : public datum::Screen { };
+  template<> struct Limits<Datum<CONSENTLANGUAGE>> : public datum::Language { };
+  template<> struct Limits<Datum<VENDORLISTVERSION>> : public datum::version::VendorList { };
+  template<> struct Limits<Datum<PURPOSESALLOWED>> : public datum::set::Purpose {
+    // At the protocol level, the "purposes" are always treated specially as a int-as-bitset.
+    using Element = std::uint8_t; // hold a value 1..24 (not the bit{set,mask} on 24 bits.
+    using Set = Type;
+  };
+  template<> struct Limits<Datum<MAXVENDORID>> : public datum::Width<datum::Vendor::Type, datum::Vendor::width()> {
+    // This is an (unsigned)integer bound, not a actual id::Vendor.
+    // A perfectly valid number is "max vendor id is zero."
+    // It means "no vendor consent is possible."
+  };
+  template<> struct Limits<Datum<ENCODINGTYPE>> : public datum::Enum<Encoding, 1> { };
+  template<> struct Limits<Datum<BITFIELD>> {
+    using Type = consent::Bitfield;  // must use the 1-based variant here, not vector<bool>
+    using Sized = Type; // the size is implicit in the dataspace
+    inline static constexpr auto width() -> Size { return 9999; }
+  };
+  template<> struct Limits<Datum<DEFAULTCONSENT>> : public datum::Bit { };
+  template<> struct Limits<Datum<NUMENTRIES>> : public datum::Width<std::uint16_t, 12> { };
+  template<> struct Limits<Datum<ISRANGE>> : public datum::Bit { };
+  template<> class Limits<Datum<SINGLEVENDORID>> : public datum::Vendor { };
+  template<> class Limits<Datum<STARTVENDORID>> : public datum::Vendor { };
+  template<> class Limits<Datum<ENDVENDORID>> : public datum::Vendor { };
+}
+#endiv

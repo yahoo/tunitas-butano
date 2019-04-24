@@ -2,4 +2,4 @@
 source ${0%/*}/rigging.sh || exit 70
 ${exe?} --dryrun -y
 # the --dryrun option enters dry-run mode, but we need to dry-run this
-test 0 == $?
+test 0 != $?

@@ -1,0 +1,19 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import want.timeline.ALL
+namespace tunitas::butano::tcf::consent::protocol {
+  namespace time {
+    using Clock = want::timeline::Clock;
+    using Point = want::timeline::point::Deciseconds;
+    using Duration = want::timeline::duration::Deciseconds;
+    using Representation = want::timeline::Representation;
+  }
+  using Time = time::Point;
+}
+#endiv
+#divert <hpp>
+namespace tunitas::butano::tcf::consent::protocol::time {
+  using want::timeline::clock::deci::now;
+}
+#endiv

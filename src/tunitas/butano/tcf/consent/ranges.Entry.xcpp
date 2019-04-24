@@ -1,0 +1,63 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent::ranges {
+  struct Entry;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.id.ALL
+#import tunitas.butano.tcf.detail.Stringable
+#import want.javalike.Boolean
+#import want.javalike.String
+#import sstream
+struct tunitas::butano::tcf::consent::ranges::Entry : public tcf::detail::Stringable {
+  want::javalike::Boolean isVendorRange;
+  id::Vendor singleVendorId;
+  id::Vendor startVendorId;
+  id::Vendor endVendorId;
+  inline Entry();
+  inline auto doesVendorExistInRange(id::Vendor vendorId) const -> bool;
+  inline auto clear() -> void;
+protected:
+  auto dump(std::ostream &outbound) const -> std::ostream & final;
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf::consent::ranges {
+  Entry::Entry()
+    : isVendorRange(false),
+      singleVendorId(id::Vendor(0)),
+      startVendorId(id::Vendor(0)),
+      endVendorId(id::Vendor(0))
+  { }
+  auto Entry::doesVendorExistInRange(id::Vendor vendorId) const -> bool {
+    // FIXTHIS ... this is now trivially up in parent consent::Ranges.
+    if (isVendorRange) {
+      if (vendorId >= startVendorId && vendorId <= endVendorId) {
+        return true;
+      }
+    } else if (vendorId == singleVendorId) {
+      return true;
+    }
+    return false;
+  }
+  auto Entry::clear() -> void {
+    Entry &self(*this);
+    self = Entry();
+  }
+}
+#endiv
+#divert <cpp>
+namespace tunitas::butano::tcf::consent::ranges {
+  auto Entry::dump(std::ostream &outbound) const -> std::ostream & {
+    // The reader can figure out whether it is a single or not by the obviousness
+    if (isVendorRange) {
+      outbound << startVendorId << ".." << endVendorId;
+    } else {
+      outbound << singleVendorId;
+    }
+    return outbound;
+  }
+}
+#endiv

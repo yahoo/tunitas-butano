@@ -1,0 +1,22 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent::encoding {
+  //
+  // The encoding (Encoding enum) is invalid (out of the acceptable range of BITS or RANGE)
+  //
+  class Invalid;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.Exception
+#import std.out_of_range
+#import std.string
+class tunitas::butano::tcf::consent::encoding::Invalid : public std::out_of_range, public tcf::Exception {
+  using ancestor = std::out_of_range;
+public:
+  inline Invalid() : ancestor("invalid encoding") { }
+  inline explicit Invalid(std::string const &reason) : ancestor(reason) { }
+  inline auto what() const noexcept -> char const * final { return ancestor::what(); }
+};
+#endiv

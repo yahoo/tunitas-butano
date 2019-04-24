@@ -1,0 +1,103 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf {
+  //
+  // In the Limits<...> definitions, declare whether to include or exclude the null (zero) id
+  // Usage:
+  //   auto begin(with::NullId) const -> Iteratable
+  //   auto end(with::NullId) const -> Iteratable
+  //   auto range(with::NullId) const -> exception::Range
+  //   auto begin(outwith::NullId) const -> Iteratable
+  //   auto end(outwith::NullId) const -> Iteratable
+  //   auto range(outwith::NullId) const -> exception::Range
+  //
+  namespace with {
+    enum NullId { NULLID };
+    enum Exceptions { EXCEPTIONS };
+  }
+  namespace without {
+    enum NullId { NULLID };
+    enum Exceptions { EXCEPTIONS };
+  }
+}
+#import std.uint8_t
+#import std.uint16_t
+#import std.uint32_t
+#import want.javalike.integer.Enum
+namespace tunitas::butano::tcf::id {
+  namespace integer {
+    using want::javalike::integer::Enum; // blik.  [[FIXTHIS]] in C++17 you just use an enum class.
+  }
+  // The IAB envisions a very limited world...
+  //... very few features and purposes.
+  // ... a small coterie of vendors, with no meaningful churn.
+#if 7 <= __GNUC__
+  enum Feature  : std::uint8_t;
+  enum Language : std::uint32_t;
+  enum Platform : std::uint32_t; // the CMP platform identifier
+  enum Purpose  : std::uint8_t;
+  enum Screen   : std::uint32_t; // something about the screen dialog that was shown
+  enum Vendor   : std::uint16_t;
+  namespace version {
+    enum Platform   : std::uint32_t; // the CMP platform's version, itself.
+    enum Protocol   : std::uint32_t; // of the "consent string"
+    enum VendorList : std::uint32_t; // version of the IAB vendor list.
+  }
+#else
+  namespace uniqueness {
+    enum Feature { };
+    enum Language { };
+    enum Platform { };
+    enum Protocol { };
+    enum Purpose { };
+    enum Screen { };
+    enum Vendor { };
+    enum VendorList { };
+  }
+  using Feature = integer::Enum<std::uint8_t, uniqueness::Feature>;
+  using Language = integer::Enum<std::uint32_t, uniqueness::Language>;
+  using Platform = integer::Enum<std::uint32_t, uniqueness::Platform>;
+  using Purpose  = integer::Enum<std::uint8_t, uniqueness::Purpose>;
+  using Screen   = integer::Enum<std::uint8_t, uniqueness::Screen>;
+  using Vendor   = integer::Enum<std::uint16_t, uniqueness::Vendor>;
+  namespace version {
+    using Platform   = integer::Enum<std::uint32_t, uniqueness::Platform>;
+    // Oath's platform is #1, and perennially on v1.0
+    namespace platform { inline constexpr auto CURRENT = Platform(1); } 
+    using Protocol   = integer::Enum<std::uint32_t, uniqueness::Protocol>;
+    // This software artifact supports IAB TCF v1
+    namespace protocol { inline constexpr auto CURRENT = Protocol(1); } 
+    using VendorList = integer::Enum<std::uint32_t, uniqueness::VendorList>;
+    // There is no "current" vendor list; it changes constantly, nay, hourly.
+  }
+#endif
+  namespace version {
+    namespace platform { inline constexpr auto CURRENT = Platform(1); } // Oath's platform is #1, and perennially on v1.0
+    namespace protocol { inline constexpr auto CURRENT = Protocol(1); } // This software artifact supports IAB TCF v1
+    // There is no "current" vendor list; it changes constantly, nay, hourly.
+  }
+}
+#endiv
+#divert <ipp>
+#import std.max
+#import std.min
+namespace tunitas::butano::tcf::id {
+#if 7 <= __GNUC__
+  template<typename ID> inline constexpr auto min(ID a, ID b) -> ID { return ID(std::min<unsigned>((unsigned)a, (unsigned) b)); }
+  template<typename ID> inline constexpr auto max(ID a, ID b) -> ID { return ID(std::max<unsigned>((unsigned)a, (unsigned) b)); }
+  namespace version {
+    template<typename ID> inline constexpr auto min(ID a, ID b) -> ID { return ID(std::min<unsigned>((unsigned)a, (unsigned) b)); }
+    template<typename ID> inline constexpr auto max(ID a, ID b) -> ID { return ID(std::max<unsigned>((unsigned)a, (unsigned) b)); }
+  }
+#else
+  namespace uniqueness {
+    template<typename INT, typename UNIQ> inline constexpr auto min(integer::Enum<INT, UNIQ> a, integer::Enum<INT, UNIQ> b) -> integer::Enum<INT, UNIQ> {
+      return integer::Enum<INT, UNIQ>(std::min<unsigned>((unsigned)a, (unsigned) b)); }
+    template<typename INT, typename UNIQ> inline constexpr auto max(integer::Enum<INT, UNIQ> a, integer::Enum<INT, UNIQ> b) -> integer::Enum<INT, UNIQ> {
+      return integer::Enum<INT, UNIQ>(std::max<unsigned>((unsigned)a, (unsigned) b));
+    }
+  }
+#endif
+}
+#endiv

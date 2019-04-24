@@ -1,0 +1,36 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::purpose {
+  //
+  // The purpose is null (zero)
+  // See the commentariat in detail::Out_Of_Range for semantic fitness and purpose.
+  //
+  // Usage:
+  //
+  //   throw Null();
+  //
+  class Null;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.Exception
+#import tunitas.butano.tcf.id.ALL
+#import stdexcept
+class tunitas::butano::tcf::purpose::Null : public std::out_of_range, public tcf::Exception {
+  using ancestor = std::out_of_range;
+public:
+  inline Null();
+  inline auto what() const noexcept -> char const * final;
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf::purpose {
+  Null::Null()
+    : ancestor("null purpose")
+  { }
+  auto Null::what() const noexcept -> char const * {
+    return ancestor::what();
+  }
+}
+#endiv

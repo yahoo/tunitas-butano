@@ -1,0 +1,125 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent {
+  //
+  // The build builds the building
+  //
+  // Specification:
+  //   https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework
+  //
+  // Usage:
+  //
+  //    ... blah blah blah ...
+  //
+  class Builder;
+}
+#endiv
+#divert <hpp>
+namespace tunitas::butano::tcf::consent {
+  inline auto buildifier() -> Builder; // this is a silly flourish, familiar to Javolos
+}
+#import tunitas.butano.tcf.consent.Object // so it can make friends with the Builder
+#import tunitas.butano.tcf.consent.Bits
+#import tunitas.butano.tcf.consent.Object
+#import tunitas.butano.tcf.consent.Ranges
+#import tunitas.butano.tcf.consent.String
+#import tunitas.butano.tcf.consent.builder.Defaultable
+#import tunitas.butano.tcf.consent.encode // detail::encode(...)
+#forward tunitas.butano.tcf.consent.encoding.getter.Field // to be friends
+#import tunitas.butano.tcf.consent.protocol.Field
+#import tunitas.butano.tcf.consent.protocol.Polished
+#import tunitas.butano.tcf.consent.protocol.Positions
+#import tunitas.butano.tcf.id.ALL
+#import tunitas.butano.tcf.purpose.Map
+#import tunitas.butano.tcf.purpose.Invalid
+#import want.javalike.Map
+#import want.javalike.List
+#import want.javalike.integer.Unsigned
+#import std.optional
+class tunitas::butano::tcf::consent::Builder : public builder::Defaultable {
+  using ancestor = builder::Defaultable;
+public:
+  inline Builder();
+  using Result = Object;
+  auto build() -> Result;
+  inline auto clear() -> void;
+  // Does paranoid checking becuase these values are coming in off the wire.
+  template<protocol::Field FIELD> inline auto set(typename protocol::Positions<FIELD>::Type) -> void;
+  // Does no checking, just accepts the polished value
+  template<protocol::Field FIELD> inline auto accept(typename protocol::Polished<FIELD>::Type) -> void;
+  struct test { struct Access; };
+  struct yuk { struct Access; };
+protected:
+  friend struct test::Access;
+  friend class yuk::Access;
+  friend auto consent::decode(std::string const &) -> Object;
+  template<typename SOURCE> friend auto consent::detail::encode(SOURCE const &) -> String;
+  template<protocol::Field FIELD> friend class consent::encoding::getter::Field;
+  using Integer_Bound = want::javalike::integer::Unsigned<std::uintmax_t>;
+  purpose::Map purposesAllowed;
+  Integer_Bound maxVendorId;
+  Bits vendorConsentBits;
+  ranges::Entry vendorConsentRanges_single_rangeEntry_buffer;
+  Ranges vendorConsentRanges;
+  // [[REMOVETHIS]] This had something to do with setting up the full client-consent, server-vendorlist DOM model.
+  // VENDOR, NOT CONSENT dao::vendors::Purpose purposeVendorData;
+  // NOT Map<id::Purpose, dao::vendors::Purpose> purposeMap;
+  // NOT Map<id::Vendor, dao::vendors::Vendor> vendorMap;
+};
+#endiv
+#divert <ipp>
+#import tunitas.butano.tcf.consent.encoding.getter.Field
+auto tunitas::butano::tcf::consent::buildifier() -> Builder {
+  return Builder();
+}
+namespace tunitas::butano::tcf::consent {
+  Builder::Builder()
+    : ancestor(DEFAULTING)
+  { }
+  auto Builder::clear() -> void {
+    ancestor::clear();
+    purposesAllowed = purpose::Map();
+    maxVendorId = 0;
+    encodingType = Encoding();
+    vendorConsentBits = Bits();
+    vendorConsentRanges_single_rangeEntry_buffer.clear();
+    vendorConsentRanges = Ranges();
+  }
+}
+#endiv
+#divert <cpp>
+namespace tunitas::butano::tcf::consent {
+  auto Builder::build() -> Result {
+    Result result = Object();
+    auto &lhs = result;
+    auto rhs = *this;
+    lhs.version = rhs.version;
+    lhs.created = rhs.created;
+    lhs.lastUpdated = rhs.lastUpdated;
+    lhs.cmpId = rhs.cmpId;
+    lhs.cmpVersion = rhs.cmpVersion;
+    lhs.consentScreen = rhs.consentScreen;
+    lhs.consentLanguage = rhs.consentLanguage;
+    lhs.vendorListVersion = rhs.vendorListVersion;
+    lhs.purposesAllowed = std::move(rhs.purposesAllowed);
+    lhs.maxVendorId = rhs.maxVendorId;
+    lhs.encodingType = rhs.encodingType;
+    if (VENDOR_CONSENT_BITS == rhs.encodingType) {
+      lhs.vendorConsentBits = std::move(rhs.vendorConsentBits);
+    } else if (VENDOR_CONSENT_RANGES == encodingType) {
+      lhs.vendorConsentRanges = std::move(rhs.vendorConsentRanges);
+    } else {
+      throw encoding::Invalid();
+    }
+#warning #if 0 // [[REMOVETHIS]] This had something to do with setting up the full client-consent, server-vendorlist DOM model.
+#if 0 // [[REMOVETHIS]] This had something to do with setting up the full client-consent, server-vendorlist DOM model.
+    if (purposeMap.size() > 0) {
+      consent.setPurposeMap(purposeMap);
+      consent.setVendorMap(vendorMap);
+    }
+#endif
+    return std::move(result);
+  }
+}
+#endiv

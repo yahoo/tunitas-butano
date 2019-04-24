@@ -1,0 +1,24 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::vendor {
+  enum Known { OATH = 25 };
+  template<Known> struct Definition;
+  template<> struct Definition<OATH>;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.id.ALL
+namespace tunitas::butano::tcf::vendor {
+  template<> struct Definition<OATH> {
+    inline constexpr static auto const the_iab_promises_promises_that_numbers_will_never_ever_be_reallocated = true;
+    inline static constexpr auto vendor_id() -> id::Vendor { return id::Vendor(25); }
+    // IAB_STORAGE_ACCESS_OF_INFORMATION
+    inline static constexpr auto storage() -> id::Purpose { return id::Purpose(1); }
+    [[deprecated("instead use storage()")]] inline static constexpr auto device() { return storage(); }
+    // IAB_PERSONALIZATION
+    inline static constexpr auto p13n() -> id::Purpose { return id::Purpose(2); }
+    // And Oath asserts Legitimate Interest over the rest of the purposes. So no need.
+  };
+}
+#endiv

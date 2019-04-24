@@ -1,0 +1,61 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent::encoding {
+  //
+  // The Getters for the encoding activity
+  // Specializations only
+  //
+  // And hereby we show that a consent::Object and a consent::Builder are cut&paste code of each other.  Ick.
+  //
+  // The encoding Getter... on an Object or a Builder
+  //
+  // Usage:
+  //
+  //   consent::Builder const &bob = ...something...
+  //   encoding::Getter<consent::Builder> getter(bob);
+  //
+  //   consent::Object const &obj = ...something...
+  //   encoding::Getter<consent::Object> getter(obj);
+  //
+  //
+  // Get a Concept!  SOURCE is only either Object or Builder
+  template<typename SOURCE> class Getter;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.consent.encoding.getter.Basis
+#import tunitas.butano.tcf.consent.encoding.getter.Field
+#import tunitas.butano.tcf.consent.protocol.Field
+#import tunitas.butano.tcf.consent.protocol.Limits
+namespace tunitas::butano::tcf::consent {
+  template<typename SOURCE> class encoding::Getter : public getter::Basis {
+    using ancestor = getter::Basis;
+  public:
+    using Source = SOURCE;
+    inline explicit Getter(Source const &);
+    template<protocol::Field FIELD> using Value = typename protocol::Limits<protocol::Datum<FIELD>>::Sized;
+    template<protocol::Field FIELD> inline auto field() -> Value<FIELD>;
+    template<protocol::Field FIELD> inline auto next() -> Value<FIELD>;
+  protected:
+    template<protocol::Field> friend struct getter::Field;
+    Source const &source;
+  };
+}
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf::consent::encoding {
+  template<typename _> Getter<_>::Getter(Source const &source) : source(source) { }
+  template<typename _> template<protocol::Field FIELD> auto Getter<_>::field() -> Value<FIELD> {
+    // field<...>(...) is order-independent, it recovers specific named fields
+    getter::Field<FIELD> redo(this);
+    return redo(source);
+  }
+  template<typename _> template<protocol::Field FIELD> inline auto Getter<_>::next() -> Value<FIELD> {
+    // next<...>(...) is order-dependent, and must be run in the appropriate sequence
+    // being: ISRANGE ( SINGLEVENDORID | STARTVENDORID ENDVENDORID ) )
+    getter::Field<FIELD> redo(this);
+    return redo(source);
+  }
+}
+#endiv

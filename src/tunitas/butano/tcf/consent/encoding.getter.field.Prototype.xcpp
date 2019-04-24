@@ -1,0 +1,32 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.tcf.consent.protocol.Field
+namespace tunitas::butano::tcf::consent::encoding::getter::field {
+  //
+  // Specializing against the field name itself.
+  // Abstracting over the SOURCE.
+  //
+  // Usage: see encoding.Getter, nearby.
+  //
+  template<protocol::Field, typename RESULT> class Prototype;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.consent.encoding.getter.Basis
+#import tunitas.butano.tcf.consent.protocol.Field
+#import tunitas.butano.tcf.consent.protocol.Limits // protocol::Limits<...>, protocol::Datum<...>
+namespace tunitas::butano::tcf::consent::encoding {
+  template<protocol::Field FIELD, typename RESULT> class getter::field::Prototype {
+  protected:
+    ~Prototype() = default;
+  public:
+    inline explicit Prototype(Basis *basis) : basis(basis) { }
+    using Limits = protocol::Limits<protocol::Datum<FIELD>>;
+    using Result = RESULT;
+  protected:
+    // This is to be non-const because we will modify fields back in the owner basis->position++
+    Basis *basis;
+  };
+}
+#endiv

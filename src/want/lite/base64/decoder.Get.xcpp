@@ -1,0 +1,25 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace want::lite::base64::decoder {
+  //
+  // An invalid get<...>(...) operation out of the base64 decoder bitstream.
+  //
+  // Usage:
+  //
+  //   throw decoder::Get("zero size");
+  //
+  class Get;
+}
+#endiv
+#divert <hpp>
+#import std.invalid_argument
+#import want.lite.base64.Exception
+class want::lite::base64::decoder::Get : public std::invalid_argument, public base64::Exception {
+  using ancestor = std::invalid_argument;
+public:
+  inline Get() : ancestor("get") { }
+  using ancestor::invalid_argument;
+  auto what() const noexcept -> char const * { return ancestor::what(); }
+};
+#endiv

@@ -1,0 +1,334 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.tcf.consent.protocol.Field
+namespace tunitas::butano::tcf::consent::encoding::getter {
+  //
+  // Specializing against the field name itself.
+  // Abstracting over the SOURCE.
+  //
+  // Usage: see encoding.Getter, nearby.
+  //
+  template<protocol::Field FIELD> class Field;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.consent.encoding.getter.field.Prototype
+#import tunitas.butano.tcf.consent.protocol.Limits // protocol::Limits<..., protocol::Datum<...>
+#import want.lite.base64.sized.ByType
+namespace tunitas::butano::tcf::consent::encoding {
+  template<protocol::Field FIELD> class getter::Field
+    : public field::Prototype<FIELD,  // All this machinery because BITFIELD needs a different sort of Result.
+                              want::lite::base64::sized::ByType<typename protocol::Limits<protocol::Datum<FIELD>>::Type,
+                                                                protocol::Limits<protocol::Datum<FIELD>>::width()>> {
+    // Ummm ... First of all.  Wow. Second of all.  Wow.
+    // The type-and-width system is much more easily expressed in the ancestor scope as Limits.
+    using ancestor = field::Prototype<FIELD,
+                                      want::lite::base64::sized::ByType<typename protocol::Limits<protocol::Datum<FIELD>>::Type,
+                                                                        protocol::Limits<protocol::Datum<FIELD>>::width()>>;
+  public:
+    using ancestor::Prototype;
+    // Get a Concept! SOURCE is consent::Object or consent::Builder
+    template<typename SOURCE> inline auto operator()(SOURCE const &) const -> typename ancestor::Result;
+  };
+  template<> class getter::Field<protocol::BITFIELD> 
+    : public field::Prototype<protocol::BITFIELD, protocol::Limits<protocol::Datum<protocol::BITFIELD>>::Sized> {
+    // Here we need a slightly different type than the one the default Prototype provides.
+    using ancestor = field::Prototype<protocol::BITFIELD, protocol::Limits<protocol::Datum<protocol::BITFIELD>>::Sized>;
+  public:
+    using ancestor::Prototype;
+    // Get a Concept! SOURCE is consent::Object or consent::Builder
+    template<typename SOURCE> inline auto operator()(SOURCE const &) const -> ancestor::Result;
+  };
+}
+#forward tunitas.butano.tcf.consent.Object
+#forward tunitas.butano.tcf.consent.Builder
+namespace tunitas::butano::tcf::consent::encoding::getter {
+  using namespace consent::protocol; // e.g. consent::protocol::VERSION etc.
+  template<> template<> inline auto Field<VERSION>::operator()<Builder>(Builder const &) const -> Result;
+  template<> template<> inline auto Field<VERSION>::operator()<Object>(Object const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<CREATED>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<LASTUPDATED>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<CMPID>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<CMPVERSION>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<CONSENTSCREEN>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<CONSENTLANGUAGE>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<VENDORLISTVERSION>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<PURPOSESALLOWED>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<MAXVENDORID>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<ENCODINGTYPE>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<DEFAULTCONSENT>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<NUMENTRIES>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<ISRANGE>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<SINGLEVENDORID>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<STARTVENDORID>::operator()(SOURCE const &) const -> Result;
+  template<> template<typename SOURCE> inline auto Field<ENDVENDORID>::operator()(SOURCE const &) const -> Result;
+}
+#endiv
+#divert <ipp>
+#import tunitas.butano.tcf.consent.Object
+#import tunitas.butano.tcf.consent.Builder
+namespace tunitas::butano::tcf::consent::encoding::getter {
+  // legitimate differences between Object and Builder
+  template<> template<> auto Field<VERSION>::operator()<Builder>(Builder const &source) const -> Result {
+    return source.version;
+  }
+  template<> template<> auto Field<VERSION>::operator()<Object>(Object const &) const -> Result {
+    return id::version::protocol::CURRENT;
+  }
+#if __GNUC__ < 9
+  namespace yuk {
+    // gcc-c++-8.2.1-5.fc28.x86_64
+    //
+    // src/tunitas/butano/tcf/consent/encoding.getter.Field.xcpp:104:18: internal compiler error: in type_dependent_expression_p, at cp/pt.c:25181
+    //      return point.time_since_epoch().count();
+    //
+    inline auto since_epoch(bool use, protocol::Time const &when, protocol::Time const &source) -> long {
+      auto const point = use ? when : source;
+      return point.time_since_epoch().count();
+    }
+  }
+  template<> template<typename SOURCE> auto Field<CREATED>::operator()(SOURCE const &source) const -> Result {
+    return yuk::since_epoch(basis->created_use_current_time, basis->when, source.created);
+  }
+  template<> template<typename SOURCE> auto Field<LASTUPDATED>::operator()(SOURCE const &source) const -> Result {
+    return yuk::since_epoch(basis->updated_use_current_time, basis->when, source.lastUpdated);
+  }
+#else
+  template<> template<typename SOURCE> auto Field<CREATED>::operator()(SOURCE const &source) const -> Result {
+    auto const point = basis->created_use_current_time ? basis->when : source.created;
+    return point.time_since_epoch().count();
+  }
+  template<> template<typename SOURCE> auto Field<LASTUPDATED>::operator()(SOURCE const &source) const -> Result {
+    auto const point = basis->updated_use_current_time ? basis->when : source.lastUpdated;
+    return point.time_since_epoch().count();
+  }
+#endif
+  template<> template<typename SOURCE> auto Field<CMPID>::operator()(SOURCE const &source) const -> Result {
+    return source.cmpId;
+  }
+  template<> template<typename SOURCE> auto Field<CMPVERSION>::operator()(SOURCE const &source) const -> Result {
+    return source.cmpVersion;
+  }
+  template<> template<typename SOURCE> auto Field<CONSENTSCREEN>::operator()(SOURCE const &source) const -> Result {
+    return source.consentScreen;
+  }
+  template<> template<typename SOURCE> auto Field<CONSENTLANGUAGE>::operator()(SOURCE const &source) const -> Result {
+    return source.consentLanguage;
+  }
+  template<> template<typename SOURCE> auto Field<VENDORLISTVERSION>::operator()(SOURCE const &source) const -> Result {
+    return source.vendorListVersion;
+  }
+  template<> template<typename SOURCE> auto Field<MAXVENDORID>::operator()(SOURCE const &source) const -> Result {
+    // WATCHOUT - this is one difference between consent::Object and consent::Builder (the builder has a wide, bounded boxed integer)
+    return (std::uint16_t) source.maxVendorId;
+  }
+  template<> template<typename SOURCE> auto Field<ENCODINGTYPE>::operator()(SOURCE const &source) const -> Result {
+    return source.encodingType;
+  }
+}
+#import tunitas.butano.tcf.consent.protocol.Decode
+namespace tunitas::butano::tcf::consent::encoding::getter {
+  template<typename SOURCE> auto Field<BITFIELD>::operator()(SOURCE const &source) const -> Result {
+    // Clarified
+    // https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/Consent%20string%20and%20vendor%20list%20formats%20v1.1%20Final.md#fields-consent-cookie
+    //
+    //   <quote>The consent value for each VendorId from 1 to MaxVendorId</quote>
+    //
+    // [[FIXTHIS]] Arguably, this should be a capability of the consent::Bits itself
+    // [[FIXTHIS]] merge the implementation of (deprecating) consent::Bits and consent::Bitfield
+    Result ret(source.maxVendorId, false);
+    for (auto const &pair : source.vendorConsentBits) {
+      ret.at(pair.first) = pair.second;
+    }
+    return std::move(ret);
+  }
+  template<> template<typename SOURCE> auto Field<DEFAULTCONSENT>::operator()(SOURCE const &source) const -> Result {
+    return source.vendorConsentRanges.defaultConsent;
+  }
+  template<> template<typename SOURCE> auto Field<ISRANGE>::operator()(SOURCE const &source) const -> Result {
+    return basis->vendorConsentRanges_position->isVendorRange;
+  }
+#if __GNUC__ < 9
+  namespace yuk {
+    //
+    // gcc-c++-8.2.1-5.fc28.x86_64
+    //
+    // src/tunitas/butano/tcf/consent/encode.xcpp:22:86:   required from here
+    // src/tunitas/butano/tcf/consent/encoding.getter.Field.xcpp:160:12: internal compiler error: in type_dependent_expression_p, at cp/pt.c:25181
+    //      return entry.startVendorId;
+    //             ^~~~~
+    // Please submit a full bug report,
+    // with preprocessed source if appropriate.
+    // See <http://bugzilla.redhat.com/bugzilla> for instructions.
+    // Preprocessed source stored into /tmp/ccIZ076B.out file, please attach this to your bugreport.
+    //
+    inline auto singlevendorid(consent::Ranges::VendorRangeEntries::const_iterator &position) -> std::uint16_t {
+      auto const &entry = *position++;
+      return entry.singleVendorId;
+    }
+    inline auto startvendorid(consent::Ranges::VendorRangeEntries::const_iterator &position) -> std::uint16_t {
+      auto const &entry = *position; // NO increment
+      return entry.startVendorId;
+    }
+    inline auto endvendorid(consent::Ranges::VendorRangeEntries::const_iterator &position) -> std::uint16_t {
+      auto const &entry = *position++;
+      return entry.endVendorId;
+    }
+  }
+  template<> template<typename SOURCE> auto Field<SINGLEVENDORID>::operator()(SOURCE const &) const -> Result {
+    return yuk::singlevendorid(basis->vendorConsentRanges_position);
+  }
+  template<> template<typename SOURCE> auto Field<STARTVENDORID>::operator()(SOURCE const &) const -> Result {
+    return yuk::startvendorid(basis->vendorConsentRanges_position);
+  }
+  template<> template<typename SOURCE> auto Field<ENDVENDORID>::operator()(SOURCE const &) const -> Result {
+    return yuk::endvendorid(basis->vendorConsentRanges_position);
+  }
+#else
+  template<> template<typename SOURCE> auto Field<SINGLEVENDORID>::operator()(SOURCE const &) const -> Result {
+    auto const &entry = *basis->vendorConsentRanges_position++;
+    return entry.singleVendorId;
+  }
+  template<> template<typename SOURCE> auto Field<STARTVENDORID>::operator()(SOURCE const &) const -> Result {
+    auto const &entry = *basis->vendorConsentRanges_position; // NO increment
+    return entry.startVendorId;
+  }
+  template<> template<typename SOURCE> auto Field<ENDVENDORID>::operator()(SOURCE const &) const -> Result {
+    auto const &entry = *basis->vendorConsentRanges_position++;
+    return entry.endVendorId;
+  }
+#endif
+}
+#endiv
+#divert <tpp>
+#import tunitas.butano.tcf.purpose.Bitfield
+#if __GNUC__ < 9
+#import std.uint32_t
+namespace tunitas::butano::tcf::consent::encoding::getter::yuk {
+  //
+  // gcc-c++-8.2.1-5.fc28.x86_64
+  //
+  // src/tunitas/butano/tcf/consent/encode.xcpp:22:86:   required from here
+  // src/tunitas/butano/tcf/consent/encoding.getter.Field.xcpp:213:14: internal compiler error: in type_dependent_expression_p, at cp/pt.c:25181
+  //        buffer.at(pair.first) = pair.second;
+  //        ~~~~~~~^~
+  // Please submit a full bug report,
+  // with preprocessed source if appropriate.
+  // See <http://bugzilla.redhat.com/bugzilla> for instructions.
+  // Preprocessed source stored into /tmp/cc0Z737K.out file, please attach this to your bugreport.
+  //
+  inline auto purposesallowed(purpose::Map const &source) -> std::uint32_t {
+    purpose::Bitfield buffer(protocol::Limits<id::Purpose>::max(), false);
+    for (auto const &pair : source) {
+      buffer.at(pair.first) = pair.second;
+    }
+    std::uint32_t ret(0);
+    // little endian means DO NOT use tunitas::butano::adapter(buffer)
+    for (auto const b : buffer) {
+      ret <<= 1;
+      ret |= b;
+    }
+    return ret;
+  }
+}
+namespace tunitas::butano::tcf::consent::encoding::getter {
+  template<> template<typename SOURCE> auto Field<PURPOSESALLOWED>::operator()(SOURCE const &source) const -> Result {
+    return yuk::purposesallowed(source.purposesAllowed);
+  }
+}
+#else
+namespace tunitas::butano::tcf::consent::encoding::getter {
+  template<> template<typename SOURCE> auto Field<PURPOSESALLOWED>::operator()(SOURCE const &source) const -> Result {
+    //
+    // Clarified
+    // https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/Consent%20string%20and%20vendor%20list%20formats%20v1.1%20Final.md#fields-consent-cookie
+    //
+    // <quote>
+    //   Purposes are listed in the global Vendor List.
+    //   Resultant consent value is the "AND" of the applicable bit(s) from this field and a vendor's specific consent bit.
+    //   Purpose #1 maps to the first (most significant) bit,
+    //   Purpose #24 maps to the last (least significant) bit.
+    // </quote>
+    //
+    // Whereas network order is big endian
+    // And the little purposes start first.
+    // The purposes are in little endian order.
+    //
+    //   purpose:   1  2  3  4          22 23 24
+    //   bit pos:  23 22 21 20 .......  02 01 00
+    //
+    // [[FIXTHIS]] Arguably, this should be a capability of the purpose::Map, and purpose::Bitfield itself
+    purpose::Bitfield buffer(protocol::Limits<id::Purpose>::max(), false);
+    for (auto const &pair : source.purposesAllowed) {
+      buffer.at(pair.first) = pair.second;
+    }
+    std::uint32_t ret(0);
+    // little endian means DO NOT use tunitas::butano::adapter(buffer)
+    for (auto const b : buffer) {
+      ret <<= 1;
+      ret |= b;
+    }
+    return ret;
+  }
+}
+#endif
+#import tunitas.butano.tcf.consent.encoding.Invariant
+#if __GNUC__ < 9
+namespace tunitas::butano::tcf::consent::encoding::getter {
+  namespace yuk {
+    //
+    // src/tunitas/butano/tcf/consent/encode.xcpp:22:86:   required from here
+    // src/tunitas/butano/tcf/consent/encoding.getter.Field.xcpp:256:27: internal compiler error: in type_dependent_expression_p, at cp/pt.c:25181
+    //      if (!Limits::possible(num)) {
+    //                            ^~~
+    // Please submit a full bug report,
+    // with preprocessed source if appropriate.
+    // See <http://bugzilla.redhat.com/bugzilla> for instructions.
+    // Preprocessed source stored into /tmp/ccTyNa9U.out file, please attach this to your bugreport.
+    // make: *** [Makefile:2152: obj/src/tunitas/butano/tcf/consent/encoding.getter.Field.lo] Error 1
+    // 
+    // Compilation exited abnormally with code 2 at Wed Apr 24 11:41:50
+    //
+    template<typename LIMITS> auto numentries(std::vector<ranges::Entry>::const_iterator &lhs, std::vector<ranges::Entry>::const_iterator begin, std::size_t num) -> std::uint16_t {
+      lhs = begin;
+      if (!LIMITS::possible(num)) {
+        // This is some sort of programming error.
+        // The protocol only has 12 bits here; thus allows 1<<12 bits of unsigned integer.
+        // So there is "no possible way" the value could be greater than that during a decode.
+        throw protocol::Decode("NUMENTRIES");
+      }
+      auto const truncated = std::uint16_t(num);
+      if (truncated != num) { throw Invariant{"truncated == num"}; }
+      return truncated;
+    }
+  }
+  template<> template<typename SOURCE> auto Field<NUMENTRIES>::operator()(SOURCE const &source) const -> Result {
+    return yuk::numentries<Limits>(basis->vendorConsentRanges_position, source.vendorConsentRanges.vendorRangeEntries.begin(), source.vendorConsentRanges.numEntries);
+  }
+}
+#else
+namespace tunitas::butano::tcf::consent::encoding::getter {
+  template<> template<typename SOURCE> auto Field<NUMENTRIES>::operator()(SOURCE const &source) const -> Result {
+    //
+    // Observe the protocol:
+    //
+    //     DEFAULTCONSENT NUMENTRIES *( ISRANGE ( SINGLEVENDORID | STARTVENDORID ENDVENDORID ) )
+    //
+    // And the final SINGLEVENDORID or ENDVENDORID increments the iterator.
+    // 
+    basis->vendorConsentRanges_position = source.vendorConsentRanges.vendorRangeEntries.begin();
+    auto const num = source.vendorConsentRanges.numEntries;
+    if (!Limits::possible(num)) {
+      // This is some sort of programming error.
+      // The protocol only has 12 bits here; thus allows 1<<12 bits of unsigned integer.
+      // So there is "no possible way" the value could be greater than that during a decode.
+      throw protocol::Decode("NUMENTRIES");
+    }
+    auto const truncated = Result(num);
+    if (truncated.value() != num) { throw Invariant{"truncated.value() == num"}; }
+    return truncated;
+  }
+}
+#endif
+#endiv

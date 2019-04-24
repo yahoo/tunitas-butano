@@ -1,0 +1,36 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#include <hpp/want.lite.base64.Encoder>
+#endiv
+#divert <hpp>
+#import std.uintmax_t
+struct want::lite::base64::Encoder::test::Access {
+  Encoder &subject;
+  explicit Access(Encoder &);
+  // More Keys Under Doormats.  
+  static auto encode(std::uintmax_t) -> char;;
+  auto dump() -> void;
+};
+#endiv
+#divert ipp
+#import want.lite.base64.Decoder
+#endiv
+#divert <cpp>
+#import std.noboolalpha
+#import std.cerr
+namespace want::lite::base64 {
+  Encoder::test::Access::Access(Encoder &subject) : subject(subject) { }
+  auto Encoder::test::Access::encode(std::uintmax_t value) -> char {
+    return Encoder::encode(value);
+  };
+  auto Encoder::test::Access::dump() -> void {
+    std::cerr << "state: (" << subject.buffer.size() << " bits) ";
+    std::cerr << std::noboolalpha;
+    for (auto b : subject.buffer) {
+      std::cerr << b;
+    }
+    std::cerr << '\n';
+  }
+}
+#endiv

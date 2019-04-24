@@ -1,0 +1,36 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#include <hpp/want.lite.base64.Decoder>
+#endiv
+#divert <hpp>
+#import std.int32_t
+struct want::lite::base64::Decoder::test::Access {
+  Decoder &subject;
+  // This is test code ... so it is all outlined
+  explicit Access(Decoder &);
+  static auto decode(char value) -> std::uint32_t;
+  auto dump() -> void;
+};
+#endiv
+#divert ipp
+#import want.lite.base64.Decoder
+#endiv
+#divert <cpp>
+#import std.cerr
+namespace want::lite::base64 {
+  Decoder::test::Access::Access(Decoder &subject)
+    : subject(subject)
+  { }
+  auto Decoder::test::Access::decode(char value) -> std::uint32_t {
+    return Decoder::decode(value);
+  };
+  auto Decoder::test::Access::dump() -> void {
+    std::cerr << "state: (" << subject.size() << " bits) ";
+    for (auto b : subject.decoded_state) {
+      std::cerr << b;
+    }
+    std::cerr << '\n';
+  }
+}
+#endiv

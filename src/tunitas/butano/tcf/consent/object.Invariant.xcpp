@@ -1,0 +1,25 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent::object {
+  //
+  // An invariant has failed in the TCF consent object itself.
+  // See the commentariat in the ancestor.
+  //
+  // Usage:
+  //
+  //   throw Invariant{};
+  //   throw Invariant{"1 == 1"};    .... the reason should state the invariant's truth (not what failed)
+  //
+  class Invariant;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.exception.Invariant
+class tunitas::butano::tcf::consent::object::Invariant : public tcf::exception::Invariant {
+  using ancestor = tcf::exception::Invariant;
+public:
+  Invariant() = default;
+  inline explicit Invariant(std::string const &reason) : ancestor{reason} { }
+};
+#endiv

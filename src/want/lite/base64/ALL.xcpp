@@ -1,0 +1,24 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import want.lite.base64.decode
+#import want.lite.base64.Decoder
+#import want.lite.base64.encode
+#import want.lite.base64.Encoder
+#import want.lite.base64.sized.ByValue
+#import want.lite.base64.sized.ByType
+#import want.lite.base64.sloppy.ALL
+// the exceptions
+// general base64
+#import want.lite.base64.Exception
+#import want.lite.base64.Code
+// decoding base64
+#import want.lite.base64.decoder.Invalid
+#import want.lite.base64.decoder.Seek
+#import want.lite.base64.decoder.Get
+#import want.lite.base64.decoder.Underflow
+// encoding base64
+#import want.lite.base64.encoder.Invalid
+#import want.lite.base64.encoder.Finalized
+#import want.lite.base64.encoder.Put
+#endiv

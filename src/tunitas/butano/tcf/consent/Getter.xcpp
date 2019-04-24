@@ -1,0 +1,64 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent {
+  class Getter;
+}
+#endiv
+#divert <hpp>
+#import want.lite.base64.Decoder
+#import tunitas.butano.tcf.consent.protocol.Positions
+#import std.size_t
+class tunitas::butano::tcf::consent::Getter {
+public:
+  using Source = want::lite::base64::Decoder;
+  Source  &source;
+  inline explicit Getter(Source &);
+  // Get the field at the absolute position indicated by Positions<FIELD>::offset()
+  template<protocol::Field FIELD> inline auto field() -> typename protocol::Positions<FIELD>::Type;
+  // Get the field at current position pointer, do not seek
+  template<protocol::Field FIELD> inline auto next() -> typename protocol::Positions<FIELD>::Type;
+  template<typename TYPE> inline auto type() -> TYPE;
+  // [[FIXTHIS]] specializations only ... on Bitfield not on std::vector<bool>
+  // Get a Concept!  ARRAY must be an container of some sort with a push_back(...) capability
+  template<typename ARRAY> inline auto array(std::size_t count) -> ARRAY;
+};
+#import utility
+#import vector
+namespace tunitas::butano::tcf::consent {
+  template<> inline auto Getter::array<std::vector<bool>>(std::size_t count) -> std::vector<bool> = delete;
+  template<> inline auto Getter::array<Bitfield>(std::size_t count) -> Bitfield;
+}
+#endiv
+#divert <ipp>
+#import want.lite.base64.Decoder
+#import tunitas.butano.tcf.consent.protocol.Positions
+#import std.move
+namespace tunitas::butano::tcf::consent {
+  Getter::Getter(Source &source)
+    : source(source)
+  { }
+  // Get the field at the absolute position indicated by Positions<FIELD>::offset()
+  template<protocol::Field FIELD> auto Getter::field() -> typename protocol::Positions<FIELD>::Type {
+    using Position = protocol::Positions<FIELD>;
+    source.seek(Position::offset());
+    return source.get<typename Position::Type>(Position::length());
+  }
+  // Get the field at current position pointer, do not seek
+  template<protocol::Field FIELD> auto Getter::next() -> typename protocol::Positions<FIELD>::Type {
+    using Position = protocol::Positions<FIELD>;
+    // DO NOT SEEK source.seek(Position::offset());
+    return source.get<typename Position::Type>(Position::length());
+  }
+  template<typename TYPE> auto Getter::type() -> TYPE {
+    return source.get<TYPE>();
+  }
+  template<> auto Getter::array<Bitfield>(std::size_t count) -> Bitfield {
+    Bitfield ret;
+    for (auto i(0lu), e(count); e != i; ++i) {
+      ret.push_back(type<bool>());
+    }
+    return std::move(ret);
+  }
+}
+#endiv

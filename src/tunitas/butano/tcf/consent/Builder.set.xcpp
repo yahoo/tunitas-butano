@@ -1,0 +1,179 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <hpp>
+#import tunitas.butano.tcf.consent.Builder
+#import tunitas.butano.tcf.consent.protocol.Field
+#import tunitas.butano.tcf.consent.protocol.Positions
+namespace tunitas::butano::tcf::consent {
+  template<> inline auto Builder::set<protocol::VERSION>(protocol::Positions<protocol::VERSION>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::CREATED>(protocol::Positions<protocol::CREATED>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::LASTUPDATED>(protocol::Positions<protocol::LASTUPDATED>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::CMPID>(protocol::Positions<protocol::CMPID>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::CMPVERSION>(protocol::Positions<protocol::CMPVERSION>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::CONSENTSCREEN>(protocol::Positions<protocol::CONSENTSCREEN>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::CONSENTLANGUAGE>(protocol::Positions<protocol::CONSENTLANGUAGE>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::VENDORLISTVERSION>(protocol::Positions<protocol::VENDORLISTVERSION>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::PURPOSESALLOWED>(protocol::Positions<protocol::PURPOSESALLOWED>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::MAXVENDORID>(protocol::Positions<protocol::MAXVENDORID>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::ENCODINGTYPE>(protocol::Positions<protocol::ENCODINGTYPE>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::BITFIELD>(protocol::Positions<protocol::BITFIELD>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::DEFAULTCONSENT>(protocol::Positions<protocol::DEFAULTCONSENT>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::NUMENTRIES>(protocol::Positions<protocol::NUMENTRIES>::Type candidate) -> void;
+  template<> inline auto Builder::set<protocol::ISRANGE>(protocol::Positions<protocol::ISRANGE>::Type value) -> void;
+  template<> inline auto Builder::set<protocol::SINGLEVENDORID>(protocol::Positions<protocol::SINGLEVENDORID>::Type candidate) -> void;
+  template<> inline auto Builder::set<protocol::STARTVENDORID>(protocol::Positions<protocol::STARTVENDORID>::Type candidate) -> void;
+  template<> inline auto Builder::set<protocol::ENDVENDORID>(protocol::Positions<protocol::ENDVENDORID>::Type candidate) -> void;
+}
+#endiv
+#divert <ipp>
+#import tunitas.butano.tcf.consent.protocol.Decode
+#import tunitas.butano.tcf.consent.protocol.Length
+#import tunitas.butano.tcf.version.Invalid
+#import tunitas.butano.tcf.version.Unsupported
+#import tunitas.butano.tcf.vendor.Invalid
+//
+// definitions pertining to
+//  template<protocol::Field FIELD> auto set(typename protocol::Positions<FIELD>::Type) -> void;
+//
+namespace tunitas::butano::tcf::consent {
+  template<> auto Builder::set<protocol::VERSION>(protocol::Positions<protocol::VERSION>::Type value) -> void {
+    // This came in off the wire.   Is it even valid?  If it is valid is it something we can handle?
+    using Limits = protocol::Limits<protocol::Datum<protocol::VERSION>>;
+    if (!Limits::possible(value)) {
+      throw version::Invalid();
+    }
+    version = id::version::Protocol(value);
+    if (id::version::Protocol(1) != version) {
+      throw version::Unsupported();
+    }
+  }
+  template<> auto Builder::set<protocol::CREATED>(protocol::Positions<protocol::CREATED>::Type value) -> void {
+    auto const point = want::timeline::point::Deciseconds(want::timeline::duration::Deciseconds(value));
+    created = point;
+  }
+  template<> auto Builder::set<protocol::LASTUPDATED>(protocol::Positions<protocol::LASTUPDATED>::Type value) -> void {
+    auto const point = want::timeline::point::Deciseconds(want::timeline::duration::Deciseconds(value));
+    lastUpdated = point;
+  }
+  template<> auto Builder::set<protocol::CMPID>(protocol::Positions<protocol::CMPID>::Type value) -> void {
+    cmpId = id::Platform(value);
+  }
+  template<> auto Builder::set<protocol::CMPVERSION>(protocol::Positions<protocol::CMPVERSION>::Type value) -> void {
+    cmpVersion = id::version::Platform(value);
+  }
+  template<> auto Builder::set<protocol::CONSENTSCREEN>(protocol::Positions<protocol::CONSENTSCREEN>::Type value) -> void {
+    consentScreen = id::Screen(value);
+  }
+  template<> auto Builder::set<protocol::CONSENTLANGUAGE>(protocol::Positions<protocol::CONSENTLANGUAGE>::Type value) -> void {
+    consentLanguage = id::Language(value);
+  }
+  template<> auto Builder::set<protocol::VENDORLISTVERSION>(protocol::Positions<protocol::VENDORLISTVERSION>::Type value) -> void {
+    vendorListVersion = id::version::VendorList(value);
+  }
+  template<> auto Builder::set<protocol::PURPOSESALLOWED>(protocol::Positions<protocol::PURPOSESALLOWED>::Type value) -> void {
+    // Clarified
+    // https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/Consent%20string%20and%20vendor%20list%20formats%20v1.1%20Final.md#fields-consent-cookie
+    //
+    // <quote>
+    //   Purposes are listed in the global Vendor List.
+    //   Resultant consent value is the "AND" of the applicable bit(s) from this field and a vendor's specific consent bit.
+    //   Purpose #1 maps to the first (most significant) bit,
+    //   Purpose #24 maps to the last (least significant) bit.
+    // </quote>
+    //
+    // Whereas network order is big endian
+    // And the little purposes start first.
+    // The purposes are in little endian order.
+    //
+    //   purpose:   1  2  3  4          22 23 24
+    //   bit pos:  23 22 21 20 .......  02 01 00
+    //
+    using Limits = protocol::Limits<id::Purpose>;
+    for (auto i(Limits::begin(without::NULLID)), e(Limits::end(without::NULLID)); e != i; ++i) {
+      auto const pid = id::Purpose(i);
+      auto const bitmask = 1u << (Limits::max() - i);
+      bool const allowed = bitmask == (value & bitmask);
+      purposesAllowed.put(pid, allowed);
+    }
+  }
+  template<> auto Builder::set<protocol::MAXVENDORID>(protocol::Positions<protocol::MAXVENDORID>::Type value) -> void {
+    using namespace protocol;
+    using Limits = Limits<Datum<MAXVENDORID>>;
+    auto const candidate = id::Vendor(value);
+    if (!Limits::valid(candidate)) {
+      // This is some sort of programming error.
+      // The protocol only has 16 bits here; thus allows 1<<16 bits of unsigned integer.
+      // So there is "no possible way" the value could be greater than that during a decode.
+      throw protocol::Decode("MAXVENDORID");
+    }
+    maxVendorId = candidate;
+  }
+  template<> auto Builder::set<protocol::ENCODINGTYPE>(protocol::Positions<protocol::ENCODINGTYPE>::Type value) -> void {
+    encodingType = value ? Encoding::RANGES : Encoding::BITS;
+    static_assert(0 == (unsigned)Encoding::BITS);
+    static_assert(1 == (unsigned)Encoding::RANGES);
+  }
+  template<> auto Builder::set<protocol::BITFIELD>(protocol::Positions<protocol::BITFIELD>::Type value) -> void {
+    // Clarified
+    // https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/Consent%20string%20and%20vendor%20list%20formats%20v1.1%20Final.md#fields-consent-cookie
+    //
+    //   <quote>The consent value for each VendorId from 1 to MaxVendorId</quote>
+    //
+    using Soft_Limits = protocol::Limits<protocol::Datum<protocol::BITFIELD>>;
+    if (value.size() > Soft_Limits::width()) {
+      // This limit is somewhat arbitrary, being 9999
+      throw protocol::Length("soft", "BITFIELD", Soft_Limits::width(), value.size());
+    }
+    using Hard_Limits = protocol::Limits<protocol::Datum<protocol::MAXVENDORID>>;
+    if (value.size() > Hard_Limits::max()) {
+      // This limit is governed by the uint16_t of the id::Vendor.
+      // Otherwise raw_vid++ will roll over into zero (null) and a vendor::Null exception will occur
+      throw protocol::Length("hard", "BITFIELD", Hard_Limits::width(), value.size());
+    }
+    unsigned raw_vid = 1;
+    for (auto bval : value) {
+      auto const vid = id::Vendor(raw_vid++);
+      vendorConsentBits.put(vid, bval);
+    }
+  }
+  template<> auto Builder::set<protocol::DEFAULTCONSENT>(protocol::Positions<protocol::DEFAULTCONSENT>::Type value) -> void {
+    vendorConsentRanges.defaultConsent = value;
+  }
+  template<> auto Builder::set<protocol::NUMENTRIES>(protocol::Positions<protocol::NUMENTRIES>::Type candidate) -> void {
+    // [[FIXTHIS]] Why keep this?
+    using Limits = protocol::Limits<protocol::Datum<protocol::NUMENTRIES>>;
+    if (!Limits::possible(candidate)) {
+      throw protocol::Decode("NUMENTRIES");
+    }
+    vendorConsentRanges.numEntries = candidate;
+  }
+  template<> auto Builder::set<protocol::ISRANGE>(protocol::Positions<protocol::ISRANGE>::Type value) -> void {
+    vendorConsentRanges_single_rangeEntry_buffer.clear();
+    vendorConsentRanges_single_rangeEntry_buffer.isVendorRange = value;
+  }
+  template<> auto Builder::set<protocol::SINGLEVENDORID>(protocol::Positions<protocol::SINGLEVENDORID>::Type candidate) -> void {
+    using Limits = protocol::Limits<id::Vendor>;
+    auto const truncated = id::Vendor(candidate);
+    if (!Limits::possible(candidate)) {
+      throw vendor::Invalid(truncated, Limits::range(without::NULLID));
+    }
+    accept<protocol::SINGLEVENDORID>(truncated);
+  }
+  template<> auto Builder::set<protocol::STARTVENDORID>(protocol::Positions<protocol::STARTVENDORID>::Type candidate) -> void {
+    using Limits = protocol::Limits<id::Vendor>;
+    auto const truncated = id::Vendor(candidate);
+    if (!Limits::possible(candidate)) {
+      throw vendor::Invalid(truncated, Limits::range(without::NULLID));
+    }
+    accept<protocol::STARTVENDORID>(truncated);
+  }
+  template<> auto Builder::set<protocol::ENDVENDORID>(protocol::Positions<protocol::ENDVENDORID>::Type candidate) -> void {
+    using Limits = protocol::Limits<id::Vendor>;
+    auto const truncated = id::Vendor(candidate);
+    if (!Limits::possible(candidate)) {
+      throw vendor::Invalid(truncated, Limits::range(without::NULLID));
+    }
+    accept<protocol::ENDVENDORID>(truncated);
+  }
+}
+#endiv

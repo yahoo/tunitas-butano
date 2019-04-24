@@ -1,0 +1,41 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import std.string
+#import std.deque
+namespace app::argv {
+  //
+  // Because you'd rather work with STL containers and std::strings
+  // than hacking C pointers and offsets.
+  //
+  // Is its own class so that ADL will find it here.
+  //
+  // Usage:
+  //
+  //   auto main(Argv av) -> int {
+  //     ...dostuff
+  //   }
+  //   auto main(int c, char *v[]) -> int {
+  //     Argv av(&v[0], &v[c])
+  //     return main(std::move(av, ac));
+  //   }
+  //
+  class Object;
+}
+#endiv
+#divert <hpp>
+class app::argv::Object : public std::deque<std::string> {
+  using ancestor = std::deque<std::string>;
+public:
+  Object() = default;
+  using ancestor::deque;
+  // just like in main(...)
+  inline Object(int c, char *v[]);
+};
+#endiv
+#divert <ipp>
+app::argv::Object::Object(int c, char *v[])
+  : ancestor(&v[0], &v[c])
+{ }
+#endiv
+

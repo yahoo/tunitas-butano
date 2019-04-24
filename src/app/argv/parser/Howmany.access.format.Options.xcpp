@@ -1,0 +1,15 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import app.argv.parser.Howmany
+#endiv
+#divert <hpp>
+#import app.argv.parser.format.Options
+class app::argv::parser::Howmany::access::format::Options : public parser::format::Options {
+  using ancestor = parser::format::Options;
+public:
+  using ancestor::Options;
+  // We want Howmany::parse(...) to be able to access the protected member variables.
+  friend class Howmany;
+};
+#endiv

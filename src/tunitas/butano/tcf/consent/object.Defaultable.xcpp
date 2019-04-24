@@ -1,0 +1,57 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent::object {
+  //
+  // The defaultable members of Object
+  //
+  // Usage:
+  //
+  //   see consent::Object
+  //
+  class Defaultable;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.id.ALL
+#import tunitas.butano.tcf.consent.Encoding
+#import tunitas.butano.tcf.consent.encode
+#forward tunitas.butano.tcf.consent.encoding.Getter
+#forward tunitas.butano.tcf.consent.encoding.getter.Field
+#import tunitas.butano.tcf.consent.protocol.Field
+#import tunitas.butano.tcf.consent.protocol.Time
+#import std.string
+class tunitas::butano::tcf::consent::object::Defaultable {
+protected:
+  ~Defaultable() = default;
+protected:
+  inline Defaultable();
+protected:
+  // Get a Concept!  THING can meaningfully be consent::Builder or consent::Object
+  template<typename THING> friend auto consent::encode(THING const &) -> std::string;
+  template<typename> friend struct encoding::Getter;
+  template<protocol::Field> friend struct encoding::getter::Field;
+  id::version::Protocol version;
+  protocol::Time created;
+  protocol::Time lastUpdated;
+  id::Platform cmpId;
+  id::version::Platform cmpVersion;
+  id::Screen consentScreen;
+  id::Language consentLanguage;
+  id::version::VendorList vendorListVersion;
+  Encoding encodingType;
+};
+#endiv
+#divert <ipp>
+tunitas::butano::tcf::consent::object::Defaultable::Defaultable()
+  : version()
+  , created(protocol::Time())
+  , lastUpdated(protocol::Time())
+  , cmpId()
+  , cmpVersion()
+  , consentScreen()
+  , consentLanguage()
+  , vendorListVersion()
+  , encodingType(Encoding())
+{ }
+#endiv

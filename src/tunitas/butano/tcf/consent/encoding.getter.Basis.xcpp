@@ -1,0 +1,40 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent::encoding::getter {
+  //
+  // The basis of all the Getters, shared into the helper Field.
+  // Descendants into Getter<SOURCE> only.
+  //
+  // Usage: see encoding.Getter, nearby.
+  //
+  class Basis;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.consent.protocol.Time
+#import tunitas.butano.tcf.consent.ranges.Entry
+#import tunitas.butano.tcf.consent.Ranges
+#import tunitas.butano.tcf.consent.protocol.Field
+class tunitas::butano::tcf::consent::encoding::getter::Basis {
+protected:
+  ~Basis() = default;
+public:
+  inline Basis();
+protected:
+  template<protocol::Field> friend class Field;
+  using Entry_Iterator = consent::Ranges::VendorRangeEntries::const_iterator;
+  Entry_Iterator vendorConsentRanges_position;
+  bool created_use_current_time;  // unused ... turn on to override the timestamp in the object.
+  bool updated_use_current_time;  // ibidem.
+  protocol::Time when;
+};
+#endiv
+#divert <ipp>
+tunitas::butano::tcf::consent::encoding::getter::Basis::Basis()
+  : vendorConsentRanges_position()
+  , created_use_current_time(false)
+  , updated_use_current_time(false)
+  , when(protocol::time::now())
+{ }
+#endiv

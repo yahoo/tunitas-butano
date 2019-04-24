@@ -7,6 +7,50 @@ lib_libwant_la_LDFLAGS = $(PACKAGE_LDFLAGS_SET)
 lib_libwant_la_MODULES = $(call TF_SOURCEStoMODULES, $(lib_libwant_la_SOURCES))
 lib_libwant_la_SOURCES = \
   obj/src/want/namespace.cpp \
+  \
+  obj/src/want/javalike/namespace.cpp \
+  obj/src/want/javalike/ALL.cpp \
+  obj/src/want/javalike/Boolean.cpp \
+  obj/src/want/javalike/Date.cpp \
+  obj/src/want/javalike/List.cpp \
+  obj/src/want/javalike/Map.cpp \
+  obj/src/want/javalike/Optional.cpp \
+  obj/src/want/javalike/String.cpp \
+  obj/src/want/javalike/Time.cpp \
+  obj/src/want/javalike/detail.Integral.cpp \
+  obj/src/want/javalike/detail.Numerize.cpp \
+  obj/src/want/javalike/integer.Enum.cpp \
+  obj/src/want/javalike/integer.Signed.cpp \
+  obj/src/want/javalike/integer.Unsigned.cpp \
+  \
+  obj/src/want/lite/namespace.cpp \
+  obj/src/want/lite/base64/namespace.cpp \
+  obj/src/want/lite/base64/ALL.cpp \
+  obj/src/want/lite/base64/Code.cpp \
+  obj/src/want/lite/base64/decode.cpp \
+  obj/src/want/lite/base64/decoder.Get.cpp \
+  obj/src/want/lite/base64/decoder.Invalid.cpp \
+  obj/src/want/lite/base64/decoder.Seek.cpp \
+  obj/src/want/lite/base64/decoder.Underflow.cpp \
+  obj/src/want/lite/base64/Decoder.cpp \
+  obj/src/want/lite/base64/Decoder.Shaver.cpp \
+  obj/src/want/lite/base64/encode.cpp \
+  obj/src/want/lite/base64/encoder.Finalized.cpp \
+  obj/src/want/lite/base64/encoder.Invalid.cpp \
+  obj/src/want/lite/base64/encoder.Put.cpp \
+  obj/src/want/lite/base64/Encoder.cpp \
+  obj/src/want/lite/base64/Exception.cpp \
+  obj/src/want/lite/base64/sized.ByType.cpp \
+  obj/src/want/lite/base64/sized.ByValue.cpp \
+  obj/src/want/lite/base64/sloppy.ALL.cpp \
+  obj/src/want/lite/base64/sloppy.decode.cpp \
+  obj/src/want/lite/base64/sloppy.decode.Result.cpp \
+  \
+  obj/src/want/timeline/namespace.cpp \
+  obj/src/want/timeline/ALL.cpp \
+  obj/src/want/timeline/clock.ALL.cpp \
+  obj/src/want/timeline/duration.ALL.cpp \
+  obj/src/want/timeline/point.ALL.cpp \
   $(end)
 $(scold_cxxdir)/want/dependencies.mk:
 	$(AM_V_BB1ST) $(call TF_DISAGGREGATE_COMPILE, $(lib_libwant_la_SOURCES))

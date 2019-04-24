@@ -1,0 +1,101 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import std.uint8_t
+#import std.uint16_t
+#import std.uint64_t
+#import std.uintmax_t
+#import std.size_t
+namespace tunitas::butano::tcf::consent::protocol::datum {
+  template<typename TYPE, std::size_t WIDTH, std::uintmax_t MAXIMUM = (1lu<<WIDTH)-1> struct Width;
+  template<typename ANUM, std::size_t WIDTH, std::uintmax_t MAXIMUM = (1lu<<WIDTH)-1> struct Enum;
+  template<typename ANUM, std::size_t WIDTH, std::uintmax_t MAXIMUM = (1lu<<WIDTH)-1> struct Identifier;
+  struct Bit;
+  using Deciseconds = Width<std::uint64_t, 36>;
+  using Vendor = Identifier<std::uint16_t, 16>;
+  struct Purpose;                     // holds a single purpose, not a set of purposes
+  namespace set { struct Purpose; }
+  using Platform = Identifier<std::uint16_t, 12>;
+  using Screen = Identifier<std::uint8_t, 6>;
+  using Language = Identifier<std::uint16_t, 12>;
+  namespace version {
+    using Protocol = Identifier<std::uint8_t, 6>;
+    using Platform = Identifier<std::uint16_t, 12>;
+    using VendorList = Identifier<std::uint16_t, 12>;
+  }
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.exception.Range
+#import want.lite.base64.sized.ByType
+#forward tunitas.butano.tcf.consent.protocol.Limits // Size
+#import tunitas.butano.tcf.id.ALL // namespace with
+namespace tunitas::butano::tcf::consent::protocol {
+  template<typename TYPE, std::size_t WIDTH, std::uintmax_t MAXIMUM> struct datum::Width {
+    using Type = TYPE;
+    using Sized = want::lite::base64::sized::ByType<Type, WIDTH>;
+    inline static constexpr auto width() -> Size { return WIDTH; }
+    inline static constexpr auto min() -> Type { return 0lu; }
+    inline static constexpr auto max() -> Type { return MAXIMUM; }
+    using Iteratable = typename std::common_type<TYPE, decltype(max()+1)>::type; // rank is at least greater to hold end()
+    inline static constexpr auto begin() -> Iteratable { return min(); }
+    inline static constexpr auto end() -> Iteratable { return max()+1; }
+    inline static constexpr auto range() -> exception::Range { return exception::Range(min(), max()); }
+    //
+    // the truncation propylaxis is:
+    //   if (possible(candidate)) {
+    //       if (valid(candidate)) {
+    //           ... then use the value safely ...
+    //       }
+    //   }
+    // valid: test with call-site silent truncation, i.e. post conversion into Type
+    inline static constexpr auto valid(Type candidate) -> bool { return min() <= candidate && candidate <= max(); }
+    // possible: test without call-site silent truncation
+    inline static constexpr auto possible(std::uintmax_t candidate) -> bool { return min() <= candidate && candidate <= max(); }
+  };
+  template<typename ENUM, std::size_t WIDTH, std::uintmax_t MAXIMUM> class datum::Enum : public Width<unsigned, WIDTH, MAXIMUM> {
+    // Same as Width, but with more casts to recover the Type as an enum.
+    using ancestor = Width<unsigned, WIDTH, MAXIMUM>;
+  public:
+    using Type = ENUM;
+    using Sized = want::lite::base64::sized::ByType<Type, WIDTH>;
+    inline static constexpr auto min() -> Type { return Type(ancestor::min()); }
+    inline static constexpr auto max() -> Type { return Type(ancestor::max()); }
+  };
+  template<typename ENUM, std::size_t WIDTH, std::uintmax_t MAXIMUM> class datum::Identifier : public Enum<unsigned, WIDTH, MAXIMUM> {
+    // Same as Enum, but has an is_not_null(Type), is_null(Type) test; e.g. id::Purpose(0) is "the null" one.
+    using ancestor = Enum<unsigned, WIDTH, MAXIMUM>;
+  public:
+    // test for valid(...() prior to use
+    inline static constexpr auto is_null(typename ancestor::Type candidate) -> bool { return ancestor::min() == candidate; }
+    inline static constexpr auto is_not_null(typename ancestor::Type candidate)-> bool { return !is_null(candidate); }
+    //
+    inline static constexpr auto begin(with::NullId) -> typename ancestor::Iteratable { return ancestor::min(); }
+    inline static constexpr auto end(with::NullId) -> typename ancestor::Iteratable { return 1+ancestor::max(); }
+    inline static constexpr auto range(with::NullId) -> exception::Range { return exception::Range(ancestor::min(), ancestor::max()); }
+    //
+    inline static constexpr auto begin(without::NullId) -> typename ancestor::Iteratable { return 1+ancestor::min(); }
+    inline static constexpr auto end(without::NullId) -> typename ancestor::Iteratable { return 1+ancestor::max(); }
+    inline static constexpr auto range(without::NullId) -> exception::Range { return exception::Range(1+ancestor::min(), ancestor::max()); }
+  };
+  struct datum::Bit : public Width<bool, 1> { };
+
+  //
+  // n.b. ... And that's the point here.  
+  //
+  // The value "zero" is both possible and valid in the protocol:
+  // it signals "not active" or "no such"
+  //
+  //   0 == id::Purpose
+  //   0 == id::Vendor
+  //
+  // i.e.
+  // At the protocol level, zero is a valid vendor ID
+  // At the semantic level, the zero id::Vendor signifies no possible vendor.
+  //
+  // At the protocol level, the "purposes" are always treated specially as a  bitset.
+  //
+  struct datum::Purpose : public Identifier<std::uint8_t, 5, 24> { };
+  struct datum::set::Purpose : public Width<std::uint32_t, 24> { };
+}
+#endiv

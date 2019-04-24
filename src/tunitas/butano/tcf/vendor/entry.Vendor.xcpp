@@ -1,0 +1,25 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::vendor::entry {
+  //
+  // A vendor Entry
+  //
+  // Usage
+  //
+  //   rly?
+  //
+  struct Vendor;
+}
+#endiv
+#divert <hpp>
+#import want.javalike.Boolean
+#import want.javalike
+#import tunitas.butano.tcf.id.ALL
+#import tunitas.butano.tcf.vendor.vendors.Vendor
+struct tunitas::butano::tcf::vendor::entry::Vendor {
+  id::version::VendorList version; // [[FIXTHIS]] of what?
+  vendors::Vendor vendorMetaData;
+  want::javalike::Boolean consent;
+};
+#endiv

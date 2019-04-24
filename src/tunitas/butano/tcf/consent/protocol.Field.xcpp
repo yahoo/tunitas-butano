@@ -1,0 +1,28 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent::protocol {
+  //
+  // The fields ad phases of the parser
+  //
+  enum Field
+    { VERSION,
+      CREATED,
+      LASTUPDATED,
+      CMPID,
+      CMPVERSION,
+      CONSENTSCREEN,
+      CONSENTLANGUAGE,
+      VENDORLISTVERSION,
+      PURPOSESALLOWED,
+      MAXVENDORID,
+      ENCODINGTYPE,
+      BITFIELD,
+      DEFAULTCONSENT,
+      NUMENTRIES,
+      ISRANGE,
+      SINGLEVENDORID,
+      STARTVENDORID,
+      ENDVENDORID };
+}
+#endiv

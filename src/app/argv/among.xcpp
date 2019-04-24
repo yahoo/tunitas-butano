@@ -1,0 +1,22 @@
+// This is -*- c++ -*- in the S.C.O.L.D. stylings that are so popular these days.
+#divert <hpp>
+#import app.argv.detail.Among
+#import std.string
+#import std.is_constructible
+namespace app::argv {
+  //
+  // Test for set membership in literally-supplied sets
+  //
+  // Usage:
+  //
+  //    bool is = candidate == among({"apple", "banana", "cherry"})
+  //
+  // Get a Concept!   Must be convertible to std::string
+  
+  template<typename... STRINGS>
+  requires (true && ... && std::is_constructible<std::string, STRINGS>::value)
+  inline auto among(std::string const &first, STRINGS const &...rest) -> detail::Among {
+    return detail::Among(first, rest...);
+  }
+}
+#endiv

@@ -1,0 +1,13 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import want.javalike
+namespace tunitas::butano::tcf {
+  // [[FIXTHIS]] Thesea are subsumed into (modern) tunitas-basics, module-nonstd or namespace std of C++17 itself.
+#if 1
+  namespace javalike = ::want::javalike;
+#else
+  using namespace ::want::javalike;
+#endif
+}
+#endiv

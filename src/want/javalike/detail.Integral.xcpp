@@ -1,0 +1,54 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace want::javalike::detail {
+  //
+  // A signed or unsigned integer
+  // boxed
+  // with an initializer, a constructor
+  // and operator<< that prints as an integer, even for the character types
+  //
+  template<typename INTEGRAL, bool IS_SIGNED> class Integral;
+}
+#endiv
+#divert <hpp>
+#import std.basic_istream
+#import std.basic_ostream
+namespace want::javalike::detail {
+  // [[FIXTHIS]] - port these over to the nonstd::required::Character, nonstd::required::Character_Traits
+  template<typename CHAR, typename TRAITS, typename INTEGRAL, bool IS_SIGNED> auto operator<<(std::basic_ostream<CHAR, TRAITS> &, Integral<INTEGRAL, IS_SIGNED> const &) -> std::basic_ostream<CHAR, TRAITS> &;
+  template<typename CHAR, typename TRAITS, typename INTEGRAL, bool IS_SIGNED> auto operator>>(std::basic_istream<CHAR, TRAITS> &, Integral<INTEGRAL, IS_SIGNED> &) -> std::basic_istream<CHAR, TRAITS> &;
+}
+#import std.is_signed
+template<typename INTEGRAL, bool IS_SIGNED> struct want::javalike::detail::Integral {
+  // [[FIXTHIS]] port to the nonstd::required::integer;:Unsigned concept
+  static_assert(IS_SIGNED == std::is_signed<INTEGRAL>::value, "signage");
+  // everything is public so that it can be used as a direct type alias
+public:
+  using Value = INTEGRAL;
+  inline constexpr Integral() : value(Value()) { }
+  inline constexpr Integral(Value value) : value(value) { }
+  inline auto operator=(Value other) -> Integral & { value = other; return *this; }
+  inline auto operator=(Integral const &other) -> Integral & { value = other.value; return *this; }
+  inline constexpr operator Value() const { return value; }
+private:
+  Value value;
+  template<typename C, typename T, typename I, bool S> friend auto detail::operator<<(std::basic_ostream<C, T> &, Integral<I, S> const &) -> std::basic_ostream<C, T> &;
+  template<typename C, typename T, typename I, bool S> friend auto detail::operator>>(std::basic_istream<C, T> &, Integral<I, S> &) -> std::basic_istream<C, T> &;
+};
+#endiv
+#divert <ipp>
+#import want.javalike.detail.Numerize
+namespace want::javalike {
+  template<typename CHAR, typename TRAITS, typename INTEGRAL, bool IS_SIGNED> auto detail::operator<<(std::basic_ostream<CHAR, TRAITS> &o, Integral<INTEGRAL, IS_SIGNED> const &l) -> std::basic_ostream<CHAR, TRAITS> & {
+    return o << (typename Numerize<INTEGRAL>::type) l;
+  }
+  template<typename CHAR, typename TRAITS, typename INTEGRAL, bool IS_SIGNED> auto detail::operator>>(std::basic_istream<CHAR, TRAITS> &i, Integral<INTEGRAL, IS_SIGNED> &l) -> std::basic_istream<CHAR, TRAITS> & {
+    typename Numerize<INTEGRAL>::type t(0);
+    if (i >> t) {
+      l = t;
+    }
+    return i;
+  }
+}
+#endiv

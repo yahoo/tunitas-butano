@@ -1,0 +1,78 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::purpose {
+  //
+  // It's a Map in the Java style, not the C++ STL style.
+  //
+  // Usage:
+  //
+  //    rly?
+  //
+  class Map;
+}
+#endiv
+#divert <hpp>
+#import std.ostream
+namespace tunitas::butano::tcf::purpose {
+  inline auto operator<<(std::ostream &, Map const &) -> std::ostream &;
+}
+#import tunitas.butano.tcf // namespaces javalike, lite, timeline
+#import tunitas.butano.tcf.id.ALL
+#import want.javalike.Map
+#import want.javalike.Boolean
+#import tunitas.butano.tcf.consent.protocol.Limits
+class tunitas::butano::tcf::purpose::Map : public want::javalike::Map<id::Purpose, want::javalike::Boolean> {
+  using ancestor = want::javalike::Map<id::Purpose, want::javalike::Boolean>;
+public:
+  Map() = default;
+  inline explicit Map(Defaulting);
+  inline auto get(id::Purpose i) const -> bool;
+  inline auto put(id::Purpose p, bool b) -> void;
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf::purpose {
+  Map::Map(Defaulting) {
+    using Limits = consent::protocol::Limits<id::Purpose>;
+    ancestor &self(*this);
+    for (auto i(Limits::begin(without::NULLID)), e(Limits::end(without::NULLID)); e != i; ++i) {
+      auto pid = id::Purpose(i);
+      self[pid] = false;
+    }
+  }
+   auto Map::get(id::Purpose i) const -> bool {
+    auto const e = ancestor::end();
+    auto const f = ancestor::find(i);
+    return e != f && f->second;
+  }
+   auto Map::put(id::Purpose p, bool b) -> void {
+    ancestor &self(*this);
+    self[p] = b;
+  }
+}
+#import std.noboolalpha
+namespace tunitas::butano::tcf {
+  auto purpose::operator<<(std::ostream &os, Map const &ma) -> std::ostream & {
+    // This presumes, but does not check (much), that the Map contains keys 1..24 and no other.
+    if (ma.empty() || 24 == ma.size()) {
+      os << '[' << std::noboolalpha;
+      for (auto const &pair : ma) {
+        os << pair.second;
+      }
+      os << ']';
+    } else {
+      // There is an unknown structure in the map ... what is it?
+      // [[FIXTHIS]] This is Java legacy code; design this away.
+      // ... by getting rid of an unbounded map to hold this fixed-sized data structure.
+      // ... purpose::Map holds between zero and twenty four bits of a set; use purpose::Bitfield, nearby.
+      os << '{' << std::noboolalpha;
+      for (auto const &pair : ma) {
+        os << '{' << pair.first << '=' << pair.second << '}';
+      }
+      os << '}';
+    }
+    return os;
+  }
+}
+#endiv

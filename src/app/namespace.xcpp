@@ -1,7 +1,7 @@
-// This is -*- c++ -*- in the S.C.O.L.D. stylings that are so popular these days.
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
 #divert <fpp>
 #import tunitas.app
-#import tunitas.app.Program
 namespace app {
   // cascade the namespaces
   using namespace tunitas::app;

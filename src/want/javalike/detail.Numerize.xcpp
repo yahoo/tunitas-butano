@@ -1,0 +1,25 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace want::javalike::detail {
+  //
+  // Like std::underlying_type but works for the nearby boxed integer
+  //
+  // Usage:
+  //
+  //   rly?
+  //
+  // [[FIXTHIS]] - use nonstd::required::Integral
+  template<typename INTEGRAL> struct Numerize;
+}
+#endiv
+#divert <hpp>
+#include <ostream>
+#include <istream>
+namespace want::javalike::detail {
+  template<typename INTEGRAL> struct Numerize { using type = INTEGRAL; };
+  template<> struct Numerize<char> { using type = int; };
+  template<> struct Numerize<char unsigned> { using type = int unsigned; };
+  template<> struct Numerize<char signed> { using type = int signed; };
+}
+#endiv

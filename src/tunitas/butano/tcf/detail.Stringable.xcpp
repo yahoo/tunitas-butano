@@ -1,0 +1,49 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::detail {
+  //
+  // Some implementation detail; can be turned into a string; is stringable;
+  // Descendants only
+  //
+  // Usage:
+  //
+  //   See the descendants format::detail::Formatter<...>
+  //
+  class Stringable;
+}
+#endiv
+#divert <hpp>
+#import std.ostream
+namespace tunitas::butano::tcf::detail {
+  inline auto operator<<(std::ostream &o, Stringable const &s) -> std::ostream &;
+}
+#import std.string
+#import tunitas.butano.tcf.format.detail.Formatter // operator<<
+class tunitas::butano::tcf::detail::Stringable {
+protected:
+  ~Stringable() = default;
+  virtual auto dump(std::ostream &) const -> std::ostream & = 0;
+  template<typename U, typename D, typename A> friend auto format::detail::operator<<(std::ostream &, format::detail::Formatter<U, D, A> const &) -> std::ostream &;
+  friend auto detail::operator<<(std::ostream &o, Stringable const &s) -> std::ostream &;
+public:
+  virtual auto toString() const -> std::string;
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf {
+  auto detail::operator<<(std::ostream &o, Stringable const &s) -> std::ostream & {
+    return s.dump(o);
+  }
+}
+#endiv
+#divert <cpp>
+#import std.ostringstream
+namespace tunitas::butano::tcf::detail {
+  auto Stringable::toString() const -> std::string {
+    std::ostringstream buf;
+    this->dump(buf);
+    return buf.str();
+  }
+}
+#endiv

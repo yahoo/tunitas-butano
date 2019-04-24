@@ -1,0 +1,50 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::parser::prattle {
+  //
+  // The prattle option directives
+  // among 'quiet' and 'verbose'
+  //
+  // Supports:
+  //    --verbose    Be lubugriously verbose and provide desired detailed about
+  //                 the the process activities. Independent of quiet.
+  //    --quiet      Shut. Up.
+  //
+  // Example:
+  //
+  //    bin/random-base64 --quiet --raw
+  //    bin/random-iab --native --verbose
+  //
+  // Usage:
+  //
+  //   class MyParser : public Basis, public prattle::Aspect { ... };
+  //
+  //   parser::Howmany pa(std:move(av), name, usage)
+  //   auto const be_quiet = pa.quiet();
+  //   auto const be_verbose = pa.verbose();
+  //   if (be_quiet) {
+  //     ...
+  //   }
+  //   if (be_verbose) {
+  //     ...
+  //   }
+  //
+  class Options;
+}
+#endiv
+#divert <hpp>
+class app::argv::parser::prattle::Options {
+public:
+  Options() : quiet(false), verbose(false) { }
+  // In preparation for setting another print prattle from a switch, in the parser.
+  inline auto clear() -> void {
+    quiet = false;
+    verbose = false;
+  }
+public:
+  // not bothering to wrap these in accessor functions. No point.
+  bool quiet;
+  bool verbose;
+};
+#endiv

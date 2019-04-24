@@ -1,0 +1,52 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::argv::parser::format {
+  //
+  // The formatting option directives
+  // among 'native' (the default), 'dump' and 'raw' 
+  //
+  // Supports:
+  //    --native, --format=native
+  //    --dump, --format=dump
+  //    --raw, --format=raw
+  //
+  // Example:
+  //
+  //    bin/random-base64 --raw
+  //    bin/random-iab --native
+  //    bin/random-rcc --format=dump
+  //
+  // Usage:
+  //
+  //   class MyParser : public Basis, public format::Aspect { ... };
+  //
+  //   parser::Howmany pa(std:move(av), name, usage)
+  //   auto const residual = pa.residual();
+  //   std::seed_seq seeder(residual.seed().begin(), residual.seed().end())
+  //   for (auto e(residual.count()), i(e-e); e != i; ++i) {
+  //     ...
+  //   }
+  //
+  class Options;
+}
+#endiv
+#divert <hpp>
+class app::argv::parser::format::Options {
+public:
+  Options() : print_format_dump(false), print_format_native(true), print_format_raw(false) { }
+  inline auto dump() const -> bool { return print_format_dump; }
+  inline auto native() const -> bool { return print_format_native; }
+  inline auto raw() const -> bool { return print_format_raw; }
+  // In preparation for setting another print format from a switch, in the parser.
+  inline auto clear() -> void {
+    print_format_dump = false;
+    print_format_native = false;
+    print_format_raw = false;
+  }
+protected:
+  bool print_format_dump;
+  bool print_format_native;
+  bool print_format_raw;
+};
+#endiv

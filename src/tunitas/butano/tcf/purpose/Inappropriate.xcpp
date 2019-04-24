@@ -1,0 +1,39 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::purpose {
+  //
+  // The purpose is inappropriate for the current semantic context.
+  // See the commentariat in detail::Out_Of_Range for semantic fitness and purpose.
+  //
+  // The purpose is valid, yet not appropriate for the current context.
+  // For example, the purposeId denotes some purpose that Oath refuses to perform.
+  // The null purpose is an "appropriate" purpose.  Instead throw Null for the null purpose.
+  //
+  // Usage:
+  //
+  //   throw Inappropriate();
+  //
+  class Inappropriate;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.purpose.detail.Out_Of_Range
+class tunitas::butano::tcf::purpose::Inappropriate : public detail::Out_Of_Range {
+  using ancestor = detail::Out_Of_Range;
+public:
+  inline Inappropriate();
+  using ancestor::Out_Of_Range;
+  inline explicit Inappropriate(Identifier offending_id, tcf::exception::Range range);
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf::purpose {
+  Inappropriate::Inappropriate()
+    : ancestor("invalid purpose")
+  { }
+  Inappropriate::Inappropriate(Identifier offending_id, tcf::exception::Range range)
+    : ancestor(format("Purpose", "inappropriate", offending_id, range))
+  { }
+}
+#endiv

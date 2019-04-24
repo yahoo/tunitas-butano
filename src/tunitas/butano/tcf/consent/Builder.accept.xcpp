@@ -1,0 +1,75 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <hpp>
+#import tunitas.butano.tcf.consent.Builder
+#import tunitas.butano.tcf.consent.protocol.Polished
+namespace tunitas::butano::tcf::consent {
+  template<> inline auto Builder::accept<protocol::VERSION>(protocol::Polished<protocol::VERSION>::Type) -> void;
+  template<> inline auto Builder::accept<protocol::CREATED>(protocol::Polished<protocol::CREATED>::Type) -> void;
+  template<> inline auto Builder::accept<protocol::LASTUPDATED>(protocol::Polished<protocol::LASTUPDATED>::Type) -> void;
+  template<> inline auto Builder::accept<protocol::CMPID>(protocol::Polished<protocol::CMPID>::Type) -> void;
+  template<> inline auto Builder::accept<protocol::CMPVERSION>(protocol::Polished<protocol::CMPVERSION>::Type) -> void;
+  template<> inline auto Builder::accept<protocol::CONSENTSCREEN>(protocol::Polished<protocol::CONSENTSCREEN>::Type) -> void;
+  template<> inline auto Builder::accept<protocol::CONSENTLANGUAGE>(protocol::Polished<protocol::CONSENTLANGUAGE>::Type) -> void;
+  template<> inline auto Builder::accept<protocol::VENDORLISTVERSION>(protocol::Polished<protocol::VENDORLISTVERSION>::Type) -> void;
+  template<> inline auto Builder::accept<protocol::ENCODINGTYPE>(protocol::Polished<protocol::ENCODINGTYPE>::Type) -> void;
+  template<> inline auto Builder::accept<protocol::SINGLEVENDORID>(protocol::Polished<protocol::SINGLEVENDORID>::Type) -> void;
+  template<> inline auto Builder::accept<protocol::STARTVENDORID>(protocol::Polished<protocol::STARTVENDORID>::Type) -> void;
+  template<> inline auto Builder::accept<protocol::ENDVENDORID>(protocol::Polished<protocol::ENDVENDORID>::Type) -> void;
+}
+#endiv
+#divert <ipp>
+#import tunitas.butano.tcf.consent.Builder.set
+namespace tunitas::butano::tcf::consent {
+  template<protocol::Field FIELD> auto Builder::accept(typename protocol::template Polished<FIELD>::Type value) -> void {
+    set<FIELD>(value);
+  }
+  template<> auto Builder::accept<protocol::VERSION>(protocol::Polished<protocol::VERSION>::Type value) -> void {
+    version = value;
+  }
+  template<> auto Builder::accept<protocol::CREATED>(protocol::Polished<protocol::CREATED>::Type value) -> void {
+    created = value;
+  }
+  template<> auto Builder::accept<protocol::LASTUPDATED>(protocol::Polished<protocol::LASTUPDATED>::Type value) -> void {
+    lastUpdated = value;
+  }
+  template<> auto Builder::accept<protocol::CMPID>(protocol::Polished<protocol::CMPID>::Type value) -> void {
+    cmpId = value;
+  }
+  template<> auto Builder::accept<protocol::CMPVERSION>(protocol::Polished<protocol::CMPVERSION>::Type value) -> void {
+    cmpVersion = value;
+  }
+  template<> auto Builder::accept<protocol::CONSENTSCREEN>(protocol::Polished<protocol::CONSENTSCREEN>::Type value) -> void {
+    consentScreen = value;
+  }
+  template<> auto Builder::accept<protocol::CONSENTLANGUAGE>(protocol::Polished<protocol::CONSENTLANGUAGE>::Type value) -> void {
+    consentLanguage = value;
+  }
+  template<> auto Builder::accept<protocol::VENDORLISTVERSION>(protocol::Polished<protocol::VENDORLISTVERSION>::Type value) -> void {
+    vendorListVersion = value;
+  }
+  template<> auto Builder::accept<protocol::ENCODINGTYPE>(protocol::Polished<protocol::ENCODINGTYPE>::Type value) -> void {
+    encodingType = value;
+  }
+  //
+  // Observe the protocol
+  //
+  // NUMENTRIES *(ISRANGE ( SINGLEVENDORID | STARTVENDORID ENDVENDORID ))
+  //
+  // with the SINGLEVENDORID, ENDVENDORID pushing into the vendorConsentRanges
+  //
+  template<> auto Builder::accept<protocol::SINGLEVENDORID>(protocol::Polished<protocol::SINGLEVENDORID>::Type value) -> void {
+    vendorConsentRanges_single_rangeEntry_buffer.singleVendorId = value;
+    vendorConsentRanges.vendorRangeEntries.push_back(vendorConsentRanges_single_rangeEntry_buffer);
+    vendorConsentRanges_single_rangeEntry_buffer.clear();
+  }
+  template<> auto Builder::accept<protocol::STARTVENDORID>(protocol::Polished<protocol::STARTVENDORID>::Type value) -> void {
+    vendorConsentRanges_single_rangeEntry_buffer.startVendorId = value;
+  }
+  template<> auto Builder::accept<protocol::ENDVENDORID>(protocol::Polished<protocol::ENDVENDORID>::Type value) -> void {
+    vendorConsentRanges_single_rangeEntry_buffer.endVendorId = value;
+    vendorConsentRanges.vendorRangeEntries.push_back(vendorConsentRanges_single_rangeEntry_buffer);
+    vendorConsentRanges_single_rangeEntry_buffer.clear();
+  }
+}
+#endiv

@@ -1,0 +1,89 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent {
+  class Object;
+}
+#import tunitas.butano.tcf.id.ALL
+#import tunitas.butano.tcf.consent.protocol.Limits
+namespace tunitas::butano::tcf::consent::object {
+  //
+  // Lifetime: of the Limits<T> must be shorter than that of the Object upon which is is observing.
+  //
+  // Usage:
+  //
+  //     Object object = ...
+  //     object::Limits check(object);
+  //     auto b = check.valid(candidate)
+  //     auto r = check.range();
+  //
+  // Get a concept!  IDENTIFIER is id::Purpose or id::Vendor 
+  template<typename IDENTIFIER> class Limits;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.exception.Range
+namespace tunitas::butano::tcf::consent {
+  template<typename IDENTIFIER> class object::Limits {
+    //
+    // n.b. the whole point here is that max() can be data-dependent, but need not be.
+    //   IDENTIFIER == id::Purpose is object-independent.
+    //   IDENTIFIER == id::Vendor is object-dependent, being based around object.MaxVendorId
+    // And as such, then all the rest of the upper bound of the suite of functions is data-dependent.
+    //
+    // There is no point in inheritance because the Protocol's member functions are all
+    // static (object-independent), being expressive around the constraints of the protocol.
+    //
+    using Protocol = protocol::Limits<IDENTIFIER>;
+    Object const &object;
+  public:
+    inline Limits(Object const &object) : object(object) { }
+    //
+    using Type = typename Protocol::Type;
+    inline auto min() const -> Type { return Protocol::min(); }
+    inline auto max() const -> Type { return Protocol::max(); }
+    //
+    using Iteratable = typename Protocol::Iteratable;
+    inline auto begin(with::NullId) const -> Iteratable { return min(); }
+    inline auto end(with::NullId) const -> Iteratable { return 1+max(); }
+    inline auto range(with::NullId) const -> exception::Range { return exception::Range(min(), max()); }
+    inline auto begin(without::NullId) const -> Iteratable { return 1+min(); }
+    inline auto end(without::NullId) const -> Iteratable { return 1+max(); }
+    inline auto range(without::NullId) const -> exception::Range { return exception::Range(1+min(), max()); }
+    //
+    // reminder: test for possible(...) && valid(...) prior to use
+    inline auto is_null(Type candidate) const -> bool { return Protocol::is_null(candidate); }
+    inline auto is_not_null(Type candidate) const -> bool { return Protocol::is_not_null(candidate); }
+    // (with possible truncation at the call site)
+    inline auto valid(Type candidate) const -> bool { return min() <= candidate && candidate <= max(); }
+    // (without possible truncation at the call site)
+    inline auto possible(std::uintmax_t candidate) const -> bool { return min() <= candidate && candidate <= max(); }
+  };
+}
+namespace tunitas::butano::tcf::consent::object {
+  template<> inline auto Limits<id::Vendor>::max() const -> Type;
+}
+#endiv
+#divert <ipp>
+#import tunitas.butano.tcf.consent.Object
+#import tunitas.butano.tcf.consent.object.Invariant
+#import std.min
+namespace tunitas::butano::tcf::consent::object {
+  // [[FIXTHIS]] ... it belongs in Limits.Vendor
+  template<> auto Limits<id::Vendor>::max() const -> Type {
+    auto the_live_one = Protocol::max();
+    if (VENDOR_CONSENT_BITS == object.encodingType) {
+      the_live_one = object.vendorConsentBits.size();
+      if (object.maxVendorId != object.vendorConsentBits.size()) { throw Invariant{"maxVendorId == object.vendorConsentBits.size()"}; }
+    } else if (VENDOR_CONSENT_RANGES == object.encodingType) {
+      the_live_one = object.maxVendorId;
+    } else {
+      the_live_one = Protocol::max();
+    }
+    // avoid early truncation, wide types down to narrow types
+    // [[C++17]] use std::common_type<...>::type
+    return std::min<Type>(std::min<decltype(object.maxVendorId)>(Protocol::max(), object.maxVendorId),
+                          std::min<decltype(the_live_one)>(Protocol::max(), the_live_one)); 
+  }
+}
+#endiv

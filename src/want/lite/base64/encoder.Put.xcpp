@@ -1,0 +1,43 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace want::lite::base64::encoder {
+  //
+  // An invalid put<...>(...) operation out of the base64 encoder bitstream.
+  //
+  // Usage:
+  //
+  //   throw encoder::Put("zero size");
+  //   throw encoder::Put("too big");
+  //
+  class Put;
+}
+#endiv
+#divert <hpp>
+#import std.invalid_argument
+#import std.string
+#import want.lite.base64.Exception
+class want::lite::base64::encoder::Put : public std::invalid_argument, public base64::Exception {
+  struct ancestors {
+    using Exception = std::invalid_argument;
+    using Aspect = base64::Exception;
+  };
+public:
+  inline Put();
+  inline explicit Put(std::string const &reason);
+  auto what() const noexcept -> char const * final;
+};
+#endiv
+#divert <ipp>
+want::lite::base64::encoder::Put::Put()
+  : ancestors::Exception("put")
+{ }
+want::lite::base64::encoder::Put::Put(std::string const &reason)
+  : ancestors::Exception(reason)
+{ }
+#endiv
+#divert <cpp>
+auto want::lite::base64::encoder::Put::what() const noexcept -> char const * {
+  return ancestors::Exception::what();
+}
+#endiv

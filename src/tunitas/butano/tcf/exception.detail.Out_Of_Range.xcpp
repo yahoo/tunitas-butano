@@ -1,0 +1,60 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::exception::detail {
+  //
+  // The genericity of the out-of-range exception: null, inappropriate, invalid.
+  // Against the purpose and vendor.
+  // Descendants only.
+  //
+  // For { purpose, vendor } \times { Invalid, Inappropriate, Null }
+  //
+  //   Invalid       -> the id is totally invalid (out of the acceptable range of 16 bits).
+  //   Inappropriate -> the id is outside of maxVendorId.
+  //   Null          -> The null id is a "valid" id.
+  //
+  // Usage:
+  //
+  //   throw Inappropriate();  Inappropriate("reason"); Inappropriate(offending_id, range)
+  //   throw Invalid();
+  //   throw Null();
+  //
+  // Get a Concept! IDENTIFIER must be id::Purpose or id::Vendor
+  template<typename IDENTIFIER> class Out_Of_Range;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.Exception
+#import tunitas.butano.tcf.exception.Range
+#import tunitas.butano.tcf.id.ALL
+#import std.out_of_range
+#import std.string
+namespace tunitas::butano::tcf::exception {
+  template<typename IDENTIFIER> class detail::Out_Of_Range : public std::out_of_range, public tcf::Exception {
+    using ancestor = std::out_of_range;
+  protected:
+    ~Out_Of_Range() = default; // descendants only
+  public:
+    using Identifier = IDENTIFIER;
+    inline Out_Of_Range();
+    inline explicit Out_Of_Range(std::string const &reason);
+    inline auto what() const noexcept -> char const * final;
+  protected:
+    inline static auto format(char const *capitalized_identifier_adjective, char const *offensiveness_adverb, Identifier offending_id, tcf::exception::Range range) -> std::string;
+  };
+}
+#endiv
+#divert <ipp>
+#import std.ostringstream
+namespace tunitas::butano::tcf::exception::detail {
+  template<typename _> Out_Of_Range<_>::Out_Of_Range() : ancestor("out of range") { }
+  template<typename _> Out_Of_Range<_>::Out_Of_Range(std::string const &reason) : ancestor(reason) { }
+  template<typename _> auto Out_Of_Range<_>::what() const noexcept -> char const * { return ancestor::what(); }
+  template<typename _> auto Out_Of_Range<_>::format(char const *capitalized_identifier_adjective, char const *offensiveness_adverb, Identifier offending_id, tcf::exception::Range range) -> std::string {
+    std::ostringstream buf;
+    buf << capitalized_identifier_adjective << " id: " << offending_id << " is " << offensiveness_adverb << ". "
+        << "It should be between " << range.first << " and " << range.second;
+    return buf.str();
+  }
+}
+#endiv

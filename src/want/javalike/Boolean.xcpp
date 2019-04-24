@@ -1,0 +1,61 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace want::javalike {
+  //
+  // A boolean
+  // boxed
+  // with an initializer, a constructor
+  // and operator<< that prints as "true" or "false" just like JSON
+  //     does not boolalpha the stream
+  //
+  class Boolean;
+}
+#endiv
+#divert <hpp>
+#import std.basic_ostream
+#import std.basic_istream
+namespace want::javalike {
+  // [[FIXTHIS]] use nonstd::required::Character nonstd::required::Character_Traits
+  template<typename CHAR, typename TRAITS> inline auto operator<<(std::basic_ostream<CHAR, TRAITS> &, Boolean const &) -> std::basic_ostream<CHAR, TRAITS> &;
+  template<typename CHAR, typename TRAITS, typename INTEGRAL> inline auto operator>>(std::basic_istream<CHAR, TRAITS> &i, Boolean &b) -> std::basic_istream<CHAR, TRAITS> &;
+}
+class want::javalike::Boolean {
+public:
+  using Value = bool;
+  inline constexpr Boolean() : value(Value()) { }
+  inline constexpr Boolean(Value value) : value(value) { }
+  inline auto operator=(Value other) -> Boolean & { value = other; return *this; }
+  inline auto operator=(Boolean const &other) -> Boolean & { value = other.value; return *this; }
+  inline constexpr operator Value() const { return value; }
+private:
+  template<typename C, typename T> friend auto operator<<(std::basic_ostream<C, T> &, Boolean const &) -> std::basic_ostream<C, T> &;
+  Value value;
+};
+#endiv
+#divert <ipp>
+#import std.basic_ostream
+#import std.basic_istream
+#import std.basic_string
+namespace want {
+  template<typename CHAR, typename TRAITS> auto javalike::operator<<(std::basic_ostream<CHAR, TRAITS> &o, Boolean const &b) -> std::basic_ostream<CHAR, TRAITS> & {
+    // FIXTHIS -- widen the string literal
+    return o << ((bool) b ? "true": "false");
+  }
+  template<typename CHAR, typename TRAITS> auto javalike::operator>>(std::basic_istream<CHAR, TRAITS> &i, Boolean &b) -> std::basic_istream<CHAR, TRAITS> & {
+    std::string t;
+    if (i >> t) {
+      // FIXTHIS -- widen the string literal
+      if ("true" == t) {
+        b = true;
+      } else if ("false" == t) {
+        b = false;
+      } else {
+        // which may throw
+        i.setstate(std::ios::failbit);
+      }
+    }
+    return i;
+  }
+}
+#endiv

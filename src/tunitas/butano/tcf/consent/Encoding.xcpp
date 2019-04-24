@@ -1,0 +1,37 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::tcf::consent {
+  enum Encoding { BITS, RANGES };
+  inline constexpr auto VENDOR_CONSENT_BITS = Encoding::BITS;
+  inline constexpr auto VENDOR_CONSENT_RANGES = Encoding::RANGES;
+  inline constexpr auto VENDOR_CONSENT_RANGE = Encoding::RANGES;  // [[deprecating]]
+}
+#endiv
+#divert <hpp>
+#import ostream
+#import string
+namespace tunitas::butano::tcf::consent {
+  inline auto operator<<(std::ostream &os, Encoding en) -> std::ostream &;
+  inline auto to_string(Encoding e) -> std::string;
+}
+namespace std {
+  // Because that is where everyone expects to find it in C++17.
+  using tunitas::butano::tcf::consent::to_string;
+}
+#endiv
+#divert <ipp>
+namespace tunitas::butano::tcf {
+  inline auto consent::operator<<(std::ostream &os, Encoding en) -> std::ostream & {
+    // Be paranoid about the values in Encoding e
+    // ... because they originate off-the-wire or off-of-disk; they can be anything.
+    if (BITS == en)        { return os << "BITS"; }
+    else if (RANGES == en) { return os << "RANGES"; }
+    else                   { return os << "Encoding=" << (int)en; }
+  }
+  inline auto consent::to_string(Encoding e) -> std::string {
+    // ibidem.
+    return BITS == e ? "BITS" : RANGES == e ? "RANGES" : "Encoding=" + std::to_string((int)e);
+  }
+}
+#endiv

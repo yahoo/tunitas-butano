@@ -1,0 +1,21 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import std.int64_t
+#import std.chrono.duration
+#import std.milli
+#import std.deci
+#import std.chrono.milliseconds
+#import std.is_same
+namespace want::timeline {
+  using Representation = std::int64_t; // choosing this representation
+  template<typename PERIOD> using Duration = std::chrono::duration<Representation, PERIOD>;
+  using std::chrono::duration_cast;
+}
+namespace want::timeline::duration {
+  using Milliseconds = std::chrono::duration<Representation, std::milli>;
+  using Deciseconds = std::chrono::duration<Representation, std::deci>;
+  using Seconds = std::chrono::duration<Representation>;
+  static_assert(std::is_same<Milliseconds, std::chrono::milliseconds>::value);
+}
+#endiv

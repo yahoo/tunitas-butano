@@ -1,0 +1,16 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::vanity_iab { }
+#endiv
+#divert <hpp>
+#import std.string_literals
+#import std.string_view_literals
+namespace app::vanity_iab {
+  using namespace std::literals;
+  extern std::string NAME; 
+}
+#endiv
+#divert <cpp>
+std::string app::vanity_iab::NAME{"vanity-iab"};
+#endiv

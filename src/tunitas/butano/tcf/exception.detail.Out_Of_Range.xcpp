@@ -38,7 +38,7 @@ namespace tunitas::butano::tcf::exception {
     using Identifier = IDENTIFIER;
     inline Out_Of_Range();
     inline explicit Out_Of_Range(std::string const &reason);
-    inline auto what() const noexcept -> char const * final;
+    auto what() const noexcept -> char const * final;
   protected:
     inline static auto format(char const *capitalized_identifier_adjective, char const *offensiveness_adverb, Identifier offending_id, tcf::exception::Range range) -> std::string;
   };
@@ -49,12 +49,16 @@ namespace tunitas::butano::tcf::exception {
 namespace tunitas::butano::tcf::exception::detail {
   template<typename _> Out_Of_Range<_>::Out_Of_Range() : ancestor("out of range") { }
   template<typename _> Out_Of_Range<_>::Out_Of_Range(std::string const &reason) : ancestor(reason) { }
-  template<typename _> auto Out_Of_Range<_>::what() const noexcept -> char const * { return ancestor::what(); }
   template<typename _> auto Out_Of_Range<_>::format(char const *capitalized_identifier_adjective, char const *offensiveness_adverb, Identifier offending_id, tcf::exception::Range range) -> std::string {
     std::ostringstream buf;
     buf << capitalized_identifier_adjective << " id: " << offending_id << " is " << offensiveness_adverb << ". "
         << "It should be between " << range.first << " and " << range.second;
     return buf.str();
   }
+}
+#endiv
+#divert <tpp>
+namespace tunitas::butano::tcf::exception::detail {
+  template<typename _> auto Out_Of_Range<_>::what() const noexcept -> char const * { return ancestor::what(); }
 }
 #endiv

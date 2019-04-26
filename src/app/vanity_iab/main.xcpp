@@ -1,0 +1,46 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <hpp>
+#import app.Argv
+namespace app::vanity_iab {
+  auto remain(Argv) -> void;
+}
+#endiv
+#divert <cpp>
+#import app.vanity_iab.options.Parser
+#import app.vanity_iab.Builder
+#import std.cout
+#import std.cerr
+#import app.Quitting
+#import tunitas.butano.tcf.format.dump
+#import tunitas.butano.tcf.consent.decode
+auto app::vanity_iab::remain(Argv av) -> void {
+  options::Parser pa(av);
+  auto const residual = pa.residual();
+  for (auto const &word : pa.residual()) {
+    Builder bob;
+    bob.with(word);
+    auto const built = bob.build();
+    if (pa.format_dump()) {
+      using namespace tunitas::butano::tcf;
+      std::cout << format::dump(consent::decode(built)) << '\n';
+    } else {
+      // --native or --raw are the same thing
+      std::cout << built << '\n';
+    }
+  }
+}
+auto main(int argc, char *argv[]) -> int {
+  using namespace app;
+  try {
+    vanity_iab::remain(Argv(&argv[0], &argv[argc]));
+    return 0;
+  } catch (Quitting const &q) {
+    std::cout << q << '\n';
+    return q.code();
+  } catch (std::exception const &e) {
+    std::cerr << vanity_iab::NAME << ": error, " << e.what() << '\n';
+    return 1;
+  }
+}
+#endiv

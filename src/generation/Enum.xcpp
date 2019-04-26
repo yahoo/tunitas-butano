@@ -1,0 +1,12 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import want.javalike.integer.Enum
+namespace generation {
+  //
+  // For the convenience...
+  // [[FIXTHIS]] ... is this really needed in C++17 with enum class and underlying types?
+  //
+  template<typename ENUM, typename UNIQUENESS = ENUM> using Enum = want::javalike::integer::Enum<ENUM, UNIQUENESS>;
+}
+#endiv

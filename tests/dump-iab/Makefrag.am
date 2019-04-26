@@ -1,0 +1,22 @@
+tests_dump_iab_XFAIL_TESTS = \
+  $(end)
+tests_dump_iab_TESTS = \
+  tests/dump-iab/option.help.test \
+  tests/dump-iab/option.dry-run.test \
+  tests/dump-iab/option.dryrun.test \
+  tests/dump-iab/option.d.test \
+  tests/dump-iab/option.help.test \
+  tests/dump-iab/option.h.test \
+  tests/dump-iab/option.q.test \
+  tests/dump-iab/option.quiet.test \
+  tests/dump-iab/option.usage.test \
+  tests/dump-iab/option.verbose.test \
+  tests/dump-iab/option.version.test \
+  tests/dump-iab/option.v.test \
+  tests/dump-iab/option.V.test \
+  tests/dump-iab/option.warnings.test \
+  tests/dump-iab/option.warning.test \
+  tests/dump-iab/option.w.test \
+  tests/dump-iab/error.unknown.test \
+  $(tests_dump_iab_XFAIL_TESTS) \
+  $(end)

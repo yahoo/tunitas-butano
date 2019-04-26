@@ -1,0 +1,61 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import generation.randomness.distribution.Implementation.declaration
+#import generation.randomness.distribution.Implementation.bool // exhibit the specialization
+#import std.uint8_t
+#import std.uint16_t
+#import std.uint32_t
+#import std.uint64_t
+#import std.size_t
+#import generation.randomness.limits.ALL // Numeric, Width, High
+namespace generation::randomness::distribution {
+  //
+  // Some (pseudo-)random number generators particularized to specific limits.
+  //
+  // Usage:
+  //
+  //     Basic basic(1, 3);            starts with a default seeder, always the same sequence
+  //     Basic better(seeder, 1, 3);
+  //     Basic better(seeder, 0, 1);   as if you wanted bitwise
+  //
+  using Unsigned64 = Implementation<std::uint64_t, limits::Numeric<std::uint64_t>, false>;
+  using Unsigned32 = Implementation<std::uint32_t, limits::Numeric<std::uint32_t>, false>;
+  using Unsigned16 = Implementation<std::uint16_t, limits::Numeric<std::uint16_t>, false>;
+  using Unsigned8 = Implementation<std::uint8_t, limits::Numeric<std::uint8_t>, false>;
+  //
+  using Signed64 = Implementation<std::int64_t, limits::Numeric<std::int64_t>, false>;
+  using Signed32 = Implementation<std::int32_t, limits::Numeric<std::int32_t>, false>;
+  using Signed16 = Implementation<std::int16_t, limits::Numeric<std::int16_t>, false>;
+  using Signed8 = Implementation<std::int8_t, limits::Numeric<std::int8_t>, false>;
+  //
+  // [[DELETETHIS]] template<std::size_t N, typename RESULT> class Width; // Get a concept!  1 < N <= 8*sizeof(RESULT)
+  using Unsigned24 = Implementation<std::uint32_t, limits::Width<24, std::uint32_t>, false>;
+  using Unsigned12 = Implementation<std::uint16_t, limits::Width<12, std::uint16_t>, false>;
+  using Unsigned5 = Implementation<std::uint8_t, limits::Width<5, std::uint8_t>, false>;
+  using Unsigned3 = Implementation<std::uint8_t, limits::Width<3, std::uint8_t>, false>;
+
+  // Get a Concept!  0 < BOUND <= 2^(8*sizeof(RESULT))
+  using Unsigned9999 = Implementation<std::uint32_t, limits::High<std::uint32_t, 9999u>, false>;
+}
+#endiv
+#divert <hpp>
+#import std.uniform_int_distribution
+#import std.is_enum
+#import std.is_same
+namespace generation::randomness::distribution {
+  template<typename RESULT, typename BOUND> class Implementation<RESULT, BOUND, false> : public std::uniform_int_distribution<RESULT> {
+    using ancestor = std::uniform_int_distribution<RESULT>;
+    static_assert(!std::is_enum<RESULT>::value);
+    static_assert(!std::is_same<RESULT, bool>::value);
+    using Bound = BOUND;
+  public:
+    using Value = RESULT;
+    inline Implementation() : ancestor(BOUND::min(), Bound::max()) { }
+    inline explicit Implementation(Value high) : ancestor(Bound::min(), high) { }
+    inline Implementation(Value low, Value high) : ancestor(low, high) { }
+    using Result = Value;
+    using ancestor::operator();
+  };
+}
+#endiv

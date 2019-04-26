@@ -94,7 +94,7 @@ namespace want::lite::base64 {
     validate(8*sizeof(INTEGRAL), size_in_bits);
     auto ret = INTEGRAL();
     for (int i(0), e(size_in_bits); e != i; ++i) {
-      if (decoded_state.end() != get_position) { throw decoder::Invalid{"position"}; } // this can never happen?
+      if (decoded_state.end() == get_position) { throw decoder::Invalid{"position"}; } // this can never happen?
       ret <<= 1;
       ret |= *get_position++; // throws out_of_range on off-the-end, but validate should have thrown prior
     }

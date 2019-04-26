@@ -71,7 +71,7 @@ auto app::argv::parser::Sloppy::parse(Argv &av, Name const &NAME, Usage USAGE) -
     if (false) {
     } else if (first == among("-h", "--help", "--usage")) {
       USAGE(NAME, std::cout);
-      throw Quitting(0);
+      throw Quitting{NAME, 0};
     } else if (first == among("-y", "--sloppy", "--decimal",
                               "--parse-sloppy",
                               "--parse=sloppy")) {

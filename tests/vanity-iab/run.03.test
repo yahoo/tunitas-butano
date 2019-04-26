@@ -1,0 +1,3 @@
+#!/bin/sh
+source ${0%/*}/rigging.sh || exit 70
+${exe?} 'Is this the party to whom I am speaking?'

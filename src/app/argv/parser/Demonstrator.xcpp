@@ -56,7 +56,7 @@ auto app::argv::parser::Demonstrator::parse(Argv &av, Name const &NAME, Usage US
     auto const first = av.front();
     if (first == among("-h", "--help", "--usage")) {
       USAGE(NAME, std::cout);
-      throw Quitting(0);
+      throw Quitting{NAME, 0};
     } else if (first == among("-q", "--quiet")) {
       parsing_prattle.quiet = true;
     } else if (first == among("-v", "--verbose")) {
@@ -67,7 +67,7 @@ auto app::argv::parser::Demonstrator::parse(Argv &av, Name const &NAME, Usage US
     } else {
       std::cerr << NAME << COLON_NOTICE_BANNER
                 << NAME << ": error, unknown option " << first << '\n';
-      throw Quitting(sys::exits::USAGE);
+      throw Quitting{NAME, sys::exits::USAGE};
     }
   }
   if (av.empty()) {

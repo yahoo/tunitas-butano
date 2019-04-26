@@ -1,0 +1,15 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import std.string
+#import tunitas.butano.tcf.consent.Object
+#import tunitas.butano.tcf.consent.String
+#import std.is_same
+namespace generation::required::tcf {
+  //
+  // The SOURCE of a Tcf Generator is either an Object or String, but nothing else.
+  //
+  template<typename SOURCE> concept bool Consent = (std::is_same<SOURCE, tunitas::butano::tcf::consent::String>::value ||
+                                                    std::is_same<SOURCE, tunitas::butano::tcf::consent::Object>::value);
+}
+#endiv

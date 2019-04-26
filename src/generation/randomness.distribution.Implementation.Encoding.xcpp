@@ -1,0 +1,26 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import generation.randomness.distribution.Implementation.declaration
+#import generation.randomness.limits.ALL // limits::Enume::Class
+#import tunitas.butano.tcf.consent.Encoding
+namespace generation::randomness::distribution::implementation {
+  namespace encoding {
+    //
+    // The standard implementation works just fine, but the recipe is ... what's the word: lugubrious
+    // recall: Implementation<...> must be specialized against limits::enume::Class<...> for enumeration types
+    // The type alias merely serves to remind us about that recipe.
+    //
+    using Class = tunitas::butano::tcf::consent::Encoding;
+    using Implementation = distribution::Implementation<Class,
+                                                        limits::enume::Class<Class,
+                                                                             Class::BITS,
+                                                                             Class::RANGES>,
+                                                        true>;
+  }
+  using Encoding = encoding::Implementation;
+}
+#endiv
+#divert <hpp>
+#import generation.randomness.distribution.Implementation.enum
+#endiv

@@ -1,0 +1,51 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <hpp>
+#import app.Argv
+#import std.ostream
+#import std.string
+namespace app::random_base64 {
+  auto remain(Argv) -> void;
+  auto usage(std::string const &, std::ostream &) -> void;
+}
+#endiv
+#divert <cpp>
+#import app.argv.parser.Howmany
+#import generation.base64.Generator
+#import std.cerr
+#import std.cout
+#import std.seed_seq
+#import want.lite.base64.decode
+auto app::random_base64::remain(Argv av) -> void {
+  argv::parser::Howmany pa(av, NAME);
+  auto const residual = pa.residual();
+  auto const &spontaneous = residual.seed();
+  std::seed_seq seeder(spontaneous.begin(), spontaneous.end());
+  generation::base64::Generator generator(seeder);
+  for (unsigned e(residual.count()), i(e-e); e != i; ++i) {
+    auto const generated = generator();
+    if (pa.format_raw()) {
+      // This is going to vomit raw bytes onto your screen (you don't really want that, do you?)
+      std::cout << want::lite::base64::decode(generated);
+    } else {
+      // --dump and --native are the same thing
+      std::cout << generated << '\n';
+    }
+  }
+}
+#import app.Quitting
+#import std.exception
+auto main(int argc, char *argv[]) -> int {
+  using namespace app;
+  try {
+    random_base64::remain(Argv(&argv[0], &argv[argc]));
+    return 0;
+  } catch (app::Quitting const &q) {
+    std::cout << q << '\n';
+    return q.code();
+  } catch (std::exception const &e) {
+    std::cerr << random_base64::NAME << ": error, " << e.what() << '\n';
+    return 1;
+  }
+}
+#endiv

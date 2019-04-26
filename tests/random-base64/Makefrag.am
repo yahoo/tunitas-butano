@@ -1,0 +1,26 @@
+tests_random_base64_XFAIL_TESTS = \
+  $(end)
+tests_random_base64_TESTS = \
+  tests/random-base64/option.help.test \
+  tests/random-base64/option.dry-run.test \
+  tests/random-base64/option.dryrun.test \
+  tests/random-base64/option.d.test \
+  tests/random-base64/option.help.test \
+  tests/random-base64/option.h.test \
+  tests/random-base64/option.q.test \
+  tests/random-base64/option.quiet.test \
+  tests/random-base64/option.usage.test \
+  tests/random-base64/option.verbose.test \
+  tests/random-base64/option.version.test \
+  tests/random-base64/option.v.test \
+  tests/random-base64/option.V.test \
+  tests/random-base64/option.warnings.test \
+  tests/random-base64/option.warning.test \
+  tests/random-base64/option.w.test \
+  \
+  tests/random-base64/error.unknown.test \
+  \
+  tests/random-base64/run.01.test \
+  \
+  $(tests_random_base64_XFAIL_TESTS) \
+  $(end)

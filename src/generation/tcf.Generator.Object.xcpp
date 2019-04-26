@@ -1,0 +1,48 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import generation.tcf.Generator.declaration
+namespace generation::tcf {
+  //
+  // Generate a (pseudo-)random IAB TCF consent object.
+  //
+  // Usage:
+  //
+  //   std::seed_seq seeder{...something...};
+  //   Generator<consent::Object> generator(seeder);
+  //   Object obj = generator();      ............................. how easy is that?
+  //
+  template<> class Generator<Object>;
+}
+#endiv
+#divert <hpp>
+#import generation.randomness.Engine
+#import generation.tcf.Distribution
+#import std.seed_seq
+template<> class generation::tcf::Generator<generation::tcf::Object> {
+  using Version = generation::tcf::singleton::id::version::Protocol;
+public:
+  inline explicit Generator(std::seed_seq &);
+  inline Generator(std::seed_seq &, Version);
+  using Result = tcf::singleton::Object;
+  inline auto operator()() -> Result;
+protected:
+  randomness::Engine engine;
+  Distribution distribution;
+};
+#endiv
+#divert <ipp>
+namespace generation::tcf {
+  Generator<Object>::Generator(std::seed_seq &seeder)
+    : engine(seeder)
+    , distribution()
+    { }
+  Generator<Object>::Generator(std::seed_seq &seeder, Version want)
+    : engine(seeder)
+    , distribution(want)
+    { }
+  auto Generator<Object>::operator()() -> Result {
+    return distribution(engine);
+  }
+}
+#endiv

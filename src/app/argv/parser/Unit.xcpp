@@ -59,7 +59,7 @@ auto app::argv::parser::Unit::parse(Argv &av, Name const &NAME) -> void {
     auto const first = av.front();
     if (first == among("-h", "--help", "--usage")) {
       usage(NAME, std::cout);
-      throw Quitting(0);
+      throw Quitting{NAME, 0};
     } else if (first.empty() || '-' != first.front()) {
       // The first non-option word.
       break;
@@ -73,7 +73,7 @@ auto app::argv::parser::Unit::parse(Argv &av, Name const &NAME) -> void {
     std::cerr << NAME << COLON_NOTICE_BANNER
               << NAME << ": error, no non-option words are supported in a unit tester\n"
       ;
-    throw Quitting(exit::USAGE);
+    throw Quitting{NAME, exit::USAGE};
   }
 }
 auto app::argv::parser::Unit::usage(Name const &NAME, std::ostream &outbound) -> void {

@@ -1,0 +1,39 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+//
+// Shave out the bits, in network order (big endian)
+//
+#include <hpp/app.vanity_iab.Builder>
+#endiv
+#divert <hpp>
+template<nonstd::required::integer::Unsigned UNSIGNED> struct app::vanity_iab::Builder::Shaver {
+  using Value = UNSIGNED;
+  static constexpr auto HIGH_BIT = 1u<<(8*sizeof (Value)-1);
+  Value value;
+  inline explicit Shaver(Value);
+  inline auto operator*() const -> bool;
+  inline auto operator--() -> Shaver &;
+  inline auto operator--(int) -> Shaver;
+};
+#endiv
+#divert <ipp>
+namespace app::vanity_iab {
+  template<typename _> Builder::Shaver<_>::Shaver(Value value) : value(value) { }
+  template<typename _>auto Builder::Shaver<_>::operator*() const -> bool {
+    return HIGH_BIT == (value & HIGH_BIT);
+  }
+  template<typename _>auto Builder::Shaver<_>::operator--() -> Shaver & {
+    value <<= 1;
+    return *this;
+  }
+  template<typename _>auto Builder::Shaver<_>::operator--(int) -> Shaver {
+    Shaver old(*this);
+    operator--();
+    return old;
+  }
+}
+#endiv
+#divert <tpp>
+#import app.vanity_iab.Builder
+#endiv

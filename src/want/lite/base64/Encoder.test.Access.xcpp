@@ -13,8 +13,8 @@ struct want::lite::base64::Encoder::test::Access {
   auto dump() -> void;
 };
 #endiv
-#divert ipp
-#import want.lite.base64.Decoder
+#divert <ipp>
+#import want.lite.base64.Encoder
 #endiv
 #divert <cpp>
 #import std.noboolalpha

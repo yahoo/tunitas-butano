@@ -1,16 +1,16 @@
-// This is -*- c++ -*- in the S.C.O.L.D. stylings that are so popular these days.
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
 #divert <hpp>
 #import app.Argv
 #import std.ostream
 #import std.string
-namespace app::dump {
-  inline auto const NAME = "dump-iab"s;
+namespace app::dump_iab {
   auto remain(Argv) -> void;
   auto usage(std::string const &, std::ostream &) -> void;
 }
 #endiv
 #divert <cpp>
-auto app::dump::usage(std::string const &name, std::ostream &out) -> void {
+auto app::dump_iab::usage(std::string const &name, std::ostream &out) -> void {
   out << "usage: " << name << " { base64 ... }\n"
       << "\n"
       << "example: BOKXjmcOKXjmcAOABAENACAAAAAAU8A ... etc.\n";
@@ -26,7 +26,7 @@ auto app::dump::usage(std::string const &name, std::ostream &out) -> void {
 #import tunitas.butano.tcf.format.dump
 #import want.lite.base64.decode
 #import want.lite.base64.sloppy.decode
-auto app::dump::remain(Argv av) -> void {
+auto app::dump_iab::remain(Argv av) -> void {
   argv::parser::Dumper pa(std::move(av), NAME, &usage);
   bool failure(false);
   for (auto word : pa.residual()) {
@@ -76,13 +76,13 @@ auto app::dump::remain(Argv av) -> void {
 auto main(int argc, char *argv[]) -> int {
   using namespace app;
   try {
-    dump::remain(Argv(&argv[0], &argv[argc]));
+    dump_iab::remain(Argv(&argv[0], &argv[argc]));
     return 0;
   } catch (Quitting const &q) {
     std::cout << q << '\n';
-    return q.exit_code();
+    return q.code();
   } catch (std::exception const &e) { 
-    std::cerr << dump::NAME << ": error, " << e.what() << '\n';
+    std::cerr << dump_iab::NAME << ": error, " << e.what() << '\n';
     return 1;
   }
 }

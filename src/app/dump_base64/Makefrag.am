@@ -1,0 +1,24 @@
+# A GNU -*- Makefile -*- which is managed by automake
+
+bin_dump_base64 = bin/dump-base64
+bin_dump_base64_LDADD = \
+  $(lib_libwant_la) \
+  $(lib_libapp_la) \
+  -ltunitas \
+  -loptions-module \
+  $(end)
+bin_dump_base64_LDFLAGS = $(PACKAGE_LDFLAGS_SET)
+bin_dump_base64_MODULES = $(call TF_SOURCEStoMODULES, $(bin_dump_base64_SOURCES))
+bin_dump_base64_SOURCES = \
+  obj/src/app/dump_base64/main.cpp \
+  obj/src/app/dump_base64/namespace.cpp \
+  obj/src/app/dump_base64/options.cpp \
+  $(end)
+
+$(scold_cxxdir)/app/dump_base64/dependencies.mk:
+	$(AM_V_BB1ST) $(call TF_DISAGGREGATE_COMPILE, $(bin_dump_base64_SOURCES))
+	$(AM_V_BB2ND) $(call TF_DEPENDENCIES_COMPILE, $(bin_dump_base64_SOURCES))
+	@test -e $@
+include $(scold_cxxdir)/app/dump_base64/dependencies.mk
+clean-dependencies::
+	rm -f $(scold_cxxdir)/app/dump_base64/dependencies.mk

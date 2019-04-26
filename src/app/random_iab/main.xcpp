@@ -1,0 +1,50 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <hpp>
+#import app.Argv
+namespace app::random_iab {
+  auto remain(Argv) -> void;
+}
+#endiv
+#divert <cpp>
+#import app.argv.parser.Howmany
+#import generation.tcf.Generator
+#import std.cerr
+#import std.cout
+#import std.seed_seq
+#import tunitas.butano.tcf.format.dump
+#import tunitas.butano.tcf.consent.decode
+auto app::random_iab::remain(Argv av) -> void {
+  argv::parser::Howmany pa(av, NAME);
+  auto const residual = pa.residual();
+  auto const &spontaneous = residual.seed();
+  std::seed_seq seeder(spontaneous.begin(), spontaneous.end());
+  using namespace generation::tcf;
+  Generator<String> generator(seeder);
+  for (auto e{residual.count()}, i{e-e}; e != i; ++i) {
+    auto const generated = generator();
+    if (pa.format_dump()) {
+      using namespace tunitas::butano::tcf;
+      std::cout << format::dump(consent::decode(generated)) << '\n';
+    } else {
+      // --native or --raw are the same thing
+      std::cout << generated << '\n';
+    }
+  }
+}
+#import std.exception
+#import app.Quitting
+auto main(int argc, char *argv[]) -> int {
+  using namespace app;
+  try {
+    random_iab::remain(Argv(&argv[0], &argv[argc]));
+    return 0;
+  } catch (Quitting const &q) {
+    std::cout << q << '\n';
+    return q.code();
+  } catch (std::exception const &e) {
+    std::cerr << random_iab::NAME << ": error, " << e.what() << '\n';
+    return 1;
+  }
+}
+#endiv

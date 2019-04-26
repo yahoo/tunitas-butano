@@ -3,11 +3,14 @@
 #divert <fpp>
 #import want.timeline
 namespace tunitas::butano::tcf {
-  // [[FIXTHIS]] Thesea are subsumed into (modern) tunitas-basics, module-nonstd or namespace std of C++17 itself.
+  // [[FIXTHIS]] These are subsumed into (modern) tunitas-basics, module-nonstd or namespace std of C++17 itself.
 #if 1
   namespace timeline = ::want::timeline;
 #else
   using namespace ::want::timeline;
 #endif
 }
+#endiv
+#divert <cpp>
+#warning [[FIXTHIS]] Thesea are subsumed into (modern) tunitas-basics, module-nonstd or namespace std of C++17 itself.
 #endiv

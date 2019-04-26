@@ -57,7 +57,7 @@ auto app::argv::parser::Dumper::parse(Argv &av, Name const &NAME, Usage USAGE) -
     auto const first = av.front();
     if (first == among("-h", "--help", "--usage")) {
       USAGE(NAME, std::cout);
-      throw Quitting(0);
+      throw Quitting{NAME, 0};
     } else if (first == among("-i", "--ignore", "--ignore-error", "--ignore-errors")) {
       parsing_ignore_errors = true;
     } else if (first.empty() || '-' != first.front()) {
@@ -66,14 +66,14 @@ auto app::argv::parser::Dumper::parse(Argv &av, Name const &NAME, Usage USAGE) -
     } else {
       std::cerr << NAME << COLON_NOTICE_BANNER
                 << NAME << ": error, unknown option " << first << '\n';
-      throw Quitting(sys::exits::USAGE);
+      throw Quitting{NAME, sys::exits::USAGE};
     }
   }
   if (av.empty()) {
     std::cerr << NAME << COLON_NOTICE_BANNER
               << NAME << ": error, at least one no non-option word is required\n"
       ;
-    throw Quitting(sys::exits::USAGE);
+    throw Quitting{NAME, sys::exits::USAGE};
   }
   parsing_residual = std::move(av);
 }

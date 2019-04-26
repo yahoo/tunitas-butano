@@ -1,0 +1,15 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#include <hpp/app.vanity_iab.options.Parser>
+#endiv
+#divert <hpp>
+#import app.argv.parser.format.Options
+class app::vanity_iab::options::Parser::access::format::Options : public argv::parser::format::Options {
+  using ancestor = argv::parser::format::Options;
+public:
+  using ancestor::Options;
+  // We want Howmany::parse(...) to be able to access the protected member variables.
+  friend class Parser;
+};
+#endiv

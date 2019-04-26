@@ -13,7 +13,7 @@ struct want::lite::base64::Decoder::test::Access {
   auto dump() -> void;
 };
 #endiv
-#divert ipp
+#divert <ipp>
 #import want.lite.base64.Decoder
 #endiv
 #divert <cpp>

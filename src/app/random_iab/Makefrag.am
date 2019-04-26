@@ -1,0 +1,25 @@
+# A GNU -*- Makefile -*- which is managed by automake
+
+bin_random_iab = bin/random-iab
+bin_random_iab_LDADD = \
+  $(lib_libgeneration_la) \
+  $(lib_libtunitas_butano_tcf_la) \
+  $(lib_libapp_la) \
+  -ltunitas \
+  -loptions-module \
+  $(end)
+bin_random_iab_LDFLAGS = $(PACKAGE_LDFLAGS_SET)
+bin_random_iab_MODULES = $(call TF_SOURCEStoMODULES, $(bin_random_iab_SOURCES))
+bin_random_iab_SOURCES = \
+  obj/src/app/random_iab/main.cpp \
+  obj/src/app/random_iab/namespace.cpp \
+  obj/src/app/random_iab/options.cpp \
+  $(end)
+
+$(scold_cxxdir)/app/random_iab/dependencies.mk:
+	$(AM_V_BB1ST) $(call TF_DISAGGREGATE_COMPILE, $(bin_random_iab_SOURCES))
+	$(AM_V_BB2ND) $(call TF_DEPENDENCIES_COMPILE, $(bin_random_iab_SOURCES))
+	@test -e $@
+include $(scold_cxxdir)/app/random_iab/dependencies.mk
+clean-dependencies::
+	rm -f $(scold_cxxdir)/app/random_iab/dependencies.mk

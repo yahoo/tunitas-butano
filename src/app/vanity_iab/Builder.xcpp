@@ -1,0 +1,105 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#pragma once
+#divert <fpp>
+namespace app::vanity_iab {
+  //
+  // Build an IAB TCF String with a message inside it.
+  // The BITFIELD is used.
+  //
+  // It us up to the caller to respect the BITFIELD limits (or not).
+  // IAB TCF v1.1 limits BITFIELD to 9999 bits (1250 bytes)
+  //
+  // However, in practical terms, the full 64K could be used because the
+  // length of the BITFIELD is practically limited only by the range of
+  // the id::Vendor type, which is a 16-bit quantity (64KB, 65536)
+  //
+  // It's a builder in the style of tunitas::butano::tcf::Builder
+  //
+  // Usage:
+  //
+  //   Builder bob;
+  //   bob.with("some seditious message");
+  //   auto const string = bob.build());
+  //   auto const object = bob.build<tcf::consent::Object>());
+  //   auto const string = bob.build<tcf::consent::String>());
+  //
+  class Builder;
+}
+#endiv
+#divert <hpp>
+#import nonstd.required.integer.Unsigned
+#import tunitas.butano.tcf.ALL
+#import std.string
+class app::vanity_iab::Builder {
+public:
+  auto with(std::string const &increment) -> Builder & { plaintext_message += increment;  return *this; }
+  using String = tunitas::butano::tcf::consent::String;
+  using Object = tunitas::butano::tcf::consent::Object;;
+  inline auto build() -> std::string; // below
+  template<typename RESULT> inline auto build() -> RESULT; // below, specializations only
+protected:
+  std::string plaintext_message;
+  tunitas::butano::tcf::consent::Builder rebob;
+  using Bitfield = tunitas::butano::tcf::vendor::Bitfield;
+  static auto make_bitfield(std::string const &) -> Bitfield;
+  static auto ensmoothen(std::string const &) -> std::string;
+  template<nonstd::required::integer::Unsigned UNSIGNED> struct Shaver;
+};
+namespace app::vanity_iab {
+  template<> auto Builder::build<Builder::Object>() -> Object;
+  template<> inline auto Builder::build<Builder::String>() -> String { return encode(build<Object>()); }
+  inline auto Builder::build() -> std::string { return build<String>(); }
+}
+#endiv
+#divert <cpp>
+#import std.size_t
+#import tunitas.butano.tcf.consent.ALL
+#import tunitas.butano.tcf.vendor.ALL
+template<> auto app::vanity_iab::Builder::build<app::vanity_iab::Builder::Object>() -> Object {
+  using namespace tunitas::butano::tcf::consent::protocol; // MAXVENDORID, et al.
+  using namespace tunitas::butano::tcf;
+  auto bf = make_bitfield(ensmoothen(plaintext_message)); // reminder: these things (bf) use 1-based indexing.
+  auto const oath_id = vendor::Definition<vendor::OATH>::vendor_id();
+  auto const oath_pos = (std::size_t) oath_id;
+  for (auto i(bf.size()), e(oath_pos); i <= e; ++i) {
+    bf.push_back(false);
+  }
+  // [[FIXTHIS]] construct the default consent so that Oath gets consented, whatever the message was.
+  rebob.accept<MAXVENDORID>(bf.size());
+  rebob.accept<ENCODINGTYPE>(consent::BITS);
+  rebob.accept<BITFIELD>(std::move(bf));
+  return rebob.build();
+}
+#import tunitas.butano.tcf.consent.protocol.Positions // Bitfield, Positions<Field>, etc.
+#import std.move
+#import app.vanity_iab.Builder.Shaver
+#import want.lite.base64.Decoder
+auto app::vanity_iab::Builder::make_bitfield(std::string const &plaintext) ->  Bitfield {
+  using namespace tunitas::butano::tcf::consent::protocol;
+  Bitfield ret;
+  for (auto i(Positions<BITFIELD>::offset() % 6), e(6lu); e != i; ++i) {
+    ret.push_back(false);
+  }
+  want::lite::base64::Decoder dec(plaintext);
+  for (auto b : dec.disgorge()) {
+    ret.push_back(b);
+  }
+  return std::move(ret);
+}
+#import std.isalnum
+auto app::vanity_iab::Builder::ensmoothen(std::string const &plaintext) -> std::string {
+  std::string ret;
+  ret += '_';
+  auto const isextra = [](char c) { return '-' == c || '+' == c || '_' == c || '/' == c; };
+  for (auto ch : plaintext) {
+    if (std::isalnum(ch) || isextra(ch)) {
+      ret += ch;
+    } else {
+      ret += '_';
+    }
+  }
+  ret += '_';
+  return std::move(ret);
+}
+#endiv

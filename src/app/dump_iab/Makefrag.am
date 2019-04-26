@@ -6,7 +6,6 @@ bin_dump_iab_LDADD = \
   $(lib_libapp_la) \
   -ltunitas \
   -loptions-module \
-  $(lib_libapp_la) \
   $(end)
 bin_dump_iab_LDFLAGS = $(PACKAGE_LDFLAGS_SET)
 bin_dump_iab_MODULES = $(call TF_SOURCEStoMODULES, $(bin_dump_iab_SOURCES))
@@ -16,10 +15,10 @@ bin_dump_iab_SOURCES = \
   obj/src/app/dump_iab/options.cpp \
   $(end)
 
-$(scold_cxxdir)/app/dump/dependencies.mk:
+$(scold_cxxdir)/app/dump_iab/dependencies.mk:
 	$(AM_V_BB1ST) $(call TF_DISAGGREGATE_COMPILE, $(bin_dump_iab_SOURCES))
 	$(AM_V_BB2ND) $(call TF_DEPENDENCIES_COMPILE, $(bin_dump_iab_SOURCES))
 	@test -e $@
-include $(scold_cxxdir)/app/dump/dependencies.mk
+include $(scold_cxxdir)/app/dump_iab/dependencies.mk
 clean-dependencies::
-	rm -f $(scold_cxxdir)/app/dump/dependencies.mk
+	rm -f $(scold_cxxdir)/app/dump_iab/dependencies.mk

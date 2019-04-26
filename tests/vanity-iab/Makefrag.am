@@ -1,0 +1,27 @@
+tests_vanity_iab_XFAIL_TESTS = \
+  $(end)
+tests_vanity_iab_TESTS = \
+  tests/vanity-iab/option.help.test \
+  tests/vanity-iab/option.dry-run.test \
+  tests/vanity-iab/option.dryrun.test \
+  tests/vanity-iab/option.d.test \
+  tests/vanity-iab/option.help.test \
+  tests/vanity-iab/option.h.test \
+  tests/vanity-iab/option.q.test \
+  tests/vanity-iab/option.quiet.test \
+  tests/vanity-iab/option.usage.test \
+  tests/vanity-iab/option.verbose.test \
+  tests/vanity-iab/option.version.test \
+  tests/vanity-iab/option.v.test \
+  tests/vanity-iab/option.V.test \
+  tests/vanity-iab/option.warnings.test \
+  tests/vanity-iab/option.warning.test \
+  tests/vanity-iab/option.w.test \
+  tests/vanity-iab/error.unknown.test \
+  \
+  tests/vanity-iab/run.01.test \
+  tests/vanity-iab/run.02.test \
+  tests/vanity-iab/run.03.test \
+  \
+  $(tests_vanity_iab_XFAIL_TESTS) \
+  $(end)

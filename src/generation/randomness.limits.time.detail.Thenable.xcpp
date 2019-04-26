@@ -1,0 +1,37 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import generation.randomness.limits.time
+namespace generation::randomness::limits::time::detail {
+  //
+  // Then.  For Span<Recently, DURATION> and Span<Soon, DURATION>
+  // Descendants only.
+  //
+  struct Thenable;
+}
+#endiv
+#divert <hpp>
+#import std.ratio_multiply
+struct generation::randomness::limits::time::detail::Thenable {
+protected:
+  ~Thenable() = default;
+  using Deciseconds = duration::Deciseconds;
+  using Seconds = Duration<typename std::ratio_multiply<Deciseconds::period, std::ratio<10, 1>>::type>;
+  using Minutes = Duration<typename std::ratio_multiply<Seconds::period, std::ratio<60, 1>>::type>;
+  using Hours = Duration<typename std::ratio_multiply<Minutes::period, std::ratio<60, 1>>::type>;
+  using Days = Duration<typename std::ratio_multiply<Hours::period, std::ratio<24, 1>>::type>;
+  template<typename RESULT_POINT, typename SOURCE_DUR> inline static auto then(SOURCE_DUR sloppy) -> RESULT_POINT;
+  template<typename RESULT_POINT> inline static auto now() -> RESULT_POINT;
+};
+#endiv
+#divert <ipp>
+#import want.timeline.ALL
+namespace generation::randomness::limits::time::detail {
+  template<typename RESULT_POINT, typename SOURCE_DUR> auto Thenable::then(SOURCE_DUR sloppy) -> RESULT_POINT {
+    return point_cast<typename RESULT_POINT::duration>(Clock::now()) + sloppy;
+  }
+  template<typename RESULT_POINT> auto Thenable::now() -> RESULT_POINT {
+    return point_cast<typename RESULT_POINT::duration>(Clock::now());
+  }
+}
+#endiv

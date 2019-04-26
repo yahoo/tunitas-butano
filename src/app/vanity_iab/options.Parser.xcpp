@@ -1,0 +1,150 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace app::vanity_iab::options {
+  //
+  // The options parser for the vanity IAB string parsing system.
+  //
+  // Parse the vanity_iab as RAII, offer the results as the constructed object.
+  // Throws Quitting when the parse is not satisfied.
+  //
+  // Scheme:
+  //    --native, --format=native
+  //    --dump, --format=dump
+  //    --raw, --format=raw
+  //    one (1) or more (2+) words are required.
+  //      these words (and they can be long paragraphs) are written in to the IAB TCF string.
+  //
+  // You'll need to keep the message limit within the limits of the BITFIELD
+  // That is 9999 bits length (1280 character)
+  // Or not ... you can violate the protocol and make a too-long IAB TCF string.
+  //
+  // Example:
+  //
+  //    bin/vanity-iab --native "Four score and seven years ago, our forefathers brought forth on this land, a new nation..."
+  //    bin/vanity-iab --dump "I am a pizza, covered in cheese!  The wheels on the bus go round and round!"
+  //    bin/vanity-iab --raw "I hereby Cede and Grant to Oath, a Verizon Company, Full Right and Title to MY DATA to use, perform and enjoy for the benefit of myself and others, now herein on media now known or yet to be developed""
+  //    bin/vanity-iab --native "$(curl https://www.gnu.org/licenses/gpl-3.0.txt 2>/dev/null | gzip)"
+  //
+  // Usage:
+  //
+  //  auto remain(Argv av) -> int {
+  //     options::Parser pa(std::move(av));
+  //     ...parsed on RAII, threw Quitting if not satisfied.
+  //     ...do the VANITY stuff...
+  //  }
+  //  auto main(int c, char *v[]) -> int {
+  //    return remain(Argv(c, v))
+  //  }
+  //
+  class Parser;
+}
+#endiv
+#divert <hpp>
+#import app.vanity_iab.options // matryoshka doesn't happen automatically
+#import app.argv.parser.Basis
+#import app.argv.parser.residual.Aspect
+#import app.argv.parser.format.Aspect
+class app::vanity_iab::options::Parser : public argv::parser::Basis, public argv::parser::residual::Aspect, public argv::parser::format::Aspect {
+  using ancestor = argv::parser::Basis;
+public:
+  inline explicit Parser(Argv a) { parse(a); }
+private:
+  struct access {
+    struct format {
+      class Options;
+    };
+  };
+  auto parse([[inout]] Argv &) -> void;
+  // The NAME is vanity_iab::NAME, not a member variable.
+  // The USAGE message is herein.
+  static auto usage(std::ostream &) -> void;
+};
+#endiv
+#divert <cpp>
+auto app::vanity_iab::options::Parser::usage(std::ostream &outbound) -> void {
+  outbound << "usage: " << NAME << " [ --format={dump,native,raw} ] message ...\n"
+           << "\n"
+           << "formatting, where FORMAT is one of 'dump', 'native' or 'raw'\n"
+           << "--format=FORMAT\n"
+           << "--format FORMAT\n"
+           << "      -f FORMAT        the formatting of the output\n"
+           << "\n"
+           << "where the MESSAGE is any message you choose to put into an IAB consent\n"
+           << "\n"
+           << "examples:\n"
+           << NAME << " 'I am a pizza, covered in Cheese!'\n"
+           << NAME << " 'I hereby grant Oath & Verizon a worldwide, revocable, royalty-free right to use my data for my enjoyment and comfort on any media now known or yet to be developed pursuant to this license'\n"
+           << NAME << " 'Is this the party to whom I am speaking?'\n"
+    ;
+}
+#import std.cerr
+#import std.cout
+#import app.Quitting
+#import app.argv // namespace exit & the constants therein
+#import app.vanity_iab.options.Parser.access.format.Options
+#import app.Quitting
+auto app::vanity_iab::options::Parser::parse(Argv &av) -> void {
+  namespace exit = argv::parser::exit;
+  av.pop_front();
+  access::format::Options parsed_format;
+  for ( ; !av.empty(); av.pop_front()) {
+    auto const first = av.front();
+    if (false) {
+    } else if ("-h"s == first || "--help"s == first || "--usage"s == first) {
+      usage(std::cout);
+      throw Quitting{NAME, 0};
+    } else if ("--dump"s == first || "--format=dump"s == first) {
+      parsed_format.clear();
+      parsed_format.print_format_dump = true;
+    } else if ("--native"s == first || "--format=native"s == first) {
+      parsed_format.clear();
+      parsed_format.print_format_native = true;
+    } else if ("--raw"s == first || "--format=raw"s == first) {
+      parsed_format.clear();
+      parsed_format.print_format_raw = true;
+    } else if ("-f"s == first || "--format"s == first) {
+      av.pop_front();
+      if (av.empty()) {
+        std::cerr << NAME << ": error, --format requires a following keyword\n";
+        throw Quitting{NAME, exit::USAGE};
+      }
+      auto const keyword = av.front();
+      if (false) {
+      } else if ("dump"s == keyword) {
+        parsed_format.clear();
+        parsed_format.print_format_dump = true;
+      } else if ("native"s == keyword) {
+        parsed_format.clear();
+        parsed_format.print_format_native = true;
+      } else if ("raw"s == keyword) {
+        parsed_format.clear();
+        parsed_format.print_format_raw = true;
+      } else {
+        std::cerr << NAME << COLON_NOTICE_BANNER
+                  << NAME << ": error, unknown format keyword " << keyword << '\n';
+        throw Quitting{NAME, exit::USAGE};
+      }
+    } else if (0 == first.find("--format=")) {
+      std::cerr << NAME << COLON_NOTICE_BANNER
+                << NAME << ": error, unknown format keyword " << first << '\n';
+      throw Quitting{NAME, exit::USAGE};
+    } else if (first.empty() || '-' != first.front()) {
+      // The first non-option word.
+      break;
+    } else {
+      std::cerr << NAME << COLON_NOTICE_BANNER
+                << NAME << ": error, unknown option " << first << '\n';
+      throw Quitting{NAME, exit::USAGE};
+    }
+  }
+  this->parsing_format = parsed_format;
+  if (av.empty()) {
+    std::cerr << NAME << COLON_NOTICE_BANNER
+              << NAME << ": error, at least one no non-option word is required\n"
+      ;
+    throw Quitting{NAME, exit::USAGE};
+  }
+  this->parsing_residual = std::move(av);
+}
+#endiv

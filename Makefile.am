@@ -56,14 +56,23 @@ clean-dependencies::
 clean-local:: clean-dependencies
 
 include src/app/Makefrag.am
+include src/app/dump_base64/Makefrag.am
 include src/app/dump_iab/Makefrag.am
+include src/app/random_base64/Makefrag.am
+include src/app/random_iab/Makefrag.am
+include src/app/vanity_iab/Makefrag.am
+include src/generation/Makefrag.am
 include src/tests/unit/Makefrag.am
 include src/tunitas/butano/Makefrag.am
 include src/tunitas/butano/tcf/Makefrag.am
 include src/want/Makefrag.am
 
 bin_PROGRAMS = \
+  bin/dump-base64 \
   bin/dump-iab \
+  bin/random-base64 \
+  bin/random-iab \
+  bin/vanity-iab \
   $(end)
 lib_LTLIBRARIES = \
   $(lib_libtunitas_butano_la) \
@@ -71,17 +80,34 @@ lib_LTLIBRARIES = \
   $(end)
 noinst_LTLIBRARIES = \
   $(lib_libwant_la) \
+  $(lib_libgeneration_la) \
   $(lib_libapp_la) \
   $(end)
 check_PROGRAMS = \
   $(check_bin_unit) \
   $(end)
 
-include tests/dump/Makefrag.am
+include tests/dump-base64/Makefrag.am
+include tests/dump-iab/Makefrag.am
+include tests/random-base64/Makefrag.am
+include tests/random-iab/Makefrag.am
+include tests/vanity-iab/Makefrag.am
 include tests/unit/Makefrag.am
+XFAIL_TESTS = \
+  $(tests_unit_XFAIL_TESTS) \
+  $(tests_dump_base64_XFAIL_TESTS) \
+  $(tests_dump_iab_XFAIL_TESTS) \
+  $(tests_random_base64_XFAIL_TESTS) \
+  $(tests_random_iab_XFAIL_TESTS) \
+  $(tests_vanity_iab_XFAIL_TESTS) \
+  $(end)
 TESTS = \
   $(tests_unit_TESTS) \
-  $(tests_dump_TESTS) \
+  $(tests_dump_base64_TESTS) \
+  $(tests_dump_iab_TESTS) \
+  $(tests_random_base64_TESTS) \
+  $(tests_random_iab_TESTS) \
+  $(tests_vanity_iab_TESTS) \
   $(end)
 
 # --- Mostly boilerplate beyond here

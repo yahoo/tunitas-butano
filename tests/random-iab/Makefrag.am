@@ -1,0 +1,39 @@
+tests_random_iab_XFAIL_TESTS = \
+  $(end)
+tests_random_iab_TESTS = \
+  tests/random-iab/option.help.test \
+  tests/random-iab/option.dry-run.test \
+  tests/random-iab/option.dryrun.test \
+  tests/random-iab/option.d.test \
+  tests/random-iab/option.f-dump.test \
+  tests/random-iab/option.f-native.test \
+  tests/random-iab/option.f-raw.test \
+  tests/random-iab/option.format-dump.test \
+  tests/random-iab/option.format-native.test \
+  tests/random-iab/option.format-raw.test \
+  tests/random-iab/option.help.test \
+  tests/random-iab/option.h.test \
+  tests/random-iab/option.q.test \
+  tests/random-iab/option.quiet.test \
+  tests/random-iab/option.s-SEED.test \
+  tests/random-iab/option.seed-SEED.test \
+  tests/random-iab/option.usage.test \
+  tests/random-iab/option.verbose.test \
+  tests/random-iab/option.version.test \
+  tests/random-iab/option.v.test \
+  tests/random-iab/option.V.test \
+  tests/random-iab/option.warnings.test \
+  tests/random-iab/option.warning.test \
+  tests/random-iab/option.w.test \
+  tests/random-iab/option.COUNT.00.test \
+  tests/random-iab/option.COUNT.01.test \
+  tests/random-iab/option.COUNT.02.test \
+  tests/random-iab/option.COUNT.03.test \
+  \
+  tests/random-iab/error.unknown.test \
+  \
+  tests/random-iab/run.01.test \
+  tests/random-iab/run.02.test \
+  \
+  $(tests_random_iab_XFAIL_TESTS) \
+  $(end)

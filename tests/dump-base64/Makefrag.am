@@ -1,0 +1,22 @@
+tests_dump_base64_XFAIL_TESTS = \
+  $(end)
+tests_dump_base64_TESTS = \
+  tests/dump-base64/option.help.test \
+  tests/dump-base64/option.dry-run.test \
+  tests/dump-base64/option.dryrun.test \
+  tests/dump-base64/option.d.test \
+  tests/dump-base64/option.help.test \
+  tests/dump-base64/option.h.test \
+  tests/dump-base64/option.q.test \
+  tests/dump-base64/option.quiet.test \
+  tests/dump-base64/option.usage.test \
+  tests/dump-base64/option.verbose.test \
+  tests/dump-base64/option.version.test \
+  tests/dump-base64/option.v.test \
+  tests/dump-base64/option.V.test \
+  tests/dump-base64/option.warnings.test \
+  tests/dump-base64/option.warning.test \
+  tests/dump-base64/option.w.test \
+  tests/dump-base64/error.unknown.test \
+  $(tests_dump_base64_XFAIL_TESTS) \
+  $(end)

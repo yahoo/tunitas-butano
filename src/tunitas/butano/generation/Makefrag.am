@@ -11,36 +11,38 @@ lib_libtunitas_butano_generation_la_SOURCES = \
   obj/src/tunitas/butano/generation/Point.cpp \
   obj/src/tunitas/butano/generation/base64.Distribution.cpp \
   obj/src/tunitas/butano/generation/base64.Generator.cpp \
-  obj/src/tunitas/butano/generation/randomness.Distribution.declaration.cpp \
-  obj/src/tunitas/butano/generation/randomness.Distribution.cpp \
-  obj/src/tunitas/butano/generation/randomness.Distribution.bool.cpp \
-  obj/src/tunitas/butano/generation/randomness.Distribution.Encoding.cpp \
-  obj/src/tunitas/butano/generation/randomness.Distribution.template.cpp \
-  obj/src/tunitas/butano/generation/randomness.Distribution.vector.bool.cpp \
-  obj/src/tunitas/butano/generation/randomness.Engine.cpp \
-  obj/src/tunitas/butano/generation/randomness.Generator.cpp \
-  obj/src/tunitas/butano/generation/randomness.distribution.Implementation.declaration.cpp \
-  obj/src/tunitas/butano/generation/randomness.distribution.Implementation.cpp \
-  obj/src/tunitas/butano/generation/randomness.distribution.Implementation.bool.cpp \
-  obj/src/tunitas/butano/generation/randomness.distribution.Implementation.Encoding.cpp \
-  obj/src/tunitas/butano/generation/randomness.distribution.Implementation.Enumlike.cpp \
-  obj/src/tunitas/butano/generation/randomness.distribution.Implementation.enum.cpp \
-  obj/src/tunitas/butano/generation/randomness.distribution.Implementation.integer.ALL.cpp \
-  obj/src/tunitas/butano/generation/randomness.distribution.Implementation.pair.cpp \
-  obj/src/tunitas/butano/generation/randomness.distribution.Implementation.Point.cpp \
-  obj/src/tunitas/butano/generation/randomness.distribution.Implementation.vector.bool.cpp \
-  obj/src/tunitas/butano/generation/randomness.limits.ALL.cpp \
-  obj/src/tunitas/butano/generation/randomness.limits.time.cpp \
-  obj/src/tunitas/butano/generation/randomness.limits.time.Span.cpp \
-  obj/src/tunitas/butano/generation/randomness.limits.time.detail.Thenable.cpp \
+  obj/src/tunitas/butano/generation/randomness/namespace.cpp \
+  obj/src/tunitas/butano/generation/randomness/Distribution.declaration.cpp \
+  obj/src/tunitas/butano/generation/randomness/Distribution.cpp \
+  obj/src/tunitas/butano/generation/randomness/Distribution.bool.cpp \
+  obj/src/tunitas/butano/generation/randomness/Distribution.Encoding.cpp \
+  obj/src/tunitas/butano/generation/randomness/Distribution.template.cpp \
+  obj/src/tunitas/butano/generation/randomness/Distribution.vector.bool.cpp \
+  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.declaration.cpp \
+  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.cpp \
+  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.bool.cpp \
+  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.Encoding.cpp \
+  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.Enumlike.cpp \
+  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.enum.cpp \
+  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.integer.ALL.cpp \
+  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.pair.cpp \
+  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.Point.cpp \
+  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.vector.bool.cpp \
+  obj/src/tunitas/butano/generation/randomness/Engine.cpp \
+  obj/src/tunitas/butano/generation/randomness/Generator.cpp \
+  obj/src/tunitas/butano/generation/randomness/limits.ALL.cpp \
+  obj/src/tunitas/butano/generation/randomness/limits.time.cpp \
+  obj/src/tunitas/butano/generation/randomness/limits.time.Span.cpp \
+  obj/src/tunitas/butano/generation/randomness/limits.time.detail.Thenable.cpp \
   obj/src/tunitas/butano/generation/required.tcf.Consent.cpp \
-  obj/src/tunitas/butano/generation/tcf.Distribution.cpp \
-  obj/src/tunitas/butano/generation/tcf.distribution.Basis.cpp \
-  obj/src/tunitas/butano/generation/tcf.distribution.fields.ALL.cpp \
-  obj/src/tunitas/butano/generation/tcf.Generator.declaration.cpp \
-  obj/src/tunitas/butano/generation/tcf.Generator.cpp \
-  obj/src/tunitas/butano/generation/tcf.Generator.Object.cpp \
-  obj/src/tunitas/butano/generation/tcf.Generator.String.cpp \
+  obj/src/tunitas/butano/generation/tcf/namespace.cpp \
+  obj/src/tunitas/butano/generation/tcf/Distribution.cpp \
+  obj/src/tunitas/butano/generation/tcf/distribution.Basis.cpp \
+  obj/src/tunitas/butano/generation/tcf/distribution.fields.ALL.cpp \
+  obj/src/tunitas/butano/generation/tcf/Generator.declaration.cpp \
+  obj/src/tunitas/butano/generation/tcf/Generator.cpp \
+  obj/src/tunitas/butano/generation/tcf/Generator.Object.cpp \
+  obj/src/tunitas/butano/generation/tcf/Generator.String.cpp \
   $(end)
 $(scold_cxxdir)/tunitas/butano/generation/dependencies.mk:
 	$(AM_V_BB1ST) $(call TF_DISAGGREGATE_COMPILE, $(lib_libtunitas_butano_generation_la_SOURCES))

@@ -1,0 +1,37 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::generation::base64 {
+  //
+  // Generate a base64 string of random data.
+  //
+  // Usage:
+  //
+  //     Generator generator;
+  //     std::string object = generator();
+  //
+  class Generator;
+}
+#endiv
+#divert <hpp>
+#import std.seed_seq
+#import tunitas.butano.generation.randomness.Engine
+#import tunitas.butano.generation.base64.Distribution
+#import std.string
+class tunitas::butano::generation::base64::Generator {
+public:
+  inline explicit Generator(std::seed_seq &);
+  using Value = std::string;
+  using Result = Value;
+  inline auto operator()() -> Result;
+protected:
+  randomness::Engine engine;
+  generation::base64::Distribution distribution;
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::generation::base64 {
+  Generator::Generator(std::seed_seq &seeder) : engine(seeder) { }
+  auto Generator::operator()() -> Result { return distribution(engine); }
+}
+#endiv

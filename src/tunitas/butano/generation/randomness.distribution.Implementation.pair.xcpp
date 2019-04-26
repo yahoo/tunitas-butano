@@ -1,0 +1,53 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.generation.randomness.distribution.Implementation.declaration
+#import std.pair
+namespace tunitas::butano::generation::randomness::distribution {
+  template<typename SINGLE, typename BOUND> struct Implementation<std::pair<SINGLE, SINGLE>, BOUND, false>;
+}
+#endiv
+#divert <hpp>
+#forward tunitas.butano.generation.randomness.Distribution
+namespace tunitas::butano::generation::randomness::distribution {
+  template<typename SINGLE, typename BOUND> class Implementation<std::pair<SINGLE, SINGLE>, BOUND, false> {
+    using Bound = BOUND;
+  public:
+    using Single = SINGLE;
+    using Value = std::pair<SINGLE, SINGLE>;
+    using Result = Value;
+    inline Implementation();
+    inline explicit Implementation(Single high);
+    inline Implementation(Single low, Single high);
+    inline auto operator()(Engine &engine) -> Result;
+  protected:
+    struct Subdistribution {
+      using First = Distribution<typename Result::first_type, Bound>;
+      using Second = Distribution<typename Result::second_type, Bound>;
+    };
+    typename Subdistribution::First first;
+    typename Subdistribution::Second second;
+  };
+}
+#endiv
+#divert <ipp>
+#import tunitas.butano.generation.randomness.Distribution
+namespace tunitas::butano::generation::randomness::distribution {
+  template<typename S, typename B> Implementation<std::pair<S, S>, B, false>::Implementation()
+    : first(Bound::min(), Bound::max())
+    , second(Bound::min(), Bound::max())
+  { }
+  template<typename S, typename B> Implementation<std::pair<S, S>, B, false>::Implementation(Single high)
+    : first(Bound::min(), high)
+    , second(Bound::min(), high)
+  { }
+  template<typename S, typename B> Implementation<std::pair<S, S>, B, false>::Implementation(Single low, Single high)
+    : first(low, high)
+    , second(high, high)
+  { }
+  template<typename S, typename B> auto Implementation<std::pair<S, S>, B, false>::operator()(Engine &engine) -> Result {
+    return Result(first(engine), second(engine));
+  }
+}
+#endiv
+

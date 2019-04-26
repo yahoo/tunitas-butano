@@ -1,0 +1,60 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::generation::tcf::distribution {
+  //
+  // The basis of a TCF Distribution.
+  // Descendants only.
+  // The parts that don't need a randomness::Engine to set up an manage.
+  //
+  // Usage: see tcf::Distribution
+  //
+  class Basis;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.tcf.id.ALL
+#import tunitas.butano.generation.tcf.distribution.fields.ALL
+#import std.pair
+class tunitas::butano::generation::tcf::distribution::Basis {
+protected:
+  using Version = generation::tcf::singleton::id::version::Protocol;
+  ~Basis() = default;
+public:
+  inline Basis();
+  inline explicit Basis(Version);
+  struct test { struct Access; };
+protected:
+  friend struct test::Access;
+  bool pathological;
+  singleton::id::version::Protocol_Optional set_protocol_version;
+  // And this thing ... which is used to rationalize the (startVendorId, endVendorId) pairs
+  // in a vendorConsentRanges entries array.  Reasonable: start < end; Pathological: maybe not so.
+  using VID = singleton::id::Vendor;
+  inline auto depathologize(std::pair<VID, VID>) -> std::pair<VID, VID>;
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::generation::tcf::distribution {
+  Basis::Basis()
+    : pathological{false}
+    , set_protocol_version{}
+  { }
+  Basis::Basis(Version want)
+    : pathological{false}
+    , set_protocol_version{want}
+  { }
+}
+#import std.min
+#import std.max
+namespace tunitas::butano::generation::tcf::distribution {
+  auto Basis::depathologize(std::pair<VID, VID> in) -> std::pair<VID, VID> {
+    if (pathological) {
+      return in;
+    } else {
+      using Out = std::pair<VID, VID>;
+      return Out(min(in.first, in.second), max(in.first, in.second));
+    }
+  } 
+}
+#endiv

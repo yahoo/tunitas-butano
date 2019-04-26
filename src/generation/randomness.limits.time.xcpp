@@ -1,8 +1,0 @@
-// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
-// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
-#divert <fpp>
-#import want.timeline.ALL
-namespace generation::randomness::limits::time {
-  using namespace want::timeline; // gets the chosen timeline::Clock
-}
-#endiv

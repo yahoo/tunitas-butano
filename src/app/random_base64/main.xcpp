@@ -11,7 +11,7 @@ namespace app::random_base64 {
 #endiv
 #divert <cpp>
 #import app.argv.parser.Howmany
-#import generation.base64.Generator
+#import tunitas.butano.generation.base64.Generator
 #import std.cerr
 #import std.cout
 #import std.seed_seq
@@ -21,7 +21,7 @@ auto app::random_base64::remain(Argv av) -> void {
   auto const residual = pa.residual();
   auto const &spontaneous = residual.seed();
   std::seed_seq seeder(spontaneous.begin(), spontaneous.end());
-  generation::base64::Generator generator(seeder);
+  tunitas::butano::generation::base64::Generator generator(seeder);
   for (unsigned e(residual.count()), i(e-e); e != i; ++i) {
     auto const generated = generator();
     if (pa.format_raw()) {

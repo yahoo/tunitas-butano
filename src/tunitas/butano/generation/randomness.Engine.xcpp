@@ -1,0 +1,22 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import std.mt19937 // [[FIXTHIS]] why not std::mt19937_64?
+namespace tunitas::butano::generation::randomness {
+  //
+  // A (pseudo-)random number generator engine.
+  // Seed appropriately or you won't get what you expect.
+  // Combine with a distribution to get the values.
+  //
+  // std::seed_seq may accept a single 32-bit value, then you only get 2^32 sequences.
+  // If you seed with the full complement then the Mersene Twister can go 2^19937
+  //
+  // Usage:
+  //
+  //     Engine engine(seeder)
+  //     Distribution &some_distribution = ...somebhow...
+  //     auto const value = distribution(engine);
+  //
+  using Engine = std::mt19937_64;
+}
+#endiv

@@ -1,0 +1,44 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::generation::randomness {
+  //
+  // A (pseudo-)random number generator is an Engine and a Distribution
+  // If you are building a lot of distributions, you'll want to share the engine.
+  // In that case you don't want this randomness::Generator.
+  //
+  // Usage:
+  //
+  //     Generator<Distribution<int>>     basic;
+  //     Generator<Distribution<int64_t>> better;
+  //     Generator<Distribution<bool>>    better;
+  //     Generator<Distribution<std::vector<bool>>> wow(seeder, 0, 1);   as if you wanted bitwise
+  //
+  template<typename DISTRIBUTION> class Generator;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.generation.randomness.Engine
+template<typename DISTRIBUTION> struct tunitas::butano::generation::randomness::Generator {
+public:
+  using Distribution = DISTRIBUTION;
+  using Value = typename Distribution::Value;
+  using Result = Value;
+  inline Generator(Value low, Value high);
+  inline auto operator()() -> Value;
+protected:
+  Engine engine;
+  Distribution distribution;
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::generation::randomness {
+  template<typename _> Generator<_>::Generator(Value low, Value high)
+    : distribution(low, high)
+  { }
+  template<typename _> auto Generator<_>::operator()() -> Value {
+    return Result(distribution(engine));
+  }
+}
+#endiv
+

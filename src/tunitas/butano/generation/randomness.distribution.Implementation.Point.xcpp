@@ -1,0 +1,52 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.generation.randomness.distribution.Implementation.declaration
+#forward tunitas.butano.generation.randomness.limits.time.Span
+#forward tunitas.butano.generation.Point
+namespace tunitas::butano::generation::randomness::distribution {
+  using want::timeline::Point;
+  template<typename DURATION, typename SPAN_NAME> class Implementation<Point<DURATION>, limits::time::Span<SPAN_NAME, DURATION>, false>;
+}
+#endiv
+#divert <hpp>
+#forward tunitas.butano.generation.randomness.Engine
+#forward tunitas.butano.generation.randomness.distribution.Implementation.integer.ALL
+namespace tunitas::butano::generation::randomness::distribution {
+  template<typename DURATION, typename SPAN_NAME> class Implementation<Point<DURATION>, limits::time::Span<SPAN_NAME, DURATION>, false>
+    : public Implementation<typename DURATION::rep, limits::time::Span<SPAN_NAME, DURATION>, false> {
+    using ancestor = Implementation<typename DURATION::rep, limits::time::Span<SPAN_NAME, DURATION>, false>;
+    using Span = limits::time::Span<SPAN_NAME, DURATION>;
+  public:
+    using Duration = DURATION;
+    using Representation = typename Duration::rep;
+    using Period = typename Duration::period;
+    using Point = generation::Point<Duration>;
+    inline Implementation();
+    inline explicit Implementation(Point when);
+    inline Implementation(Point start, Point finish);
+    using Result = Point;
+    inline auto operator()(Engine &engine) -> Result;
+  };
+}
+#endiv
+#divert <ipp>
+#import tunitas.butano.generation.Point
+#import tunitas.butano.generation.randomness.Engine
+#import tunitas.butano.generation.randomness.limits.time.Span
+#import tunitas.butano.generation.randomness.distribution.Implementation.integer.ALL
+namespace tunitas::butano::generation::randomness::distribution {
+  template<typename D, typename S> Implementation<Point<D>, limits::time::Span<S, D>, false>::Implementation()
+    : ancestor(Span::min().time_since_epoch().count(), Span::max().time_since_epoch().count())
+  { }
+  template<typename D, typename S> Implementation<Point<D>, limits::time::Span<S, D>, false>::Implementation(Point when)
+    : ancestor(Span::min().time_since_epoch().count(), when.time_since_epoch().count())
+  { }
+  template<typename D, typename S> Implementation<Point<D>, limits::time::Span<S, D>, false>::Implementation(Point start, Point finish)
+    : ancestor(start.time_since_epoch().count(), finish.time_since_epoch().count())
+  { }
+  template<typename D, typename S> auto Implementation<Point<D>, limits::time::Span<S, D>, false>::operator()(Engine &engine) -> Result {
+    return Point(Duration(ancestor::operator()(engine)));
+  }
+}
+#endiv

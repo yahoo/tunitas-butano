@@ -1,0 +1,53 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::generation::base64 {
+  //
+  // Distribution for base64 string generation.
+  // Distributes both along the axis of string size and string contents.
+  //
+  // Usage:
+  //
+  //     randomness::Engine engine(...seeder...);
+  //     Distribution distribution;
+  //     std::string s = distribution(engine);
+  //
+  struct Distribution;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.generation.randomness.Engine
+#import tunitas.butano.generation.randomness.Distribution
+#import std.string
+#import std.uint16_t
+#import std.uint8_t
+class tunitas::butano::generation::base64::Distribution {
+public:
+  inline Distribution();
+  using Engine = randomness::Engine;
+  using Value = std::string;
+  using Result = Value;
+  inline auto operator()(Engine &) -> Result;
+protected:
+  // Not looking to make (random) strings bigger than 2^13 == 8192
+  static constexpr auto MAXIMUM_STRING_LENGTH = (1u<<13)-1;
+  randomness::Distribution<std::uint16_t> size;
+  randomness::Distribution<std::uint8_t> byte;
+};
+#endiv
+#divert <ipp>
+#import want.lite.base64.encode
+namespace tunitas::butano::generation::base64 {
+  Distribution::Distribution()
+    : size{0, MAXIMUM_STRING_LENGTH}
+    , byte{}
+  { }
+  auto Distribution::operator()(Engine &engine) -> Result {
+    std::string specimen;
+    for (unsigned i{0}, e{size(engine)}; e != i; ++i) {
+      specimen.push_back(byte(engine));
+    }
+    return want::lite::base64::encode(specimen);
+  }
+}
+#endiv

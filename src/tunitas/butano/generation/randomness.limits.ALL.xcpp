@@ -1,0 +1,86 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import std.numeric_limits
+#import std.uint8_t
+#import std.uint16_t
+#import std.size_t
+namespace tunitas::butano::generation::randomness::limits {
+  //
+  // Expressing some limits for the Distribution<...>
+  //
+  template<typename INTEGRAL> using Numeric = std::numeric_limits<INTEGRAL>;
+  template<std::size_t N, typename INTEGRAL> struct Width : public Numeric<INTEGRAL> {
+    static_assert((1lu<<N) <= (1lu<<(8*sizeof (INTEGRAL))), "fit fail");
+    using Value = INTEGRAL;
+    static constexpr auto min() -> Value { return 0; }
+    static constexpr auto max() -> Value { return (1lu<<N)-1; }
+  };
+  template<typename INTEGRAL, INTEGRAL LOW, INTEGRAL HIGH> struct Bound : public Numeric<INTEGRAL> {
+    static_assert(LOW < (1lu<<(8*sizeof (INTEGRAL))), "fit fail");
+    static_assert(HIGH < (1lu<<(8*sizeof (INTEGRAL))), "fit fail");
+    static_assert(LOW <= HIGH);
+    using Value = INTEGRAL;
+    static constexpr auto min() -> Value { return LOW; }
+    inline static constexpr auto minimum = LOW;;
+    static constexpr auto max() -> Value { return HIGH; }
+    inline static constexpr auto maximum = HIGH;
+  };
+  template<typename INTEGRAL, INTEGRAL LOW = INTEGRAL()> struct Low;
+  template<typename INTEGRAL, INTEGRAL LOW> struct Low : public Bound<INTEGRAL, LOW, std::numeric_limits<INTEGRAL>::max()> { };
+  template<typename INTEGRAL, INTEGRAL HIGH = std::numeric_limits<INTEGRAL>::max()> struct High;
+  template<typename INTEGRAL, INTEGRAL HIGH> struct High : public Bound<INTEGRAL, 0u, HIGH> { };
+}
+namespace tunitas::butano::generation::randomness::limits::enume {
+  //
+  // When C++3x
+  //   Class<bool, false, true>
+  //   Class<Encoding, Encoding::BITS, Encoding::RANGES>
+  // When C++2a
+  //   Classlike<id::Vendor, Value<id::Vendor, LOW>, Value<id::Vendor, HIGH>
+  //   Classlike<id::Purpose, Value<id::Purpose, LOW>, Value<id::Purpose, HIGH>
+  //
+  // Get a Concept!
+  // ENUM is a regular enum classes
+  template<typename ENUM,
+           ENUM LOW = ENUM(Width<8*sizeof(ENUM), /*FIXTHIS*/ unsigned>::min()),
+           ENUM HIGH = ENUM(Width<8*sizeof(ENUM), /*FIXTHIS*/ unsigned>::max())> struct Class;
+  template<typename ENUM, ENUM LOW, ENUM HIGH> struct Class : public Width<8*sizeof(ENUM), /*FIXTHIS*/ unsigned> {
+    // Like Bound<ENUM, LOW, HIGH> but (re)computes the integral type by
+    // observing of the enum (e.g. the enum classes: uint8, uint16, uint32, uint64)
+    using Value = ENUM;
+    static constexpr auto min() -> Value { return LOW; }
+    inline static constexpr auto minimum = LOW;;
+    static constexpr auto max() -> Value { return HIGH; }
+    inline static constexpr auto maximum = HIGH;
+  };
+  //
+  // When C++03
+  //   Classlike<id::Vendor, Value<id::Vendor, LOW>, Value<id::Vendor, HIGH>
+  //   Classlike<id::Purpose, Value<id::Purpose, LOW>, Value<id::Purpose, HIGH>
+  //
+  // see want::javalike::integer::Enum as standard layout types surrounding an integer-of-size.
+  //
+  // Get a Concept!
+  // ENUM is a class with a type alias 'Value' within it, e.g. want::javalike::Enum
+  enum Side { LOW, HIGH };
+  template<typename ENUM, Side> struct Value;
+  template<typename ENUM> struct Value<ENUM, LOW> {
+    inline static constexpr auto value = ENUM(Width<8*sizeof(ENUM), typename ENUM::Value>::min());
+  };
+  template<typename ENUM> struct Value<ENUM, HIGH> {
+    inline static constexpr auto value = ENUM(Width<8*sizeof(ENUM), typename ENUM::Value>::min());
+  };
+  template<typename ENUM, typename LOW = Value<ENUM, LOW>, typename HIGH = Value<ENUM, HIGH>> struct Classlike;
+  template<typename ENUM, typename LOW, typename HIGH> struct Classlike {
+    // Like Bound<ENUM, LOW, HIGH> but (re)computes the integral type by
+    // observing of the enum (e.g. the enum classes: uint8, uint16, uint32, uint64)
+    using Value = ENUM;
+    static constexpr auto min() -> Value { return LOW::value; }
+    inline static constexpr auto minimum = LOW::value;
+    static constexpr auto max() -> Value { return HIGH::value; }
+    inline static constexpr auto maximum = HIGH::value;
+  };  
+}
+#import tunitas.butano.generation.randomness.limits.time.Span
+#endiv

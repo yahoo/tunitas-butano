@@ -1,0 +1,50 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.generation.tcf.Generator.declaration
+namespace tunitas::butano::generation::tcf {
+  //
+  // Generate a (pseudo-)random IAB TCF consent object.
+  //
+  // Usage:
+  //
+  //   std::seed_seq seeder{...something...};
+  //   Generator<consent::Object> generator(seeder);
+  //   Object obj = generator();      ............................. how easy is that?
+  //
+  template<> class Generator<Object>;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.generation.randomness.Engine
+#import tunitas.butano.generation.tcf.Distribution
+#import std.seed_seq
+namespace tunitas::butano::generation::tcf {
+  template<> class Generator<Object> {
+    using Version = generation::tcf::singleton::id::version::Protocol;
+  public:
+    inline explicit Generator(std::seed_seq &);
+    inline Generator(std::seed_seq &, Version);
+    using Result = tcf::singleton::Object;
+    inline auto operator()() -> Result;
+  protected:
+    randomness::Engine engine;
+    Distribution distribution;
+  };
+}
+#endiv
+#divert <ipp>
+namespace tunitas::butano::generation::tcf {
+  Generator<Object>::Generator(std::seed_seq &seeder)
+    : engine(seeder)
+    , distribution()
+    { }
+  Generator<Object>::Generator(std::seed_seq &seeder, Version want)
+    : engine(seeder)
+    , distribution(want)
+    { }
+  auto Generator<Object>::operator()() -> Result {
+    return distribution(engine);
+  }
+}
+#endiv

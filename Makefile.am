@@ -61,9 +61,9 @@ include src/app/dump_iab/Makefrag.am
 include src/app/random_base64/Makefrag.am
 include src/app/random_iab/Makefrag.am
 include src/app/vanity_iab/Makefrag.am
-include src/generation/Makefrag.am
 include src/tests/unit/Makefrag.am
 include src/tunitas/butano/Makefrag.am
+include src/tunitas/butano/generation/Makefrag.am
 include src/tunitas/butano/tcf/Makefrag.am
 include src/want/Makefrag.am
 
@@ -76,11 +76,11 @@ bin_PROGRAMS = \
   $(end)
 lib_LTLIBRARIES = \
   $(lib_libtunitas_butano_la) \
+  $(lib_libtunitas_butano_generation_la) \
   $(lib_libtunitas_butano_tcf_la) \
   $(end)
 noinst_LTLIBRARIES = \
   $(lib_libwant_la) \
-  $(lib_libgeneration_la) \
   $(lib_libapp_la) \
   $(end)
 check_PROGRAMS = \

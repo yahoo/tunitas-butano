@@ -8,7 +8,7 @@ namespace app::random_iab {
 #endiv
 #divert <cpp>
 #import app.argv.parser.Howmany
-#import generation.tcf.Generator
+#import tunitas.butano.generation.tcf.Generator
 #import std.cerr
 #import std.cout
 #import std.seed_seq
@@ -19,7 +19,7 @@ auto app::random_iab::remain(Argv av) -> void {
   auto const residual = pa.residual();
   auto const &spontaneous = residual.seed();
   std::seed_seq seeder(spontaneous.begin(), spontaneous.end());
-  using namespace generation::tcf;
+  using namespace tunitas::butano::generation::tcf;
   Generator<String> generator(seeder);
   for (auto e{residual.count()}, i{e-e}; e != i; ++i) {
     auto const generated = generator();

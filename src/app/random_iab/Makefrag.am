@@ -2,8 +2,7 @@
 
 bin_random_iab = bin/random-iab
 bin_random_iab_LDADD = \
-  $(lib_libgeneration_la) \
-  $(lib_libtunitas_butano_tcf_la) \
+  $(lib_libtunitas_butano_generation_la) \
   $(lib_libapp_la) \
   -ltunitas \
   -loptions-module \

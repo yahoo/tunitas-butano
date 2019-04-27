@@ -2,7 +2,7 @@
 // Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
 #divert <fpp>
 #import tunitas.butano.generation.randomness.distribution.Implementation.declaration
-#import tunitas.butano.generation.randomness.limits.ALL // limits::Enume::Class
+#import tunitas.butano.generation.limits.Enum
 #import tunitas.butano.tcf.consent.Encoding
 namespace tunitas::butano::generation::randomness::distribution::implementation {
   namespace encoding {
@@ -13,14 +13,12 @@ namespace tunitas::butano::generation::randomness::distribution::implementation 
     //
     using Class = tunitas::butano::tcf::consent::Encoding;
     using Implementation = distribution::Implementation<Class,
-                                                        limits::enume::Class<Class,
-                                                                             Class::BITS,
-                                                                             Class::RANGES>,
+                                                        limits::Enum<Class, Class::BITS, Class::RANGES>,
                                                         true>;
   }
   using Encoding = encoding::Implementation;
 }
 #endiv
 #divert <hpp>
-#import tunitas.butano.generation.randomness.distribution.Implementation.enum
+#import tunitas.butano.generation.randomness.distribution.Implementation.Enum
 #endiv

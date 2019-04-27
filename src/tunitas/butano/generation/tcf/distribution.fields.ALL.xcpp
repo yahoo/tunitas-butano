@@ -75,44 +75,47 @@ namespace tunitas::butano::generation::tcf::singleton {
   using Encoding = tunitas::butano::tcf::consent::Encoding;
   using Object = tunitas::butano::tcf::consent::Object;
 }
+#import tunitas.butano.generation.limits.Enum
+#import tunitas.butano.generation.limits.numeric.Bound
+#import tunitas.butano.generation.limits.numeric.Width
 #import tunitas.butano.generation.randomness.Distribution
 #forward tunitas.butano.generation.tcf.Distribution
 namespace tunitas::butano::generation::tcf::distribution {
   namespace id {
     namespace version {
-      using Protocol   = randomness::Distribution<singleton::id::version::Protocol, randomness::limits::enume::Class<singleton::id::version::Protocol>>;
-      using Platform   = randomness::Distribution<singleton::id::version::Platform, randomness::limits::enume::Class<singleton::id::version::Platform>>;
-      using VendorList = randomness::Distribution<singleton::id::version::VendorList, randomness::limits::enume::Class<singleton::id::version::VendorList>>;
+      using Protocol   = randomness::Distribution<singleton::id::version::Protocol, limits::enume::Class<singleton::id::version::Protocol>>;
+      using Platform   = randomness::Distribution<singleton::id::version::Platform, limits::enume::Class<singleton::id::version::Platform>>;
+      using VendorList = randomness::Distribution<singleton::id::version::VendorList, limits::enume::Class<singleton::id::version::VendorList>>;
     }
-    using Vendor   = randomness::Distribution<singleton::id::Vendor, randomness::limits::enume::Class<singleton::id::Vendor>>;
-    using Platform = randomness::Distribution<singleton::id::Platform, randomness::limits::enume::Class<singleton::id::Platform>>;
-    using Language = randomness::Distribution<singleton::id::Language, randomness::limits::enume::Class<singleton::id::Language>>;
-    using Screen   = randomness::Distribution<singleton::id::Screen, randomness::limits::enume::Class<singleton::id::Screen>>;
-    using Purpose  = randomness::Distribution<singleton::id::Purpose, randomness::limits::enume::Class<singleton::id::Purpose>>;
-    using Feature  = randomness::Distribution<singleton::id::Feature, randomness::limits::enume::Class<singleton::id::Feature>>;
+    using Vendor   = randomness::Distribution<singleton::id::Vendor, limits::enume::Class<singleton::id::Vendor>>;
+    using Platform = randomness::Distribution<singleton::id::Platform, limits::enume::Class<singleton::id::Platform>>;
+    using Language = randomness::Distribution<singleton::id::Language, limits::enume::Class<singleton::id::Language>>;
+    using Screen   = randomness::Distribution<singleton::id::Screen, limits::enume::Class<singleton::id::Screen>>;
+    using Purpose  = randomness::Distribution<singleton::id::Purpose, limits::enume::Class<singleton::id::Purpose>>;
+    using Feature  = randomness::Distribution<singleton::id::Feature, limits::enume::Class<singleton::id::Feature>>;
   }
   namespace protocol {
     using Version = id::version::Protocol;
     namespace detail {
       namespace ss = singleton::protocol::detail;
-      namespace ll = randomness::limits::time;
+      namespace ll = limits::time;
       using Point = randomness::Distribution<ss::Point, ll::Span<ll::Recently, ss::Duration>>;
     }
     using Time = detail::Point;
   }
   namespace purpose {
-    using Count = randomness::Distribution<std::uint8_t, randomness::limits::Bound<std::uint8_t, 0, 24>>;
-    using Set = randomness::Distribution<std::uint32_t, randomness::limits::Width<24, std::uint32_t>>;
+    using Count = randomness::Distribution<std::uint8_t, limits::numeric::Bound<std::uint8_t, 0, 24>>;
+    using Set = randomness::Distribution<std::uint32_t, limits::numeric::Width<24, std::uint32_t>>;
   }
   namespace vendor {
     // The maximum vendor id to generate
-    using Count = randomness::Distribution<singleton::vendor::Count, randomness::limits::High<singleton::vendor::Count, singleton::vendor::MAXIMUM>>;
+    using Count = randomness::Distribution<singleton::vendor::Count, limits::numeric::Bound<singleton::vendor::Count, 0u, singleton::vendor::MAXIMUM>>;
     // Generate a (single) vendor id within the 1..Count range
-    using Population = randomness::Distribution<singleton::id::Vendor, randomness::limits::enume::Class<singleton::id::Vendor>>;
+    using Population = randomness::Distribution<singleton::id::Vendor, limits::enume::Class<singleton::id::Vendor>>;
   }
   namespace bitfield {
     // The length of the bitfield string to generate
-    using Count = randomness::Distribution<singleton::bitfield::Count, randomness::limits::High<singleton::bitfield::Count, singleton::bitfield::COUNT_MAXIMUM>>;
+    using Count = randomness::Distribution<singleton::bitfield::Count, limits::numeric::Bound<singleton::bitfield::Count, 0u, singleton::bitfield::COUNT_MAXIMUM>>;
     // Generate positions within the bitfield
     using Population = randomness::Distribution<std::vector<bool>>;
   }
@@ -120,9 +123,9 @@ namespace tunitas::butano::generation::tcf::distribution {
     constexpr static auto const NUMENTRIES = singleton::range::NUMENTRIES;
     constexpr static auto const COUNT_WIDTH = tunitas::butano::tcf::consent::protocol::Positions<NUMENTRIES>::length();
     // The number of range entries to generate
-    using Count = randomness::Distribution<std::uint16_t, randomness::limits::Width<COUNT_WIDTH, std::uint16_t>>;
+    using Count = randomness::Distribution<std::uint16_t, limits::numeric::Width<COUNT_WIDTH, std::uint16_t>>;
     // Generate a (pair) vendor id within the 1..vendor::Count range (not 1..range::Count)
-    using Population = randomness::Distribution<std::pair<singleton::id::Vendor, singleton::id::Vendor>, randomness::limits::enume::Class<singleton::id::Vendor>>;
+    using Population = randomness::Distribution<std::pair<singleton::id::Vendor, singleton::id::Vendor>, limits::enume::Class<singleton::id::Vendor>>;
   }
   using Bit = randomness::distribution::Bit;
   using Byte = randomness::distribution::Byte;

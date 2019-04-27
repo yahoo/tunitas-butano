@@ -2,14 +2,15 @@
 // Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
 #divert <fpp>
 #import tunitas.butano.generation.randomness.distribution.Implementation.declaration
-#import tunitas.butano.generation.limits.ALL // limits.enume.Class
+#import tunitas.butano.generation.required.enumeration.Class
+#import tunitas.butano.generation.limits.Enum
 namespace tunitas::butano::generation::randomness::distribution {
-  template<typename ENUM, ENUM LOW, ENUM HIGH> class Implementation<ENUM, limits::enume::Class<ENUM, LOW, HIGH>, true>;
+  template<required::enumeration::Class ENUM, ENUM LOW, ENUM HIGH> class Implementation<ENUM, limits::Enum<ENUM, LOW, HIGH>, true>;
 }
 #endiv
 #divert <hpp>
 #import tunitas.butano.generation.randomness.distribution.Implementation.integer.ALL
-#import tunitas.butano.generation.limits.ALL // limits::Bound
+#import tunitas.butano.generation.limits.numeric.Bound
 #forward tunitas.butano.generation.randomness.Engine
 namespace tunitas::butano::generation::randomness::distribution {
   //
@@ -18,10 +19,10 @@ namespace tunitas::butano::generation::randomness::distribution {
   // The Implementation must be specialized against limits::enume::Class<ENUM> when IS_ENUM=true
   //                    or also specialized against limits::enume::Classlike<ENUM> when IS_ENUM=true
   //
-  template<typename ENUM, ENUM LOW, ENUM HIGH> class Implementation<ENUM, limits::enume::Class<ENUM, LOW, HIGH>, true>
-    : public Implementation<unsigned, limits::numeric::Bound<unsigned, (unsigned) limits::enume::Class<ENUM, LOW, HIGH>::min(), (unsigned) limits::enume::Class<ENUM, LOW, HIGH>::max()>, false> {
+  template<required::enumeration::Class ENUM, ENUM LOW, ENUM HIGH> class Implementation<ENUM, limits::Enum<ENUM, LOW, HIGH>, true>
+    : public Implementation<unsigned, limits::numeric::Bound<unsigned, (unsigned) limits::Enum<ENUM, LOW, HIGH>::min(), (unsigned) limits::Enum<ENUM, LOW, HIGH>::max()>, false> {
     // [[FIXTHIS]] sloppy ... what if the enum class is bigger than 32-bit unsigned?
-    using ancestor = Implementation<unsigned, limits::numeric::Bound<unsigned, (unsigned) limits::enume::Class<ENUM, LOW, HIGH>::min(), (unsigned) limits::enume::Class<ENUM, LOW, HIGH>::max()>, false>;
+    using ancestor = Implementation<unsigned, limits::numeric::Bound<unsigned, (unsigned) limits::Enum<ENUM, LOW, HIGH>::min(), (unsigned) limits::Enum<ENUM, LOW, HIGH>::max()>, false>;
   public:
     using Value = ENUM;
     Implementation() = default;
@@ -34,7 +35,7 @@ namespace tunitas::butano::generation::randomness::distribution {
 #endiv
 #divert <ipp>
 namespace tunitas::butano::generation::randomness::distribution {
-  template<typename E, E L, E H> auto Implementation<E, limits::enume::Class<E, L, H>, true>::operator()(Engine &engine) -> Result {
+  template<required::enumeration::Class E, E L, E H> auto Implementation<E, limits::Enum<E, L, H>, true>::operator()(Engine &engine) -> Result {
     return Result(ancestor::operator()(engine));
   }
 }

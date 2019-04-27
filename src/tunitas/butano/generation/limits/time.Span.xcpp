@@ -1,7 +1,7 @@
 // This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
 // Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
 #divert <fpp>
-namespace tunitas::butano::generation::randomness::limits::time {
+namespace tunitas::butano::generation::limits::time {
   // Get a Concept!  DURATION is a std::chrono::duration<...>
   template<typename UNIQUENESS, typename DURATION> struct Span;
   enum Recently { RECENTLY };
@@ -9,8 +9,8 @@ namespace tunitas::butano::generation::randomness::limits::time {
 }
 #endiv
 #divert <hpp>
-#import tunitas.butano.generation.randomness.limits.time // Point, point_cast<...>(...), Cloc,, etc.
-namespace tunitas::butano::generation::randomness::limits {
+#import tunitas.butano.generation.limits.time // Point, point_cast<...>(...), Cloc,, etc.
+namespace tunitas::butano::generation::limits {
   template<typename UNIQUENESS, typename DURATION> struct time::Span {
     using Duration = DURATION;
     using Point = time::Point<DURATION>;
@@ -19,8 +19,8 @@ namespace tunitas::butano::generation::randomness::limits {
     static auto max() -> Value { return point_cast<Duration>(Clock::now()); }
   };
 }
-#import tunitas.butano.generation.randomness.limits.time.detail.Thenable
-namespace tunitas::butano::generation::randomness::limits::time {
+#import tunitas.butano.generation.limits.time.detail.Thenable
+namespace tunitas::butano::generation::limits::time {
   template<typename DURATION> struct Span<Recently, DURATION> : protected detail::Thenable {
     using Duration = DURATION;
     using Point = time::Point<DURATION>;

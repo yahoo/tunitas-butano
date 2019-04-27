@@ -6,19 +6,20 @@
 #import tunitas.butano.generation.randomness.Distribution.Encoding
 #import tunitas.butano.generation.randomness.Distribution.vector.bool
 #import tunitas.butano.generation.randomness.Distribution.template
-#import tunitas.butano.generation.randomness.limits.ALL // limits::Enume::Class, limits::time::Span, limits::time::Recently
+#import tunitas.butano.generation.limits.ALL // limits::Enume::Class, limits::time::Span, limits::time::Recently
 #import std.uint8_t
 #import tunitas.butano.tcf.consent.Encoding
 #import tunitas.butano.tcf.consent.protocol.Time
 namespace tunitas::butano::generation::randomness::distribution {
   using Byte = Distribution<std::uint8_t>;
   using Bit = Distribution<bool>; // [[THISWAS]] randomness::Distribution<bool, limits::enume::Class<bool>>;
+  //
   namespace detail::encoding {
     namespace co = tunitas::butano::tcf::consent;
     using Point = Distribution<co::Encoding>;
   }
   using Encoding = detail::encoding::Point;
-
+  //
   namespace detail::time {
     namespace pt = tunitas::butano::tcf::consent::protocol::time;
     namespace lt = limits::time;

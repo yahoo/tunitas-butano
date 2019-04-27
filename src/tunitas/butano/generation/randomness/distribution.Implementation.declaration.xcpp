@@ -18,9 +18,9 @@ namespace tunitas::butano::generation::randomness::distribution {
 }
 // All specializations will need these
 #forward tunitas.butano.generation.randomness.Engine
-#forward tunitas.butano.generation.randomness.limits.ALL
+#forward tunitas.butano.generation.limits.ALL
 #endiv
 #divert <ipp>
 #import tunitas.butano.generation.randomness.Engine
-#import tunitas.butano.generation.randomness.limits.ALL
+#import tunitas.butano.generation.limits.ALL
 #endiv

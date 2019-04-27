@@ -23,18 +23,27 @@ lib_libtunitas_butano_generation_la_SOURCES = \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.bool.cpp \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.Encoding.cpp \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.Enumlike.cpp \
+  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.Enum.cpp \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.enum.cpp \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.integer.ALL.cpp \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.pair.cpp \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.Point.cpp \
-  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.vector.bool.cpp \
   obj/src/tunitas/butano/generation/randomness/Engine.cpp \
   obj/src/tunitas/butano/generation/randomness/Generator.cpp \
-  obj/src/tunitas/butano/generation/randomness/limits.ALL.cpp \
-  obj/src/tunitas/butano/generation/randomness/limits.time.cpp \
-  obj/src/tunitas/butano/generation/randomness/limits.time.Span.cpp \
-  obj/src/tunitas/butano/generation/randomness/limits.time.detail.Thenable.cpp \
+  obj/src/tunitas/butano/generation/limits/namespace.cpp \
+  obj/src/tunitas/butano/generation/limits/ALL.cpp \
+  obj/src/tunitas/butano/generation/limits/numeric.Bound.cpp \
+  obj/src/tunitas/butano/generation/limits/numeric.Width.cpp \
+  obj/src/tunitas/butano/generation/limits/Bool.cpp \
+  obj/src/tunitas/butano/generation/limits/Enum.cpp \
+  obj/src/tunitas/butano/generation/limits/Numeric.cpp \
+  obj/src/tunitas/butano/generation/limits/Unbound.cpp \
+  obj/src/tunitas/butano/generation/limits/time.cpp \
+  obj/src/tunitas/butano/generation/limits/time.Span.cpp \
+  obj/src/tunitas/butano/generation/limits/time.detail.Thenable.cpp \
   obj/src/tunitas/butano/generation/required.tcf.Consent.cpp \
+  obj/src/tunitas/butano/generation/required.Integral.cpp \
+  obj/src/tunitas/butano/generation/required.enumeration.Class.cpp \
   obj/src/tunitas/butano/generation/tcf/namespace.cpp \
   obj/src/tunitas/butano/generation/tcf/Distribution.cpp \
   obj/src/tunitas/butano/generation/tcf/distribution.Basis.cpp \

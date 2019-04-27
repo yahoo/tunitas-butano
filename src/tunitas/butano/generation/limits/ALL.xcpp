@@ -1,14 +1,37 @@
 // This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
 // Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
 #divert <fpp>
+#import tunitas.butano.generation.limits.Enum
+#import tunitas.butano.generation.limits.numeric.Bound
+#import tunitas.butano.generation.limits.numeric.Width
+#import tunitas.butano.generation.limits.Numeric
+#import tunitas.butano.generation.limits.time.Span
+#import std.numeric_limits
+#import std.underlying_type
+namespace tunitas::butano::generation::limits::enume {
+  // Get a Concept!
+  // ENUM is a regular enum classes
+  template<typename ENUM,
+           ENUM LOW = ENUM(std::numeric_limits<typename std::underlying_type<ENUM>::type>::min()),
+           ENUM HIGH = ENUM(std::numeric_limits<typename std::underlying_type<ENUM>::type>::max())> struct Class;
+  //
+  // Get a Concept!
+  // ENUM is a class with a type alias 'Value' within it, e.g. want::javalike::Enum
+  enum Side { LOW, HIGH };
+  template<typename ENUM, Side> struct Value;
+  template<typename ENUM, typename LOW = Value<ENUM, LOW>, typename HIGH = Value<ENUM, HIGH>> struct Classlike;
+}
+#endiv
+#divert <hpp>
 #import std.numeric_limits
 #import std.uint8_t
 #import std.uint16_t
 #import std.size_t
-namespace tunitas::butano::generation::randomness::limits {
+namespace tunitas::butano::generation::limits {
   //
   // Expressing some limits for the Distribution<...>
   //
+#if 0
   template<typename INTEGRAL> using Numeric = std::numeric_limits<INTEGRAL>;
   template<std::size_t N, typename INTEGRAL> struct Width : public Numeric<INTEGRAL> {
     static_assert((1lu<<N) <= (1lu<<(8*sizeof (INTEGRAL))), "fit fail");
@@ -30,8 +53,9 @@ namespace tunitas::butano::generation::randomness::limits {
   template<typename INTEGRAL, INTEGRAL LOW> struct Low : public Bound<INTEGRAL, LOW, std::numeric_limits<INTEGRAL>::max()> { };
   template<typename INTEGRAL, INTEGRAL HIGH = std::numeric_limits<INTEGRAL>::max()> struct High;
   template<typename INTEGRAL, INTEGRAL HIGH> struct High : public Bound<INTEGRAL, 0u, HIGH> { };
+#endif
 }
-namespace tunitas::butano::generation::randomness::limits::enume {
+namespace tunitas::butano::generation::limits::enume {
   //
   // When C++3x
   //   Class<bool, false, true>
@@ -40,12 +64,7 @@ namespace tunitas::butano::generation::randomness::limits::enume {
   //   Classlike<id::Vendor, Value<id::Vendor, LOW>, Value<id::Vendor, HIGH>
   //   Classlike<id::Purpose, Value<id::Purpose, LOW>, Value<id::Purpose, HIGH>
   //
-  // Get a Concept!
-  // ENUM is a regular enum classes
-  template<typename ENUM,
-           ENUM LOW = ENUM(Width<8*sizeof(ENUM), /*FIXTHIS*/ unsigned>::min()),
-           ENUM HIGH = ENUM(Width<8*sizeof(ENUM), /*FIXTHIS*/ unsigned>::max())> struct Class;
-  template<typename ENUM, ENUM LOW, ENUM HIGH> struct Class : public Width<8*sizeof(ENUM), /*FIXTHIS*/ unsigned> {
+  template<typename ENUM, ENUM LOW, ENUM HIGH> struct Class : public numeric::Width<8*sizeof(ENUM), /*FIXTHIS*/ unsigned> {
     // Like Bound<ENUM, LOW, HIGH> but (re)computes the integral type by
     // observing of the enum (e.g. the enum classes: uint8, uint16, uint32, uint64)
     using Value = ENUM;
@@ -60,18 +79,12 @@ namespace tunitas::butano::generation::randomness::limits::enume {
   //   Classlike<id::Purpose, Value<id::Purpose, LOW>, Value<id::Purpose, HIGH>
   //
   // see want::javalike::integer::Enum as standard layout types surrounding an integer-of-size.
-  //
-  // Get a Concept!
-  // ENUM is a class with a type alias 'Value' within it, e.g. want::javalike::Enum
-  enum Side { LOW, HIGH };
-  template<typename ENUM, Side> struct Value;
   template<typename ENUM> struct Value<ENUM, LOW> {
-    inline static constexpr auto value = ENUM(Width<8*sizeof(ENUM), typename ENUM::Value>::min());
+    inline static constexpr auto value = ENUM(numeric::Width<8*sizeof(ENUM), typename ENUM::Value>::min());
   };
   template<typename ENUM> struct Value<ENUM, HIGH> {
-    inline static constexpr auto value = ENUM(Width<8*sizeof(ENUM), typename ENUM::Value>::min());
+    inline static constexpr auto value = ENUM(numeric::Width<8*sizeof(ENUM), typename ENUM::Value>::min());
   };
-  template<typename ENUM, typename LOW = Value<ENUM, LOW>, typename HIGH = Value<ENUM, HIGH>> struct Classlike;
   template<typename ENUM, typename LOW, typename HIGH> struct Classlike {
     // Like Bound<ENUM, LOW, HIGH> but (re)computes the integral type by
     // observing of the enum (e.g. the enum classes: uint8, uint16, uint32, uint64)
@@ -82,5 +95,4 @@ namespace tunitas::butano::generation::randomness::limits::enume {
     inline static constexpr auto maximum = HIGH::value;
   };  
 }
-#import tunitas.butano.generation.randomness.limits.time.Span
 #endiv

@@ -4,10 +4,10 @@
 #import tunitas.butano.generation.randomness.distribution.Implementation.declaration
 #import tunitas.butano.generation.randomness.distribution.Implementation.bool
 #import tunitas.butano.generation.randomness.distribution.Implementation.Encoding
-#import tunitas.butano.generation.randomness.distribution.Implementation.Enumlike
-#import tunitas.butano.generation.randomness.distribution.Implementation.enum
+#import tunitas.butano.generation.randomness.distribution.Implementation.Enumlike // deprecating
+#import tunitas.butano.generation.randomness.distribution.Implementation.enum // deprecating
+#import tunitas.butano.generation.randomness.distribution.Implementation.Enum
 #import tunitas.butano.generation.randomness.distribution.Implementation.integer.ALL
 #import tunitas.butano.generation.randomness.distribution.Implementation.pair
 #import tunitas.butano.generation.randomness.distribution.Implementation.Point
-#import tunitas.butano.generation.randomness.distribution.Implementation.vector.bool
 #endiv

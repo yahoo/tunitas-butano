@@ -5,5 +5,5 @@
 #import tunitas.butano.generation.randomness.Generator
 #import tunitas.butano.generation.randomness.Distribution
 #import tunitas.butano.generation.randomness.distribution.ALL
-#import tunitas.butano.generation.randomness.limits.ALL
+#import tunitas.butano.generation.limits.ALL
 #endiv

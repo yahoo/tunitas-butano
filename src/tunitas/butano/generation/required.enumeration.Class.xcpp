@@ -1,0 +1,21 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import std.is_enum
+namespace tunitas::butano::generation::required::enumeration {
+  //
+  // An enum class of the C++ Language, Right and Proper
+  //
+  template<typename ENUM> concept bool Class = std::is_enum<ENUM>::value;
+  //
+  // Deprecated ... really ...  Blik.  You don't want these
+  // A boxed enumeration; an class pretending to be an enumeration.
+  namespace deprecated {
+    template<typename BOXED> concept bool Boxed = requires(BOXED boxed) {
+      // enum Thingy { ... };
+      // e.g. javalike::Enum<Thingy>
+      typename BOXED::Value;
+    };
+  }
+}
+#endiv

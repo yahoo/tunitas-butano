@@ -1,0 +1,31 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.generation.required.Integral
+#import std.size_t
+namespace tunitas::butano::generation::limits::numeric {
+  template<std::size_t N, required::Integral INTEGRAL> struct Width;
+}
+#endiv
+#divert <hpp>
+#import std.numeric_limits
+namespace tunitas::butano::generation::limits {
+  template<std::size_t N, required::Integral INTEGRAL> struct numeric::Width : private std::numeric_limits<INTEGRAL> {
+    static_assert((1lu<<N) <= (1lu<<(8*sizeof (INTEGRAL))), "fit fail");
+    using Value = INTEGRAL;
+    static constexpr auto min() -> Value { return 0; }
+    static constexpr auto max() -> Value { return (1lu<<N)-1; }
+  };
+}
+#endiv
+#divert <cpp>
+// This is test code
+#import std.uint8_t
+#import std.uint16_t
+namespace tunitas::butano::generation::limits::numeric {
+  static_assert(Width<1,unsigned>::min() <= Width<1,unsigned>::max());
+  static_assert(Width<3,std::uint8_t>::min() <= Width<3,std::uint8_t>::max());
+  static_assert(Width<12,std::uint16_t>::min() <= Width<12,std::uint16_t>::max());
+  static_assert(Width<16,std::uint16_t>::min() <= Width<16,std::uint16_t>::max());
+}
+#endiv

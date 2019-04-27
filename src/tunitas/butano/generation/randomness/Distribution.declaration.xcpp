@@ -1,7 +1,7 @@
 // This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
 // Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
 #divert <fpp>
-#import tunitas.butano.generation.randomness.limits.ALL
+#import tunitas.butano.generation.limits.Unbound
 namespace tunitas::butano::generation::randomness {
   //
   // A distribution, to be bound to an engine, to get a (randomly) distributed value.
@@ -12,11 +12,13 @@ namespace tunitas::butano::generation::randomness {
   //     Distribution<int> distribution(3);
   //     auto value = distribution(engine);
   //
-  // Get a Concept!
-  // RESULT is most likely an integral type, that works for the default value of BOUND
-  // BOUND is a member of namespace limits that describes bounds of the distribution
-  // Specializations against non-numeric types are possible but require much more declaration ceremony.
+  // CANNOT---> Get a Concept! <---CANNOT
+  // Usually
+  //   RESULT is most likely an integral type, that works for the default value of BOUND
+  //   BOUND is a member of namespace limits that describes bounds of the distribution
+  // However
+  //   Specializations against non-numeric types are possible but require much more declaration ceremony.
   //
-  template<typename RESULT, typename BOUND = limits::Numeric<RESULT>> struct Distribution;
+  template<typename RESULT, typename BOUND = limits::Unbound<RESULT>> struct Distribution;
 }
 #endiv

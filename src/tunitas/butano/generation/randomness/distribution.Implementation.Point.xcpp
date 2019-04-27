@@ -2,7 +2,7 @@
 // Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
 #divert <fpp>
 #import tunitas.butano.generation.randomness.distribution.Implementation.declaration
-#forward tunitas.butano.generation.randomness.limits.time.Span
+#forward tunitas.butano.generation.limits.time.Span
 #forward tunitas.butano.generation.Point
 namespace tunitas::butano::generation::randomness::distribution {
   using want::timeline::Point;
@@ -33,7 +33,7 @@ namespace tunitas::butano::generation::randomness::distribution {
 #divert <ipp>
 #import tunitas.butano.generation.Point
 #import tunitas.butano.generation.randomness.Engine
-#import tunitas.butano.generation.randomness.limits.time.Span
+#import tunitas.butano.generation.limits.time.Span
 #import tunitas.butano.generation.randomness.distribution.Implementation.integer.ALL
 namespace tunitas::butano::generation::randomness::distribution {
   template<typename D, typename S> Implementation<Point<D>, limits::time::Span<S, D>, false>::Implementation()

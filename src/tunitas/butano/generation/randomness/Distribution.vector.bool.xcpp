@@ -8,13 +8,36 @@ namespace tunitas::butano::generation::randomness {
 }
 #endiv
 #divert <hpp>
-#import tunitas.butano.generation.randomness.distribution.Implementation.vector.bool
+#import std.size_t
+#import std.vector
+#import tunitas.butano.generation.randomness.Engine
+#import tunitas.butano.generation.limits.Unbound
 namespace tunitas::butano::generation::randomness {
-  template<> struct Distribution<std::vector<bool>> : public distribution::Implementation<std::vector<bool>, limits::enume::Class<bool>, false> {
-    using ancestor = distribution::Implementation<std::vector<bool>, limits::enume::Class<bool>, false>;
+  template<> struct Distribution<std::vector<bool>> {
+    using Bitdistribution = Distribution<bool, limits::Unbound<bool>>;
   public:
-    using ancestor::Implementation;
-    using ancestor::operator();
+    using Value = std::vector<bool>;
+    using Result = Value;
+    inline explicit Distribution(std::size_t size);
+    inline auto operator()(Engine &) -> Result;
+  protected:
+    std::size_t size;
   };
+}
+#endiv
+#divert <ipp>
+#import std.vector
+#import tunitas.butano.generation.randomness.Distribution
+#import tunitas.butano.generation.randomness.Engine
+namespace tunitas::butano::generation::randomness {
+  Distribution<std::vector<bool>>::Distribution(std::size_t size) : size(size) { }
+  auto Distribution<std::vector<bool>>::operator()(Engine &engine) -> Result {
+    Bitdistribution bitdist;
+    Result ret(size, false); // parents, not {size, false}
+    for (auto e(size), i(e-e); e != i; ++i) {
+      ret[i] = bitdist(engine);
+    }
+    return std::move(ret);
+  }
 }
 #endiv

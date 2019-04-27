@@ -1,0 +1,26 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::generation::limits {
+  //
+  // A 'bool' is a special sort of enumeration
+  // It requires special treatment because it does not fit in the memory model of C++
+  //
+  // It is "1 bit wide" in the data layout.
+  // It is "1 byte wide" in the memory layout, but we must avoid that interpretation.
+  //
+  struct Bool;
+}
+#endiv
+#divert <hpp>
+#import std.numeric_limits
+namespace tunitas::butano::generation {
+  struct limits::Bool : public std::numeric_limits<bool> {
+    using Value = bool;
+    static constexpr auto min() -> Value { return false; }
+    inline static constexpr auto minimum = false;;
+    static constexpr auto max() -> Value { return true; }
+    inline static constexpr auto maximum = true;
+  };
+}
+#endiv

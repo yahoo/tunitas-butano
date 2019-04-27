@@ -1,0 +1,41 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.generation.required.enumeration.Class
+#import tunitas.butano.generation.limits.numeric.Width
+#import std.underlying_type
+namespace tunitas::butano::generation::limits {
+  //
+  // An enumeration, an enum class, Right and Proper
+  //
+  // Shaped like numeric::Bound<INTEGRAL, LOW, HIGH>
+  template<required::enumeration::Class ENUM,
+           ENUM LOW = ENUM(numeric::Width<8*sizeof(ENUM), typename std::underlying_type<ENUM>::type>::min()),
+           ENUM HIGH = ENUM(numeric::Width<8*sizeof(ENUM), typename std::underlying_type<ENUM>::type>::max())> struct Enum;
+}
+#endiv
+#divert <hpp>
+namespace tunitas::butano::generation {
+  template<required::enumeration::Class ENUM, ENUM LOW, ENUM HIGH> struct limits::Enum {
+    using Value = ENUM;
+    static constexpr auto min() -> Value { return LOW; }
+    inline static constexpr auto minimum = LOW;;
+    static constexpr auto max() -> Value { return HIGH; }
+    inline static constexpr auto maximum = HIGH;
+  };
+}
+#endiv
+#divert <cpp>
+// This is test code
+#import tunitas.butano.tcf.consent.Encoding
+#import tunitas.butano.tcf.id.ALL
+namespace tunitas::butano::generation::limits {
+  static_assert(!required::enumeration::Class<bool>);
+  // therefore NOT ---> static_assert(Enum<bool, false, true>::min() != Enum<bool, false, true>::max()); <--- NOT
+  using tcf::consent::Encoding;
+  static_assert(Enum<Encoding, Encoding::BITS>::min() != Enum<Encoding, Encoding::BITS, Encoding::RANGES>::max());
+  namespace id = tcf::id;
+  static_assert(Enum<id::Vendor>::min() != Enum<id::Vendor>::max());
+  static_assert(Enum<id::Purpose>::min() != Enum<id::Purpose>::max());
+}
+#endiv

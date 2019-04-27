@@ -1,8 +1,8 @@
 // This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
 // Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
 #divert <fpp>
-#import tunitas.butano.generation.randomness.limits.time
-namespace tunitas::butano::generation::randomness::limits::time::detail {
+#import tunitas.butano.generation.limits.time
+namespace tunitas::butano::generation::limits::time::detail {
   //
   // Then.  For Span<Recently, DURATION> and Span<Soon, DURATION>
   // Descendants only.
@@ -12,7 +12,7 @@ namespace tunitas::butano::generation::randomness::limits::time::detail {
 #endiv
 #divert <hpp>
 #import std.ratio_multiply
-struct tunitas::butano::generation::randomness::limits::time::detail::Thenable {
+struct tunitas::butano::generation::limits::time::detail::Thenable {
 protected:
   ~Thenable() = default;
   using Deciseconds = duration::Deciseconds;
@@ -26,7 +26,7 @@ protected:
 #endiv
 #divert <ipp>
 #import want.timeline.ALL
-namespace tunitas::butano::generation::randomness::limits::time::detail {
+namespace tunitas::butano::generation::limits::time::detail {
   template<typename RESULT_POINT, typename SOURCE_DUR> auto Thenable::then(SOURCE_DUR sloppy) -> RESULT_POINT {
     return point_cast<typename RESULT_POINT::duration>(Clock::now()) + sloppy;
   }

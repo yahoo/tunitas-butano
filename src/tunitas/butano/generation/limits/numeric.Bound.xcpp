@@ -1,0 +1,34 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.generation.required.Integral
+namespace tunitas::butano::generation::limits::numeric {
+  template<required::Integral INTEGRAL, INTEGRAL LOW, INTEGRAL HIGH> struct Bound;
+}
+#endiv
+#divert <hpp>
+#import std.numeric_limits
+namespace tunitas::butano::generation::limits {
+  template<required::Integral INTEGRAL, INTEGRAL LOW, INTEGRAL HIGH> struct numeric::Bound : private std::numeric_limits<INTEGRAL> {
+    static_assert(LOW < (1lu<<(8*sizeof (INTEGRAL))), "fit fail");
+    static_assert(HIGH < (1lu<<(8*sizeof (INTEGRAL))), "fit fail");
+    static_assert(LOW <= HIGH);
+    using Value = INTEGRAL;
+    static constexpr auto min() -> Value { return LOW; }
+    inline static constexpr auto minimum = LOW;;
+    static constexpr auto max() -> Value { return HIGH; }
+    inline static constexpr auto maximum = HIGH;
+  };
+}
+#endiv
+#divert <cpp>
+// This is test code
+#import std.uint8_t
+#import std.uint16_t
+namespace tunitas::butano::generation::limits::numeric {
+  static_assert(Bound<unsigned,1,9>::min() <= Bound<unsigned,1,9>::max());
+  static_assert(Bound<std::uint8_t,0,255>::min() <= Bound<std::uint8_t,0,255>::max());
+  static_assert(Bound<std::uint16_t,1,64000>::min() <= Bound<std::uint16_t,1,64000>::max());
+  static_assert(Bound<std::uint16_t,256,300>::min() <= Bound<std::uint16_t,256,300>::max());
+}
+#endiv

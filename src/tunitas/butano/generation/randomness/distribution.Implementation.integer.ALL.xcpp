@@ -2,14 +2,14 @@
 // Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
 #divert <fpp>
 #import tunitas.butano.generation.randomness.distribution.Implementation.declaration
-#import tunitas.butano.generation.randomness.distribution.Implementation.bool // exhibit the specialization
 #import std.uint8_t
 #import std.uint16_t
 #import std.uint32_t
 #import std.uint64_t
 #import std.size_t
-#import tunitas.butano.generation.randomness.limits.ALL // Numeric, Width, High
-namespace tunitas::butano::generation::randomness::distribution {
+#import tunitas.butano.generation.limits.ALL // [[deprecating]] Numeric, Width, High
+#import tunitas.butano.generation.limits.Numeric
+namespace tunitas::butano::generation::randomness::distribution::implementation {
   //
   // Some (pseudo-)random number generators particularized to specific limits.
   //
@@ -29,14 +29,14 @@ namespace tunitas::butano::generation::randomness::distribution {
   using Signed16 = Implementation<std::int16_t, limits::Numeric<std::int16_t>, false>;
   using Signed8 = Implementation<std::int8_t, limits::Numeric<std::int8_t>, false>;
   //
-  // [[DELETETHIS]] template<std::size_t N, typename RESULT> class Width; // Get a concept!  1 < N <= 8*sizeof(RESULT)
-  using Unsigned24 = Implementation<std::uint32_t, limits::Width<24, std::uint32_t>, false>;
-  using Unsigned12 = Implementation<std::uint16_t, limits::Width<12, std::uint16_t>, false>;
-  using Unsigned5 = Implementation<std::uint8_t, limits::Width<5, std::uint8_t>, false>;
-  using Unsigned3 = Implementation<std::uint8_t, limits::Width<3, std::uint8_t>, false>;
+  using Unsigned24 = Implementation<std::uint32_t, limits::numeric::Width<24, std::uint32_t>, false>;
+  using Unsigned12 = Implementation<std::uint16_t, limits::numeric::Width<12, std::uint16_t>, false>;
+  using Unsigned5 = Implementation<std::uint8_t, limits::numeric::Width<5, std::uint8_t>, false>;
+  using Unsigned3 = Implementation<std::uint8_t, limits::numeric::Width<3, std::uint8_t>, false>;
+  using Unsigned1 = Implementation<std::uint8_t, limits::numeric::Width<1, std::uint8_t>, false>;
 
   // Get a Concept!  0 < BOUND <= 2^(8*sizeof(RESULT))
-  using Unsigned9999 = Implementation<std::uint32_t, limits::High<std::uint32_t, 9999u>, false>;
+  using Unsigned9999 = Implementation<std::uint32_t, limits::numeric::Bound<std::uint32_t, 0u, 9999u>, false>;
 }
 #endiv
 #divert <hpp>

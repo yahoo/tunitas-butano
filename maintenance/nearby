@@ -25,8 +25,12 @@
 #
 cd ${0%/*}/.. || exit 70
 : ${prefix:=/exp/tunitas}
-: ${with_std_tunitas:=/opt/tunitas}
-: ${with_std_scold:=${with_std_tunitas%/*}/scold}
+: ${with_std_scold:=/opt/scold}
+if [[ -e /opt/tunitas ]] ; then
+    : ${with_std_tunitas:=/opt/tunitas} ;
+else
+    : ${with_std_tunitas:=${with_std_scold?}} ;
+fi
 : ${with_siblings:=${PWD%/*}}
 : ${with_temerarious_flagship:=${with_siblings?}/temerarious-flagship}
 : ${with_tunitas_basics:=${with_siblings?}/basics}

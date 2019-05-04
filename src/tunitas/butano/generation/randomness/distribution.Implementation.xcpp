@@ -3,6 +3,7 @@
 #divert <fpp>
 #import tunitas.butano.generation.randomness.distribution.Implementation.declaration
 #import tunitas.butano.generation.randomness.distribution.Implementation.bool
+#import tunitas.butano.generation.randomness.distribution.Implementation.byte
 #import tunitas.butano.generation.randomness.distribution.Implementation.Encoding
 #import tunitas.butano.generation.randomness.distribution.Implementation.Enumlike // deprecating
 #import tunitas.butano.generation.randomness.distribution.Implementation.enum // deprecating

@@ -15,12 +15,15 @@ lib_libtunitas_butano_generation_la_SOURCES = \
   obj/src/tunitas/butano/generation/randomness/Distribution.declaration.cpp \
   obj/src/tunitas/butano/generation/randomness/Distribution.cpp \
   obj/src/tunitas/butano/generation/randomness/Distribution.bool.cpp \
+  obj/src/tunitas/butano/generation/randomness/Distribution.byte.cpp \
   obj/src/tunitas/butano/generation/randomness/Distribution.Encoding.cpp \
   obj/src/tunitas/butano/generation/randomness/Distribution.template.cpp \
   obj/src/tunitas/butano/generation/randomness/Distribution.vector.bool.cpp \
+  obj/src/tunitas/butano/generation/randomness/Distribution.vector.byte.cpp \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.declaration.cpp \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.cpp \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.bool.cpp \
+  obj/src/tunitas/butano/generation/randomness/distribution.Implementation.byte.cpp \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.Encoding.cpp \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.Enumlike.cpp \
   obj/src/tunitas/butano/generation/randomness/distribution.Implementation.Enum.cpp \

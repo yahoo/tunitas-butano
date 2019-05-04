@@ -1,6 +1,7 @@
 // This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
 // Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
 #divert <fpp>
+#import std.byte
 namespace tunitas::butano::generation::limits {
   //
   // No well-defined bounds for many types.
@@ -8,13 +9,18 @@ namespace tunitas::butano::generation::limits {
   //
   template<typename RESULT> class Unbound;
   template<> class Unbound<bool>;
+  template<> class Unbound<std::byte>;
 }
 #endiv
 #divert <hpp>
 #import std.enable_if
+#import tunitas.butano.generation.limits.Bool
+#import tunitas.butano.generation.limits.Enum
 #import tunitas.butano.generation.limits.Numeric
 namespace tunitas::butano::generation {
   template<typename RESULT> class limits::Unbound : public std::enable_if<std::is_integral<RESULT>::value, Numeric<RESULT>>::type { };
-  template<> class limits::Unbound<bool> { };
+  // Recall: the second template argument to randomness::Distribution<...> is Unbound<RESULT>
+  template<> class limits::Unbound<bool> : public Bool { };
+  template<> class limits::Unbound<std::byte> : public Enum<std::byte, std::byte{0x00}, std::byte{0xff}> { };
 }
 #endiv

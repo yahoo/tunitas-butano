@@ -1,0 +1,45 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tests::unit::randomness { class Fixture; }
+#endiv
+#divert <hpp>
+#import cppunit.Test
+#import cppunit.test.Fixture
+class tests::unit::randomness::Fixture : public cppunit::test::Fixture {
+public:
+  template<typename TYPE> auto test_Distribution() -> void;
+  static auto suite() -> cppunit::Test *;
+};
+#endiv
+#divert <tpp>
+#import tunitas.butano.generation.randomness.Engine
+#import tunitas.butano.generation.randomness.Distribution
+template<typename TYPE> auto tests::unit::randomness::Fixture::test_Distribution() -> void {
+  using Engine = tunitas::butano::generation::randomness::Engine;
+  using Subject = tunitas::butano::generation::randomness::Distribution<TYPE>;
+  Engine engine;
+  Subject subject;
+  auto generated = subject(engine);
+  // Could be any value, including zero (false)
+  CPPUNIT_ASSERT(sizeof (generated));
+}
+#endiv
+#divert <cpp>
+#import unit.rigging.suite.Stream
+#import unit.rigging.suite.call
+#import unit.rigging.suite.add
+auto tests::unit::randomness::Fixture::suite() -> cppunit::Test * {
+  using namespace ::unit::rigging::suite;
+  Stream series("randomness");
+  {
+    Stream dis("Distribution");
+    dis << call("bool", &Fixture::test_Distribution<bool>)
+        << call("byte", &Fixture::test_Distribution<std::byte>)
+        << call("char", &Fixture::test_Distribution<char>)
+    ;
+    series << move(dis);
+  }
+  return series.release();
+}
+#endiv

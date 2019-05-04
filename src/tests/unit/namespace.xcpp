@@ -1,5 +1,15 @@
 // This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
 // Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
 #divert <fpp>
+#import std.string
+#import std.string_view
 namespace tests::unit { }
+#endiv
+#divert <hpp>
+#import std.string_literals
+#import std.string_view_literals
+#import std.cerr
+namespace tests::unit {
+  using namespace std::literals;
+}
 #endiv

@@ -1,7 +1,10 @@
 # -*- Makefile -*-
 
 check_bin_unit = check/bin/unit
+# WATCHOUT -- -ltunitas-butano-generation entails -ltunitas-butano-tcf entails -ltunitas-butano entails -ltunitas
+# WATCHOUT -- but we want to ensure that -ltunitas-butano-generation is not always required; this tester does not prove that
 check_bin_unit_LDADD = \
+  $(lib_libtunitas_butano_generation_la) \
   $(lib_libtunitas_butano_tcf_la) \
   $(lib_libwant_la) \
   -lrigging-bench-module \
@@ -18,6 +21,8 @@ check_bin_unit_SOURCES = \
   obj/src/tests/unit/namespace.cpp \
   \
   obj/src/tests/unit/butano.Fixture.cpp \
+  obj/src/tests/unit/generation.Fixture.cpp \
+  obj/src/tests/unit/randomness.Fixture.cpp \
   obj/src/tests/unit/want.Fixture.cpp \
   $(end)
 

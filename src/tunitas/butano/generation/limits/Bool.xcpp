@@ -13,9 +13,8 @@ namespace tunitas::butano::generation::limits {
 }
 #endiv
 #divert <hpp>
-#import std.numeric_limits
 namespace tunitas::butano::generation {
-  struct limits::Bool : public std::numeric_limits<bool> {
+  struct limits::Bool {
     using Value = bool;
     static constexpr auto min() -> Value { return false; }
     inline static constexpr auto minimum = false;;

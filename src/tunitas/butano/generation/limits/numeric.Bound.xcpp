@@ -10,8 +10,6 @@ namespace tunitas::butano::generation::limits::numeric {
 #import std.numeric_limits
 namespace tunitas::butano::generation::limits {
   template<required::Integral INTEGRAL, INTEGRAL LOW, INTEGRAL HIGH> struct numeric::Bound : private std::numeric_limits<INTEGRAL> {
-    static_assert(LOW < (1lu<<(8*sizeof (INTEGRAL))), "fit fail");
-    static_assert(HIGH < (1lu<<(8*sizeof (INTEGRAL))), "fit fail");
     static_assert(LOW <= HIGH);
     using Value = INTEGRAL;
     static constexpr auto min() -> Value { return LOW; }

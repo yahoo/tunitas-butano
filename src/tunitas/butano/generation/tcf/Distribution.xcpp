@@ -106,12 +106,12 @@ namespace tunitas::butano::generation::tcf {
     : Distribution() {
     set_protocol_version = want;
   }
-  using namespace tunitas::butano::tcf::consent::protocol;
   auto Distribution::operator()(randomness::Engine &engine) -> Result {
     Builder bob;
     prep(bob, engine);
     return bob.build();
   }
+  using namespace tunitas::butano::tcf::consent::protocol;
   template<> inline auto Distribution::distribute<VERSION>(Engine &engine) -> Value<VERSION>::Type {
     if (set_protocol_version) {
       return set_protocol_version.value();

@@ -1,0 +1,38 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import tunitas.butano.generation.randomness.distribution.Implementation.declaration
+#import tunitas.butano.generation.limits.Unbound
+#import std.byte
+namespace tunitas::butano::generation::randomness::distribution {
+  template<> struct Implementation<std::byte, limits::Unbound<std::byte>, /*IS_ENUM*/ true>;
+  namespace implementation {
+    using Byte = distribution::Implementation<std::byte, limits::Unbound<std::byte>, /*IS_ENUM*/ true>; // records the one allowable specialization
+  }
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.generation.randomness.distribution.Implementation.integer.ALL
+#import tunitas.butano.generation.limits.numeric.Bound
+#forward tunitas.butano.generation.randomness.Engine
+#import std.uint8_t
+namespace tunitas::butano::generation::randomness::distribution {
+  template<> class Implementation<std::byte, limits::Unbound<std::byte>, true> : public Implementation<unsigned, limits::numeric::Bound<std::uint8_t, 0x0, 0xff>, false> {
+    using ancestor = Implementation<unsigned, limits::numeric::Bound<std::uint8_t, 0x0, 0xff>, false>;
+  public:
+    using Value = std::byte;
+    Implementation() = default;
+    inline explicit Implementation(Value high) : ancestor{0u, (unsigned)high} { }
+    inline Implementation(Value low, Value high) : ancestor{(unsigned)low, (unsigned)high} { }
+    using Result = Value;
+    inline auto operator()(Engine &engine) -> Result;
+  };
+}
+#endiv
+#divert <ipp>
+namespace tunitas::butano::generation::randomness::distribution {
+  auto Implementation<std::byte, limits::Unbound<std::byte>, true>::operator()(Engine &engine) -> Result {
+    return Result(ancestor::operator()(engine));
+  }
+}
+#endiv

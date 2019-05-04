@@ -51,9 +51,9 @@ namespace tunitas::butano::generation::randomness::distribution {
     using Bound = BOUND;
   public:
     using Value = RESULT;
-    inline Implementation() : ancestor(BOUND::min(), Bound::max()) { }
-    inline explicit Implementation(Value high) : ancestor(Bound::min(), high) { }
-    inline Implementation(Value low, Value high) : ancestor(low, high) { }
+    inline Implementation() : ancestor{Bound::min(), Bound::max()} { }
+    inline explicit Implementation(Value high) : ancestor{Bound::min(), high} { }
+    inline Implementation(Value low, Value high) : ancestor{low, high} { }
     using Result = Value;
     using ancestor::operator();
   };

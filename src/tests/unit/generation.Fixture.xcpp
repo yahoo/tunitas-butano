@@ -1,0 +1,64 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tests::unit::generation { class Fixture; }
+#endiv
+#divert <hpp>
+#import cppunit.Test
+#import cppunit.test.Fixture
+class tests::unit::generation::Fixture : public cppunit::test::Fixture {
+public:
+  auto test_base64() -> void;
+  auto test_tcf_String() -> void;
+  auto test_tcf_Object() -> void;
+  static auto suite() -> cppunit::Test *;
+};
+#endiv
+#divert <cpp>
+#import tunitas.butano.generation.base64.Generator
+#import std.seed_seq
+auto tests::unit::generation::Fixture::test_base64() -> void {
+  using Subject = ::tunitas::butano::generation::base64::Generator;
+  std::seed_seq seed{0};
+  Subject subject{seed};
+  auto generated = subject();
+  std::cerr << "generated: " << generated << '\n';
+  CPPUNIT_ASSERT(generated.size());
+}
+#import tunitas.butano.generation.tcf.Generator
+#import std.seed_seq
+auto tests::unit::generation::Fixture::test_tcf_String() -> void {
+  using Subject = ::tunitas::butano::generation::tcf::Generator<::tunitas::butano::generation::tcf::String>;
+  std::seed_seq seed{0};
+  Subject subject{seed};
+  auto generated = subject();
+  std::cerr << "generated: " << generated << '\n';
+  CPPUNIT_ASSERT(generated.size());
+}
+auto tests::unit::generation::Fixture::test_tcf_Object() -> void {
+  using Subject = ::tunitas::butano::generation::tcf::Generator<::tunitas::butano::generation::tcf::Object>;
+  std::seed_seq seed{0};
+  Subject subject{seed};
+  auto pregenerated = subject();
+  auto generated = encode(pregenerated);
+  std::cerr << "generated: " << generated << '\n';
+  CPPUNIT_ASSERT(generated.size());
+}
+#import unit.rigging.suite.Stream
+#import unit.rigging.suite.call
+#import unit.rigging.suite.add
+auto tests::unit::generation::Fixture::suite() -> cppunit::Test * {
+  using namespace ::unit::rigging::suite;
+  Stream series("generation");
+  series << call("base64", &Fixture::test_base64)
+    ;
+  {
+    Stream tcf("tcf");
+    tcf << call("Object", &Fixture::test_tcf_Object)
+        << call("String", &Fixture::test_tcf_String)
+      ;
+    series << move(tcf);
+  }
+  return series.release();
+}
+#endiv

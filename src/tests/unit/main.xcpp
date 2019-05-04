@@ -1,13 +1,17 @@
 // This is -*- c++ -*- in the S.C.O.L.D. stylings that are so popular these days.
 #divert <cpp>
 #import tests.unit.butano.Fixture
+#import tests.unit.generation.Fixture
+#import tests.unit.randomness.Fixture
 #import tests.unit.want.Fixture
 #import rigging.bench.Main
 auto main(int argc, char *argv[]) -> int {
   using namespace rigging::bench;
-  using namespace tests::unit;
-  Main remain(butano::Fixture::suite(),
-              want::Fixture::suite());
+  namespace tu = tests::unit;
+  Main remain(tu::butano::Fixture::suite(),
+              tu::generation::Fixture::suite(),
+              tu::randomness::Fixture::suite(),
+              tu::want::Fixture::suite());
   return remain(argc, argv);
 }
 #endiv

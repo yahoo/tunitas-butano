@@ -55,10 +55,14 @@ namespace tunitas::butano::tcf::purpose {
 namespace tunitas::butano::tcf {
   auto purpose::operator<<(std::ostream &os, Map const &ma) -> std::ostream & {
     // This presumes, but does not check (much), that the Map contains keys 1..24 and no other.
-    if (ma.empty() || 24 == ma.size()) {
-      os << '[' << std::noboolalpha;
+    if (ma.empty()) {
+      os << '[' << ' ' << ']';
+    } else if (24 == ma.size()) {
+      char sep = '[';
+      os << std::noboolalpha; // [[FIXTHIS]] - noboolalpha has no effect here because pair.second is Boolean, which ALWAYS prints its own way.
       for (auto const &pair : ma) {
-        os << pair.second;
+        os << sep << pair.second;
+        sep = ',';
       }
       os << ']';
     } else {
@@ -66,9 +70,11 @@ namespace tunitas::butano::tcf {
       // [[FIXTHIS]] This is Java legacy code; design this away.
       // ... by getting rid of an unbounded map to hold this fixed-sized data structure.
       // ... purpose::Map holds between zero and twenty four bits of a set; use purpose::Bitfield, nearby.
-      os << '{' << std::noboolalpha;
+      char sep = '{';
+      os << std::noboolalpha; // [[FIXTHIS]] - boolalpha - ibidem
       for (auto const &pair : ma) {
-        os << '{' << pair.first << '=' << pair.second << '}';
+        os << sep << '{' << pair.first << '=' << pair.second << '}';
+        sep = ',';
       }
       os << '}';
     }

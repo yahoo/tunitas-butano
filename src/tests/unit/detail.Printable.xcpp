@@ -1,0 +1,66 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tests::unit::detail {
+  //
+  // Manage printability for the types.
+  //
+  // Behavior: see tests::unit::printable(...)
+  //
+  // Lifetime
+  //   This is a formatter, which captures a reference to its subject.
+  //   As such, it must have a shorter lifespan than its subject.
+  //
+  // Usage:
+  //
+  //   auto thing = ...something...
+  //   cout << printable(thing);
+  //
+  template<typename TYPE> struct Printable;
+}
+#endiv
+#divert <hpp>
+#import std.ostream
+namespace tests::unit::detail {
+  template<typename TYPE> inline auto operator<<(std::ostream &, Printable<TYPE> const &) -> std::ostream &;
+}
+namespace tests::unit {
+  template<typename TYPE> struct detail::Printable {
+    using Value = TYPE;
+    inline explicit Printable(Value const &value) : value{value} { }
+    inline auto print(std::ostream &o) const -> std::ostream & { return o << value; }
+    Value const &value;
+  };
+}
+namespace tests::unit::detail {
+  template<> inline auto Printable<std::byte>::print(std::ostream &o) const -> std::ostream &;
+  template<> inline auto Printable<char>::print(std::ostream &o) const -> std::ostream &;
+  template<> inline auto Printable<unsigned char>::print(std::ostream &o) const -> std::ostream & { return o << (unsigned) value; }
+  template<> inline auto Printable<signed char>::print(std::ostream &o) const -> std::ostream & { return o << (signed) value; }
+}
+#endiv
+#divert <ipp>
+template<typename TYPE> auto tests::unit::detail::operator<<(std::ostream &o, Printable<TYPE> const &p) -> std::ostream & {
+  return p.print(o);
+}
+#import std.byte
+#import std.dec
+#import std.hex
+#import std.isprint
+#import std.setfill
+#import std.setw
+#import tests.unit.printable
+namespace tests::unit::detail {
+  template<> auto Printable<std::byte>::print(std::ostream &o) const -> std::ostream & {
+    // [[FIXTHIS]] use a guard here to capture & reset the flags before and afterwards; we hope it was decimal prior to our ministrations
+    return o << '\\' << 'x' << std::setw(2) << std::setfill('0') << std::hex << unsigned(value) << std::dec;
+  }
+  template<> auto Printable<char>::print(std::ostream &o) const -> std::ostream & {
+    if (std::isprint(value)) {
+      return o << value;
+    } else {
+      return o << printable(std::byte(value));
+    }
+  }
+}
+#endiv

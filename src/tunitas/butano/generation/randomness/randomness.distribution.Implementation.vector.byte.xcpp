@@ -1,0 +1,45 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import generation.randomness.distribution.Implementation.declaration
+#import std.byte
+#import std.vector
+namespace generation::randomness::distribution {
+  template<typename BOUND> struct Implementation<std::vector<std::byte>, BOUND, false>;
+}
+#endiv
+#divert <hpp>
+#forward generation.randomness.Distribution
+#forward generation.randomness.Engine
+#import std.vector // forward, but there is no point
+#import std.size_t
+namespace generation::randomness::distribution {
+  template<typename BOUND> struct Implementation<std::vector<std::byte>, BOUND, false> {
+    using Bytedistribution = Distribution<std::byte, BOUND>;
+  public:
+    using Value = std::vector<std::byte>;
+    using Result = Value;
+    inline explicit Implementation(std::size_t size);
+    inline auto operator()(Engine &engine) -> Result;
+  protected:
+    std::size_t size;
+  };
+}
+#endiv
+#divert <ipp>
+#import std.vector
+#import generation.randomness.Distribution
+#import generation.randomness.Engine
+#import generation.randomness.limits.ALL
+namespace generation::randomness::distribution {
+  template<typename _> Implementation<std::vector<std::byte>, _, false>::Implementation(std::size_t size) : size(size) { }
+  template<typename _> auto Implementation<std::vector<std::byte>, _, false>::operator()(Engine &engine) -> Result {
+    Bytedistribution bytedist;
+    Result ret(size, std::byte{}); // parens not curlies
+    for (auto e(size), i(e-e); e != i; ++i) {
+      ret[i] = bytedist(engine);
+    }
+    return std::move(ret);
+  }
+}
+#endiv

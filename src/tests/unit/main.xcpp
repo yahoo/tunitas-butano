@@ -3,6 +3,7 @@
 #import tests.unit.butano.Fixture
 #import tests.unit.generation.Fixture
 #import tests.unit.randomness.Fixture
+#import tests.unit.tcf.Fixture
 #import tests.unit.want.Fixture
 #import rigging.bench.Main
 auto main(int argc, char *argv[]) -> int {
@@ -11,6 +12,7 @@ auto main(int argc, char *argv[]) -> int {
   Main remain(tu::butano::Fixture::suite(),
               tu::generation::Fixture::suite(),
               tu::randomness::Fixture::suite(),
+              tu::tcf::Fixture::suite(),
               tu::want::Fixture::suite());
   return remain(argc, argv);
 }

@@ -1,8 +1,10 @@
 tests_unit_TESTS = \
   tests/unit/list.test \
   \
-  tests/unit/want.test \
   tests/unit/butano.test \
+  tests/unit/generation.test \
+  tests/unit/tcf.test \
+  tests/unit/want.test \
   \
   tests/unit/all.test \
   $(end)

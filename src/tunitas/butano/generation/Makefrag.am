@@ -1,8 +1,11 @@
 # A GNU -*- Makefile -*- which is managed by automake
 
-# merely a convenience library
 lib_libtunitas_butano_generation_la = lib/libtunitas-butano-generation.la
-lib_libtunitas_butano_generation_la_LIBADD = $(lib_libtunitas_butano_tcf_la)
+lib_libtunitas_butano_generation_la_LIBADD = \
+  $(lib_libtunitas_butano_tcf_la) \
+  $(lib_libwant_la) \
+  -luuid-module \
+  $(end)
 lib_libtunitas_butano_generation_la_LDFLAGS = $(PACKAGE_LDFLAGS_SET)
 lib_libtunitas_butano_generation_la_MODULES = $(call TF_SOURCEStoMODULES, $(lib_libtunitas_butano_generation_la_SOURCES))
 lib_libtunitas_butano_generation_la_SOURCES = \
@@ -55,6 +58,7 @@ lib_libtunitas_butano_generation_la_SOURCES = \
   obj/src/tunitas/butano/generation/tcf/Generator.cpp \
   obj/src/tunitas/butano/generation/tcf/Generator.Object.cpp \
   obj/src/tunitas/butano/generation/tcf/Generator.String.cpp \
+  obj/src/tunitas/butano/generation/uuid.Distribution.cpp \
   $(end)
 $(scold_cxxdir)/tunitas/butano/generation/dependencies.mk:
 	$(AM_V_BB1ST) $(call TF_DISAGGREGATE_COMPILE, $(lib_libtunitas_butano_generation_la_SOURCES))

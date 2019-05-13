@@ -1,4 +1,11 @@
-dnl -*- autoconf -*-
+dnl This is a GNU -*- autoconf -*- specification that is processed by Autoconf.
+dnl Copyright 2018-2019, Oath Inc.
+dnl Licensed under the terms of the Apache-2.0 license.
+dnl See the LICENSE file in https://github.com/yahoo/tunitas-butano/blob/master/LICENSE for terms.
+dnl
+dnl Build Instructions are in the nearby README.md
+dnl
+dnl ./maintenance/nearby is a developer-centric build recipe; it guesses about nearby source trees
 dnl
 dnl ./buildconf &&
 dnl ./configure --prefix=/opt/tunitas &&
@@ -7,7 +14,7 @@ dnl make check &&
 dnl make install &&
 dnl echo OK DONE
 dnl
-AC_INIT([butano], [0.0.0], [/dev/null@verizonmedia.com])
+AC_INIT([butano], [0.2.0], [tunitas@verizonmedia.com])
 TF_INIT(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, AC_PACKAGE_BUGREPORT)
 
 dnl These options are also in the Makefile.am in AUTOMAKE_OPTIONS
@@ -37,6 +44,7 @@ TF_WITH_STD([tunitas])
 
 TF_WITH_SUBSYSTEM([temerarious-flagship], [], [The Tunitas Build System])
 TF_WITH_SUBSYSTEM([tunitas-basics], [], [The Tunitas Basics])
+TF_WITH_SUBSYSTEM([butano], [], [The Tunitas TCF Components])
 
 # and mention in $(DEVELOPMENT_AREAS) in Makefile.am
 TF_WITH_MODULE([json])
@@ -46,6 +54,7 @@ TF_WITH_MODULE([posix])
 TF_WITH_MODULE([std])
 TF_WITH_MODULE([string]) dnl a.k.a. c-string
 TF_WITH_MODULE([sys])
+TF_WITH_MODULE([uuid])
 
 TF_WITH_MODULE([cppunit])
 TF_WITH_MODULE([rigging]) dnl a.k.a. unit-rigging -> rigging-unit

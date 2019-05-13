@@ -19,10 +19,13 @@ check_bin_unit_SOURCES = \
   \
   obj/src/tests/unit/main.cpp \
   obj/src/tests/unit/namespace.cpp \
+  obj/src/tests/unit/printable.cpp \
+  obj/src/tests/unit/detail.Printable.cpp \
   \
   obj/src/tests/unit/butano.Fixture.cpp \
   obj/src/tests/unit/generation.Fixture.cpp \
   obj/src/tests/unit/randomness.Fixture.cpp \
+  obj/src/tests/unit/tcf.Fixture.cpp \
   obj/src/tests/unit/want.Fixture.cpp \
   $(end)
 

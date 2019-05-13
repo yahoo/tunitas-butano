@@ -7,11 +7,11 @@
 #import tunitas.butano.generation.randomness.Distribution.vector.bool
 #import tunitas.butano.generation.randomness.Distribution.template
 #import tunitas.butano.generation.limits.ALL // limits::Enume::Class, limits::time::Span, limits::time::Recently
-#import std.uint8_t
+#import std.byte
 #import tunitas.butano.tcf.consent.Encoding
 #import tunitas.butano.tcf.consent.protocol.Time
 namespace tunitas::butano::generation::randomness::distribution {
-  using Byte = Distribution<std::uint8_t>;
+  using Byte = Distribution<std::byte>;
   using Bit = Distribution<bool>; // [[THISWAS]] randomness::Distribution<bool, limits::enume::Class<bool>>;
   //
   namespace detail::encoding {

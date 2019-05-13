@@ -1,0 +1,20 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+#import generation.randomness.Distribution.declaration
+#import std.byte
+namespace generation::randomness {
+  template<> struct Distribution<std::byte>;
+}
+#endiv
+#divert <hpp>
+#import generation.randomness.distribution.Implementation.byte
+namespace generation::randomness {
+  template<> struct Distribution<std::byte> : public distribution::implementation::Byte {
+    using ancestor = distribution::implementation::Byte;
+  public:
+    using ancestor::Implementation;
+    using ancestor::operator();
+  };
+}
+#endiv

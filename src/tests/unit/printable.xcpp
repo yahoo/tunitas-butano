@@ -1,0 +1,33 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <hpp>
+#forward tests.unit.detail.Printable
+namespace tests::unit {
+  //
+  // Ensure that the TYPE is printable.
+  // To wit, at least:
+  //
+  // Behavior:
+  //
+  //    TYPE              Special Care
+  //    ----              ------------
+  //    std::byte         print as "hex bytes"
+  //    char              print safely 
+  //    unsigned char     these are small integers
+  //    signed char       these are small integers
+  //    ...otherwise...   whatever operator<< does
+  //
+  // Usage:
+  //
+  //   auto thing = ...something...
+  //   cout << printable(thing);
+  //
+  template<typename TYPE> inline auto printable(TYPE const &) -> detail::Printable<TYPE>;
+}
+#endiv
+#divert <ipp>
+#import tests.unit.detail.Printable
+template<typename TYPE>  auto tests::unit::printable(TYPE const &subject) -> detail::Printable<TYPE> {
+  return detail::Printable<TYPE>{subject};
+}
+#endiv

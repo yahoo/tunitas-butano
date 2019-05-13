@@ -3,15 +3,17 @@
 #divert <fpp>
 #import generation.randomness.Distribution.declaration
 #import generation.randomness.Distribution.bool
+#import generation.randomness.Distribution.byte
 #import generation.randomness.Distribution.Encoding
 #import generation.randomness.Distribution.vector.bool
+#import generation.randomness.Distribution.vector.byte
 #import generation.randomness.Distribution.template
 #import generation.randomness.limits.ALL // limits::Enume::Class, limits::time::Span, limits::time::Recently
-#import std.uint8_t
+#import std.byte
 #import tunitas.butano.tcf.consent.Encoding
 #import tunitas.butano.tcf.consent.protocol.Time
 namespace generation::randomness::distribution {
-  using Byte = Distribution<std::uint8_t>;
+  using Byte = Distribution<std::byte>;
   using Bit = Distribution<bool>; // [[THISWAS]] randomness::Distribution<bool, limits::enume::Class<bool>>;
   namespace detail::encoding {
     namespace co = tunitas::butano::tcf::consent;

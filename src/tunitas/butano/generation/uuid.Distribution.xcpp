@@ -1,0 +1,44 @@
+// This is C++2a -*- c++ -*- in the S.C.O.L.D. Stylings that are so popular these days
+// Copyright Verizon Media (c) 2018-2019, the license statement is nearby; licensable under Apache 2.0
+#divert <fpp>
+namespace tunitas::butano::generation::uuid {
+  //
+  // A (random) uuid distribution
+  //
+  // Combined with an Engine and wrapped in a Generator as per the usual pattern in these things.
+  //
+  // Usage:
+  //
+  //   Engine engine{...seeding...}
+  //   Distribution distribution;
+  //   uuid::Container uu = distribution(engine);
+  //
+  class Distribution;
+}
+#endiv
+#divert <hpp>
+#import tunitas.butano.generation.randomness.Engine
+#import tunitas.butano.generation.randomness.Distribution.
+#import uuid.Container
+class tunitas::butano::generation::uuid::Distribution {
+public:
+  Distribution() = default;
+  using Engine = randomness::Engine;
+  using Value = ::uuid::Container;
+  using Result = Value;
+  inline auto operator()(Engine &) -> Result;
+protected:
+  randomness::Distribution<unsigned char> subdistribution;
+};
+#endiv
+#divert <ipp>
+namespace tunitas::butano::generation::uuid {
+  auto Distribution::operator()(Engine &engine) -> Result {
+    Result specimen;
+    for (auto &byte : specimen.value) {
+      byte = subdistribution(engine);
+    }
+    return specimen;
+  }
+}
+#endiv

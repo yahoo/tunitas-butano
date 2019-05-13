@@ -27,6 +27,7 @@ DEVELOPMENT_AREAS = \
   $(module_std_prefix) \
   $(module_string_prefix) \
   $(module_sys_prefix) \
+  $(module_uuid_prefix) \
   $(tunitas_basics_prefix) \
   $(end)
 TESTING_AREAS = \
@@ -64,6 +65,7 @@ include src/app/vanity_iab/Makefrag.am
 include src/generation/Makefrag.am
 include src/tests/unit/Makefrag.am
 include src/tunitas/butano/Makefrag.am
+include src/tunitas/butano/generation/Makefrag.am
 include src/tunitas/butano/tcf/Makefrag.am
 include src/want/Makefrag.am
 
@@ -76,6 +78,7 @@ bin_PROGRAMS = \
   $(end)
 lib_LTLIBRARIES = \
   $(lib_libtunitas_butano_la) \
+  $(lib_libtunitas_butano_generation_la) \
   $(lib_libtunitas_butano_tcf_la) \
   $(end)
 noinst_LTLIBRARIES = \

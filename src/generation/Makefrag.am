@@ -14,14 +14,17 @@ lib_libgeneration_la_SOURCES = \
   obj/src/generation/randomness.Distribution.declaration.cpp \
   obj/src/generation/randomness.Distribution.cpp \
   obj/src/generation/randomness.Distribution.bool.cpp \
+  obj/src/generation/randomness.Distribution.byte.cpp \
   obj/src/generation/randomness.Distribution.Encoding.cpp \
   obj/src/generation/randomness.Distribution.template.cpp \
   obj/src/generation/randomness.Distribution.vector.bool.cpp \
+  obj/src/generation/randomness.Distribution.vector.byte.cpp \
   obj/src/generation/randomness.Engine.cpp \
   obj/src/generation/randomness.Generator.cpp \
   obj/src/generation/randomness.distribution.Implementation.declaration.cpp \
   obj/src/generation/randomness.distribution.Implementation.cpp \
   obj/src/generation/randomness.distribution.Implementation.bool.cpp \
+  obj/src/generation/randomness.distribution.Implementation.byte.cpp \
   obj/src/generation/randomness.distribution.Implementation.Encoding.cpp \
   obj/src/generation/randomness.distribution.Implementation.Enumlike.cpp \
   obj/src/generation/randomness.distribution.Implementation.enum.cpp \
@@ -29,6 +32,7 @@ lib_libgeneration_la_SOURCES = \
   obj/src/generation/randomness.distribution.Implementation.pair.cpp \
   obj/src/generation/randomness.distribution.Implementation.Point.cpp \
   obj/src/generation/randomness.distribution.Implementation.vector.bool.cpp \
+  obj/src/generation/randomness.distribution.Implementation.vector.byte.cpp \
   obj/src/generation/randomness.limits.ALL.cpp \
   obj/src/generation/randomness.limits.time.cpp \
   obj/src/generation/randomness.limits.time.Span.cpp \

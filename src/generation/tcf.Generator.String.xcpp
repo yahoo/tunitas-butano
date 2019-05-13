@@ -29,7 +29,7 @@ public:
   inline explicit Generator(std::seed_seq &);
   inline Generator(std::seed_seq &, Version);
   using Result = tcf::String;
-  auto operator()() -> Result;
+  inline auto operator()() -> Result;
 protected:
   Generator<Object> subgen;
 };

@@ -27,7 +27,7 @@ public:
   using Engine = randomness::Engine;
   using Value = std::string;
   using Result = Value;
-  auto operator()(Engine &) -> Result;
+  inline auto operator()(Engine &) -> Result;
 protected:
   // Not looking to make (random) strings bigger than 2^13 == 8192
   static constexpr auto MAXIMUM_STRING_LENGTH = (1u<<13)-1;

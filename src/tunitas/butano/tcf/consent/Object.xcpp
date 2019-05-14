@@ -129,7 +129,7 @@ namespace tunitas::butano::tcf::consent {
 }
 #endiv
 #divert <cpp>
-#import sys.time.put
+#import tunitas.time.put
 namespace tunitas::butano::tcf::consent {
   // The Java Way
   // n.b. they signal invalid identifier with an exception.
@@ -166,8 +166,8 @@ namespace tunitas::butano::tcf::consent {
   }
   auto Object::dump(std::ostream &outbound) const -> std::ostream & {
     outbound << "version=" << version
-             << ", created=" << sys::time::put(created, "%Y-%m-%dT%H:%M:%S")
-             << ", lastUpdated=" << sys::time::put(lastUpdated, "%Y-%m-%dT%H:%M:%S")
+             << ", created=" << tunitas::time::put(created, "%Y-%m-%dT%H:%M:%S")
+             << ", lastUpdated=" << tunitas::time::put(lastUpdated, "%Y-%m-%dT%H:%M:%S")
              << ", cmpId=" << cmpId
              << ", cmpVersion=" << cmpVersion
              << ", consentScreen=" << consentScreen

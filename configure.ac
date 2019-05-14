@@ -44,7 +44,6 @@ TF_WITH_STD([tunitas])
 
 TF_WITH_SUBSYSTEM([temerarious-flagship], [], [The Tunitas Build System])
 TF_WITH_SUBSYSTEM([tunitas-basics], [], [The Tunitas Basics])
-TF_WITH_SUBSYSTEM([butano], [], [The Tunitas TCF Components])
 
 # and mention in $(DEVELOPMENT_AREAS) in Makefile.am
 TF_WITH_MODULE([json])

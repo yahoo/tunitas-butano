@@ -1,5 +1,8 @@
-# -*- Makefile -*-
-
+# This is a GNU -*- Makefile -*- fragment that is included by Automake
+# Copyright 2018-2019, Oath Inc.
+# Licensed under the terms of the Apache-2.0 license.
+# See the LICENSE file in https://github.com/yahoo/tunitas-butano/blob/master/LICENSE for terms.
+#
 # [[FIXTHIS]] - ACLOCAL_AMFLAGS is evaluted by automake *before* make even runs
 # It uses /bin/bash eval to evaluate the line ...
 #    so make variables $(...) look like backticks

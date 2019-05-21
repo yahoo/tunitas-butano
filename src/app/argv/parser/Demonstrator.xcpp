@@ -45,7 +45,7 @@ private:
 };
 #endiv
 #divert <cpp>
-#import app.Quitting
+#import app.exception.Quitting
 #import std.cerr
 #import std.cout
 #import std.move
@@ -57,7 +57,7 @@ auto app::argv::parser::Demonstrator::parse(Argv &av, Name const &NAME, Usage US
     auto const first = av.front();
     if (first == among("-h", "--help", "--usage")) {
       USAGE(NAME, std::cout);
-      throw Quitting{NAME, 0};
+      throw exception::Quitting{NAME, sys::exits::OK};
     } else if (first == among("-q", "--quiet")) {
       parsing_prattle.quiet = true;
     } else if (first == among("-v", "--verbose")) {
@@ -68,14 +68,14 @@ auto app::argv::parser::Demonstrator::parse(Argv &av, Name const &NAME, Usage US
     } else {
       std::cerr << NAME << COLON_NOTICE_BANNER
                 << NAME << ": error, unknown option " << first << '\n';
-      throw Quitting{NAME, sys::exits::USAGE};
+      throw exception::Quitting{NAME, sys::exits::USAGE};
     }
   }
   if (av.empty()) {
     std::cerr << NAME << COLON_NOTICE_BANNER
               << NAME << ": error, at least one no non-option word is required\n"
       ;
-    throw Quitting(sys::exits::USAGE);
+    throw exception::Quitting(NAME, sys::exits::USAGE);
   }
   parsing_residual = std::move(av);
 }

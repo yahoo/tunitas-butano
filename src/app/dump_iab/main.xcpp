@@ -17,7 +17,7 @@ auto app::dump_iab::usage(std::string const &name, std::ostream &out) -> void {
       << "example: BOKXjmcOKXjmcAOABAENACAAAAAAU8A ... etc.\n";
 }
 #import app.argv.parser.Dumper
-#import nonstd.exception.Quitting
+#import app.exception.Quitting
 #import std.cerr
 #import std.cout
 #import std.move
@@ -66,11 +66,11 @@ auto app::dump_iab::remain(Argv av) -> void {
     if (pa.ignore_errors()) {
     std::cerr << NAME << ": notice, there were errors but exiting successfully anyway because of --ignore-errors\n";
     } else {
-      throw nonstd::exception::Quitting{NAME, sys::exits::FAIL};
+      throw exception::Quitting{NAME, sys::exits::FAIL};
     }
   }
 }
-#import app.Quitting
+#import app.exception.Quitting
 #import std.cerr
 #import std.cout
 #import std.exception
@@ -79,7 +79,7 @@ auto main(int argc, char *argv[]) -> int {
   try {
     dump_iab::remain(Argv(&argv[0], &argv[argc]));
     return 0;
-  } catch (Quitting const &q) {
+  } catch (app::exception::Quitting const &q) {
     std::cout << q << '\n';
     return q.code();
   } catch (std::exception const &e) { 

@@ -49,8 +49,8 @@ private:
 };
 #endiv
 #divert <cpp>
-#import app.Quitting
 #import app.argv.among
+#import app.exception.Quitting
 #import std.cerr
 #import std.cout
 #import sys.exits.constants
@@ -60,21 +60,21 @@ auto app::argv::parser::Unit::parse(Argv &av, Name const &NAME) -> void {
     auto const first = av.front();
     if (first == among("-h", "--help", "--usage")) {
       usage(NAME, std::cout);
-      throw Quitting{NAME, 0};
+      throw exception::Quitting{NAME, sys::exits::OK};
     } else if (first.empty() || '-' != first.front()) {
       // The first non-option word.
       break;
     } else {
       std::cerr << NAME << COLON_NOTICE_BANNER
                 << NAME << ": error, unknown option " << first << '\n';
-      throw Quitting(exit::USAGE);
+      throw exception::Quitting(NAME, sys::exits::USAGE);
     }
   }
   if (!av.empty()) {
     std::cerr << NAME << COLON_NOTICE_BANNER
               << NAME << ": error, no non-option words are supported in a unit tester\n"
       ;
-    throw Quitting{NAME, exit::USAGE};
+    throw exception::Quitting{NAME, sys::exits::USAGE};
   }
 }
 auto app::argv::parser::Unit::usage(Name const &NAME, std::ostream &outbound) -> void {

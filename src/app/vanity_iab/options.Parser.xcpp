@@ -79,14 +79,11 @@ auto app::vanity_iab::options::Parser::usage(std::ostream &outbound) -> void {
            << NAME << " 'Is this the party to whom I am speaking?'\n"
     ;
 }
+#import app.exception.Quitting
+#import app.vanity_iab.options.Parser.access.format.Options
 #import std.cerr
 #import std.cout
-#import app.Quitting
-#import app.argv // namespace exit & the constants therein
-#import app.vanity_iab.options.Parser.access.format.Options
-#import app.Quitting
 auto app::vanity_iab::options::Parser::parse(Argv &av) -> void {
-  namespace exit = argv::parser::exit;
   av.pop_front();
   access::format::Options parsed_format;
   for ( ; !av.empty(); av.pop_front()) {
@@ -94,7 +91,7 @@ auto app::vanity_iab::options::Parser::parse(Argv &av) -> void {
     if (false) {
     } else if ("-h"s == first || "--help"s == first || "--usage"s == first) {
       usage(std::cout);
-      throw Quitting{NAME, 0};
+      throw exception::Quitting{NAME, sys::exits::OK};
     } else if ("--dump"s == first || "--format=dump"s == first) {
       parsed_format.clear();
       parsed_format.print_format_dump = true;
@@ -108,7 +105,7 @@ auto app::vanity_iab::options::Parser::parse(Argv &av) -> void {
       av.pop_front();
       if (av.empty()) {
         std::cerr << NAME << ": error, --format requires a following keyword\n";
-        throw Quitting{NAME, exit::USAGE};
+        throw exception::Quitting{NAME, sys::exits::USAGE};
       }
       auto const keyword = av.front();
       if (false) {
@@ -124,19 +121,19 @@ auto app::vanity_iab::options::Parser::parse(Argv &av) -> void {
       } else {
         std::cerr << NAME << COLON_NOTICE_BANNER
                   << NAME << ": error, unknown format keyword " << keyword << '\n';
-        throw Quitting{NAME, exit::USAGE};
+        throw exception::Quitting{NAME, sys::exits::USAGE};
       }
     } else if (0 == first.find("--format=")) {
       std::cerr << NAME << COLON_NOTICE_BANNER
                 << NAME << ": error, unknown format keyword " << first << '\n';
-      throw Quitting{NAME, exit::USAGE};
+      throw exception::Quitting{NAME, sys::exits::USAGE};
     } else if (first.empty() || '-' != first.front()) {
       // The first non-option word.
       break;
     } else {
       std::cerr << NAME << COLON_NOTICE_BANNER
                 << NAME << ": error, unknown option " << first << '\n';
-      throw Quitting{NAME, exit::USAGE};
+      throw exception::Quitting{NAME, sys::exits::USAGE};
     }
   }
   this->parsing_format = parsed_format;
@@ -144,7 +141,7 @@ auto app::vanity_iab::options::Parser::parse(Argv &av) -> void {
     std::cerr << NAME << COLON_NOTICE_BANNER
               << NAME << ": error, at least one no non-option word is required\n"
       ;
-    throw Quitting{NAME, exit::USAGE};
+    throw exception::Quitting{NAME, sys::exits::USAGE};
   }
   this->parsing_residual = std::move(av);
 }

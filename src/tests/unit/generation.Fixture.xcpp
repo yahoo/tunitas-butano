@@ -114,7 +114,7 @@ auto tests::unit::generation::Fixture::suite() -> cppunit::Test * {
     tcf << call("Object", &Fixture::test_tcf_Object)
         << call("String", &Fixture::test_tcf_String)
       ;
-    series << move(tcf);
+    series << add(tcf.release());
   } {
     Stream ran("randomness");
     {

@@ -86,23 +86,24 @@ auto app::argv::parser::Howmany::usage(Name const &NAME, std::ostream &outbound)
            << "--quiet                shut. up.\n"
       ;
 }
-#import app.Quitting
+#import app.exception.Quitting
 #import std.cerr
 #import std.invalid_argument
 #import std.stoi
+#import sys.exits.constants
 auto app::argv::parser::Howmany::parse_seed(Name const &NAME, std::string const &syntax) -> std::uint32_t {
   try {
     return std::stoi(syntax);
   } catch (std::invalid_argument const &) {
     std::cerr << NAME << ": error, --seed requires an integer argument\n";
-    throw Quitting(exit::USAGE);
+    throw exception::Quitting{NAME, sys::exits::USAGE};
   }
 }
 #import app.argv.among
-#import app.argv.parser.Howmany.access.format.Options
-#import std.cerr
-#import app.Quitting
 #import app.argv.among
+#import app.argv.parser.Howmany.access.format.Options
+#import app.exception.Quitting
+#import std.cerr
 auto app::argv::parser::Howmany::parse(Argv &av, Name const &NAME) -> void {
   av.pop_front();
   access::format::Options parsed_format;
@@ -111,7 +112,7 @@ auto app::argv::parser::Howmany::parse(Argv &av, Name const &NAME) -> void {
     if (false) {
     } else if (first == among("-h", "--help", "--usage")) {
       usage(NAME, std::cout);
-      throw Quitting{NAME, 0};
+      throw exception::Quitting{NAME, sys::exits::OK};
     } else if (first == among("-q", "--quiet")) {
       parsing_prattle.quiet = true;
     } else if (first == among("-v", "--verbose")) {
@@ -122,7 +123,7 @@ auto app::argv::parser::Howmany::parse(Argv &av, Name const &NAME) -> void {
       av.pop_front();
       if (av.empty()) {
         std::cerr << NAME << ": error, --seed requires a following integer\n";
-        throw Quitting{NAME, exit::USAGE};
+        throw exception::Quitting{NAME, sys::exits::USAGE};
       }
       parsing_residual.seed_accretion.push_back(parse_seed(NAME, av.front()));
     } else if (first == among("--dump", "--format=dump")) {
@@ -138,7 +139,7 @@ auto app::argv::parser::Howmany::parse(Argv &av, Name const &NAME) -> void {
       av.pop_front();
       if (av.empty()) {
         std::cerr << NAME << ": error, --format requires a following keyword\n";
-        throw Quitting{NAME, exit::USAGE};
+        throw exception::Quitting{NAME, sys::exits::USAGE};
       }
       auto const keyword = av.front();
       if (false) {
@@ -154,19 +155,19 @@ auto app::argv::parser::Howmany::parse(Argv &av, Name const &NAME) -> void {
       } else {
         std::cerr << NAME << COLON_NOTICE_BANNER
                   << NAME << ": error, unknown format keyword " << keyword << '\n';
-        throw Quitting{NAME, exit::USAGE};
+        throw exception::Quitting{NAME, sys::exits::USAGE};
       }
     } else if (0 == first.find("--format=")) {
       std::cerr << NAME << COLON_NOTICE_BANNER
                 << NAME << ": error, unknown format keyword " << first << '\n';
-      throw Quitting{NAME, exit::USAGE};
+      throw exception::Quitting{NAME, sys::exits::USAGE};
     } else if (first.empty() || '-' != first.front()) {
       // The first non-option word.
       break;
     } else {
       std::cerr << NAME << COLON_NOTICE_BANNER
                 << NAME << ": error, unknown option " << first << '\n';
-      throw Quitting{NAME, exit::USAGE};
+      throw exception::Quitting{NAME, sys::exits::USAGE};
     }
   }
   this->parsing_format = parsed_format;
@@ -180,7 +181,7 @@ auto app::argv::parser::Howmany::parse(Argv &av, Name const &NAME) -> void {
     if (0 == parsing_residual.iteration_count) {
       std::cerr << NAME << COLON_NOTICE_BANNER
                 << NAME << ": error, the interation count is zero, it must be positive\n";
-      throw Quitting{NAME, exit::USAGE};
+      throw exception::Quitting{NAME, sys::exits::USAGE};
     }
   }
 }

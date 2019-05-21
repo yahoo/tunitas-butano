@@ -4,9 +4,3 @@
 #divert <fpp>
 namespace app::argv { }
 #endiv
-#divert <hpp>
-#import sys.exits.constants
-namespace app::argv::parser::exit {
-  using namespace sys::exits;
-}
-#endiv

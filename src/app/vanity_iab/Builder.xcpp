@@ -2,6 +2,7 @@
 // Copyright 2018-2019, Oath Inc.
 // Licensed under the terms of the Apache-2.0 license. See LICENSE file in https://github.com/yahoo/tunitas-butano/blob/master/LICENSE for terms.
 #divert <fpp>
+#import std.is_unsigned
 namespace app::vanity_iab {
   //
   // Build an IAB TCF String with a message inside it.
@@ -25,10 +26,13 @@ namespace app::vanity_iab {
   //   auto const string = bob.build<tcf::consent::String>());
   //
   class Builder;
+  namespace required::integer {
+    // [[FIXTHIS]] move to use nonstd::required::integer::Unsigned in nextgen module-nonstd
+    template<typename UNSIGNED> concept bool Unsigned = std::is_unsigned<UNSIGNED>::value;
+  }
 }
 #endiv
 #divert <hpp>
-#import nonstd.required.integer.Unsigned
 #import tunitas.butano.tcf.ALL
 #import std.string
 class app::vanity_iab::Builder {
@@ -44,7 +48,7 @@ protected:
   using Bitfield = tunitas::butano::tcf::vendor::Bitfield;
   static auto make_bitfield(std::string const &) -> Bitfield;
   static auto ensmoothen(std::string const &) -> std::string;
-  template<nonstd::required::integer::Unsigned UNSIGNED> struct Shaver;
+  template<required::integer::Unsigned UNSIGNED> struct Shaver;
 };
 namespace app::vanity_iab {
   template<> auto Builder::build<Builder::Object>() -> Object;

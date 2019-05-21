@@ -45,10 +45,9 @@ private:
 };
 #endiv
 #divert <cpp>
-#import app.Quitting
+#import app.exception.Quitting
 #import app.argv.among
 #import std.ostream
-#import app.Quitting
 #import std.cerr
 #import std.cout
 #import sys.exits.constants
@@ -58,7 +57,7 @@ auto app::argv::parser::Dumper::parse(Argv &av, Name const &NAME, Usage USAGE) -
     auto const first = av.front();
     if (first == among("-h", "--help", "--usage")) {
       USAGE(NAME, std::cout);
-      throw Quitting{NAME, 0};
+      throw exception::Quitting{NAME, sys::exits::OK};
     } else if (first == among("-i", "--ignore", "--ignore-error", "--ignore-errors")) {
       parsing_ignore_errors = true;
     } else if (first.empty() || '-' != first.front()) {
@@ -67,14 +66,14 @@ auto app::argv::parser::Dumper::parse(Argv &av, Name const &NAME, Usage USAGE) -
     } else {
       std::cerr << NAME << COLON_NOTICE_BANNER
                 << NAME << ": error, unknown option " << first << '\n';
-      throw Quitting{NAME, sys::exits::USAGE};
+      throw exception::Quitting{NAME, sys::exits::USAGE};
     }
   }
   if (av.empty()) {
     std::cerr << NAME << COLON_NOTICE_BANNER
               << NAME << ": error, at least one no non-option word is required\n"
       ;
-    throw Quitting{NAME, sys::exits::USAGE};
+    throw exception::Quitting{NAME, sys::exits::USAGE};
   }
   parsing_residual = std::move(av);
 }

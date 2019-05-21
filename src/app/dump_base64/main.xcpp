@@ -21,7 +21,7 @@ auto app::dump_base64::usage(std::string const &name, std::ostream &out) -> void
       << "\n"
       << "example: BOKXjmcOKXjmcAOABAENACAAAAAAU8A ... etc.\n";
 }
-#import app.Quitting
+#import app.exception.Quitting
 #import app.argv.parser.Demonstrator
 #import want.lite.base64.ALL
 auto app::dump_base64::remain(Argv av) -> void {
@@ -87,7 +87,7 @@ auto app::dump_base64::remain(Argv av) -> void {
   }
   if (failure) {
     std::cerr << NAME << ": error, there were problems in decoding the BASE64 samples.\n";
-    throw Quitting{NAME, sys::exits::FAIL};
+    throw exception::Quitting{NAME, sys::exits::FAIL};
   }
 }
 #import std.exception
@@ -96,7 +96,7 @@ auto main(int argc, char *argv[]) -> int {
   try {
     dump_base64::remain(Argv(&argv[0], &argv[argc]));
     return 0;
-  } catch (app::Quitting const &q) {
+  } catch (app::exception::Quitting const &q) {
     std::cout << q << '\n';
     return q.code();
   } catch (std::exception const &e) { 

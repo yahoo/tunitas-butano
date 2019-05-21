@@ -34,13 +34,13 @@ auto app::random_iab::remain(Argv av) -> void {
   }
 }
 #import std.exception
-#import app.Quitting
+#import app.exception.Quitting
 auto main(int argc, char *argv[]) -> int {
   using namespace app;
   try {
     random_iab::remain(Argv(&argv[0], &argv[argc]));
     return 0;
-  } catch (Quitting const &q) {
+  } catch (app::exception::Quitting const &q) {
     std::cout << q << '\n';
     return q.code();
   } catch (std::exception const &e) {

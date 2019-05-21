@@ -83,7 +83,7 @@ fi
 # you can always override the defaults from the command line, but that can be onerous
 #
 function set_all_defaults_no() {
-    : ${with_hypogeal_twilight:=no} # ${with_hypogeal_twilight:=$with_std_scold}
+    : ${with_hypogeal_twilight:=${with_std_scold?}} # you can't NOT use hypogeal-twilight
     : ${with_module_half:=no}
     : ${with_module_json:=no}
     : ${with_module_nonstd:=no}

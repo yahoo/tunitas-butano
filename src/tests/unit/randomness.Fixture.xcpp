@@ -39,7 +39,7 @@ auto tests::unit::randomness::Fixture::suite() -> cppunit::Test * {
         << call("byte", &Fixture::test_Distribution<std::byte>)
         << call("char", &Fixture::test_Distribution<char>)
     ;
-    series << move(dis);
+    series << add(dis.release());
   }
   return series.release();
 }

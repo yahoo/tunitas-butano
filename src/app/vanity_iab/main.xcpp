@@ -8,13 +8,13 @@ namespace app::vanity_iab {
 }
 #endiv
 #divert <cpp>
-#import app.vanity_iab.options.Parser
+#import app.exception.Quitting
 #import app.vanity_iab.Builder
-#import std.cout
+#import app.vanity_iab.options.Parser
 #import std.cerr
-#import app.Quitting
-#import tunitas.butano.tcf.format.dump
+#import std.cout
 #import tunitas.butano.tcf.consent.decode
+#import tunitas.butano.tcf.format.dump
 auto app::vanity_iab::remain(Argv av) -> void {
   options::Parser pa(av);
   auto const residual = pa.residual();
@@ -36,7 +36,7 @@ auto main(int argc, char *argv[]) -> int {
   try {
     vanity_iab::remain(Argv(&argv[0], &argv[argc]));
     return 0;
-  } catch (Quitting const &q) {
+  } catch (app::exception::Quitting const &q) {
     std::cout << q << '\n';
     return q.code();
   } catch (std::exception const &e) {

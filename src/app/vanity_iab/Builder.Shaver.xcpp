@@ -8,15 +8,17 @@
 #include <hpp/app.vanity_iab.Builder>
 #endiv
 #divert <hpp>
-template<nonstd::required::integer::Unsigned UNSIGNED> struct app::vanity_iab::Builder::Shaver {
-  using Value = UNSIGNED;
-  static constexpr auto HIGH_BIT = 1u<<(8*sizeof (Value)-1);
-  Value value;
-  inline explicit Shaver(Value);
-  inline auto operator*() const -> bool;
-  inline auto operator--() -> Shaver &;
-  inline auto operator--(int) -> Shaver;
-};
+namespace app::vanity_iab {
+  template<required::integer::Unsigned UNSIGNED> struct Builder::Shaver {
+    using Value = UNSIGNED;
+    static constexpr auto HIGH_BIT = 1u<<(8*sizeof (Value)-1);
+    Value value;
+    inline explicit Shaver(Value);
+    inline auto operator*() const -> bool;
+    inline auto operator--() -> Shaver &;
+    inline auto operator--(int) -> Shaver;
+  };
+}
 #endiv
 #divert <ipp>
 namespace app::vanity_iab {

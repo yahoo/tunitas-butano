@@ -34,7 +34,7 @@ lib_libapp_la_SOURCES = \
   obj/src/app/argv/parser/Sloppy.cpp \
   obj/src/app/argv/parser/Unit.cpp \
   \
-  obj/src/app/Quitting.cpp \
+  obj/src/app/exception.Quitting.cpp \
   \
   obj/src/app/grammar.a_noun.cpp \
   obj/src/app/grammar.A_Noun.cpp \

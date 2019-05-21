@@ -34,14 +34,14 @@ auto app::random_base64::remain(Argv av) -> void {
     }
   }
 }
-#import app.Quitting
+#import app.exception.Quitting
 #import std.exception
 auto main(int argc, char *argv[]) -> int {
   using namespace app;
   try {
     random_base64::remain(Argv(&argv[0], &argv[argc]));
     return 0;
-  } catch (app::Quitting const &q) {
+  } catch (app::exception::Quitting const &q) {
     std::cout << q << '\n';
     return q.code();
   } catch (std::exception const &e) {

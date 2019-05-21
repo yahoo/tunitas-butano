@@ -61,7 +61,7 @@ private:
 #endiv
 #divert <cpp>
 #import app.argv.among
-#import app.Quitting
+#import app.exception.Quitting
 #import std.cerr
 #import std.cout
 #import std.move
@@ -72,7 +72,7 @@ auto app::argv::parser::Sloppy::parse(Argv &av, Name const &NAME, Usage USAGE) -
     if (false) {
     } else if (first == among("-h", "--help", "--usage")) {
       USAGE(NAME, std::cout);
-      throw Quitting{NAME, 0};
+      throw exception::Quitting{NAME, sys::exits::OK};
     } else if (first == among("-y", "--sloppy", "--decimal",
                               "--parse-sloppy",
                               "--parse=sloppy")) {
@@ -98,14 +98,14 @@ auto app::argv::parser::Sloppy::parse(Argv &av, Name const &NAME, Usage USAGE) -
     } else {
       std::cerr << NAME << COLON_NOTICE_BANNER
                 << NAME << ": error, unknown option " << first << '\n';
-      throw Quitting(sys::exits::USAGE);
+      throw exception::Quitting(NAME, sys::exits::USAGE);
     }
   }
   if (av.empty()) {
     std::cerr << NAME << COLON_NOTICE_BANNER
               << NAME << ": error, at least one no non-option word is required\n"
       ;
-    throw Quitting(sys::exits::USAGE);
+    throw exception::Quitting(NAME, sys::exits::USAGE);
   }
   parsing_residual = std::move(av);
 }

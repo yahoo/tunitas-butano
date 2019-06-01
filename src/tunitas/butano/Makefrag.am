@@ -4,9 +4,11 @@
 # See the LICENSE file in https://github.com/yahoo/tunitas-butano/blob/master/LICENSE for terms.
 
 lib_libtunitas_butano_la = lib/libtunitas-butano.la
+# [[FIXTHIS]] - -ltunitas-app is required here because tunitas::butano::Version uses it
+# [[FIXTHIS]] - need a way to provide tunitas-butano that doesn't need the TXUI of -ltuintas-app
 lib_libtunitas_butano_la_LIBADD = \
   $(lib_libwant_la) \
-  -ltunitas \
+  -ltunitas-app \
   $(end)
 lib_libtunitas_butano_la_LDFLAGS = $(PACKAGE_LDFLAGS_SET)
 lib_libtunitas_butano_la_MODULES = $(call TF_SOURCEStoMODULES, $(lib_libtunitas_butano_la_SOURCES))

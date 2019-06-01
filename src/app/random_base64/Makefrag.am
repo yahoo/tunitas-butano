@@ -7,7 +7,7 @@ bin_random_base64 = bin/random-base64
 bin_random_base64_LDADD = \
   $(lib_libtunitas_butano_tcf_la) \
   $(lib_libapp_la) \
-  -ltunitas \
+  -ltunitas-app \
   -loptions-module \
   $(end)
 bin_random_base64_LDFLAGS = $(PACKAGE_LDFLAGS_SET)

@@ -8,7 +8,7 @@ bin_vanity_iab_LDADD = \
   $(lib_libtunitas_butano_generation_la) \
   $(lib_libtunitas_butano_tcf_la) \
   $(lib_libapp_la) \
-  -ltunitas \
+  -ltunitas-app \
   -loptions-module \
   $(end)
 bin_vanity_iab_LDFLAGS = $(PACKAGE_LDFLAGS_SET)

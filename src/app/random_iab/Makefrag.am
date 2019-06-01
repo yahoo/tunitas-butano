@@ -7,7 +7,7 @@ bin_random_iab = bin/random-iab
 bin_random_iab_LDADD = \
   $(lib_libtunitas_butano_generation_la) \
   $(lib_libapp_la) \
-  -ltunitas \
+  -ltunitas-app \
   -loptions-module \
   $(end)
 bin_random_iab_LDFLAGS = $(PACKAGE_LDFLAGS_SET)

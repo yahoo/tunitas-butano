@@ -7,7 +7,7 @@ bin_dump_base64 = bin/dump-base64
 bin_dump_base64_LDADD = \
   $(lib_libwant_la) \
   $(lib_libapp_la) \
-  -ltunitas \
+  -ltunitas-app \
   -loptions-module \
   $(end)
 bin_dump_base64_LDFLAGS = $(PACKAGE_LDFLAGS_SET)

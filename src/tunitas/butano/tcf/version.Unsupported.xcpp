@@ -4,7 +4,7 @@
 #divert <fpp>
 namespace tunitas::butano::tcf::version {
   //
-  // The version is not supported by Verizon.
+  // The version is not supported by the current operator.
   // It is in the valid range, but ... we don't support that.
   //
   // Usage:

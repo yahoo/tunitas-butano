@@ -24,7 +24,7 @@ namespace app::vanity_iab::options {
   //
   //    bin/vanity-iab --native "Four score and seven years ago, our forefathers brought forth on this land, a new nation..."
   //    bin/vanity-iab --dump "I am a pizza, covered in cheese!  The wheels on the bus go round and round!"
-  //    bin/vanity-iab --raw "I hereby Cede and Grant to Oath, a Verizon Company, Full Right and Title to MY DATA to use, perform and enjoy for the benefit of myself and others, now herein on media now known or yet to be developed""
+  //    bin/vanity-iab --raw "I hereby Cede and Grant to The Operator, a Holding Company Subsidiary, Full Right and Title to MY DATA to use, perform and enjoy for the benefit of myself and others, now herein on media now known or yet to be developed""
   //    bin/vanity-iab --native "$(curl https://www.gnu.org/licenses/gpl-3.0.txt 2>/dev/null | gzip)"
   //
   // Usage:
@@ -75,7 +75,7 @@ auto app::vanity_iab::options::Parser::usage(std::ostream &outbound) -> void {
            << "\n"
            << "examples:\n"
            << NAME << " 'I am a pizza, covered in Cheese!'\n"
-           << NAME << " 'I hereby grant Oath & Verizon a worldwide, revocable, royalty-free right to use my data for my enjoyment and comfort on any media now known or yet to be developed pursuant to this license'\n"
+           << NAME << " 'I hereby grant The Operator & The Holding Company a worldwide, revocable, royalty-free right to use my data for my enjoyment and comfort on any media now known or yet to be developed pursuant to this license'\n"
            << NAME << " 'Is this the party to whom I am speaking?'\n"
     ;
 }

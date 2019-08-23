@@ -33,6 +33,7 @@ namespace tests::unit {
     Value const &value;
   };
 }
+#import std.byte
 namespace tests::unit::detail {
   template<> inline auto Printable<std::byte>::print(std::ostream &o) const -> std::ostream &;
   template<> inline auto Printable<char>::print(std::ostream &o) const -> std::ostream &;

@@ -48,10 +48,13 @@ INSTALLATION_AREAS = \
 
 default: all
 
-module_SOURCE_SET = $(none)
+module_SOURCE_SET = $(not yet)
 module_BB_SOURCE_SET = \
-  $(warning module_BB_SOURCE_SET is deprecated, instead use module_SOURCE_SET) \
-  $(module_SOURCE_SET) \
+  $(warning module_BB_SOURCE_SET is deprecated, instead someday soon, use module_SOURCE_SET) \
+  $(lib_libtunitas_butano_la_SOURCES) \
+  $(lib_libtunitas_butano_generation_la_SOURCES) \
+  $(lib_libtunitas_butano_tcf_la_SOURCES) \
+  $(lib_libwant_la_SOURCES) \
   $(end)
 
 .PHONY: clean-local mostlyclean-local distclean-local

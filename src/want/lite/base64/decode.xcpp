@@ -7,7 +7,7 @@
 namespace want::lite::base64 {
   // Get a Concept!  RESULT must be std::string, std::vector<char>, std::vector<bool>
   template<typename RESULT> inline auto decode(std::string const &source) -> RESULT;
-  template<> inline auto base64::decode<std::vector<bool>>(std::string const &source) -> std::vector<bool>;
+  template<> inline auto decode<std::vector<bool>>(std::string const &source) -> std::vector<bool>;
   inline auto decode(std::string const &source) -> std::string;
 }
 #endiv

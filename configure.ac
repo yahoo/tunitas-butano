@@ -1,4 +1,5 @@
 dnl This is a GNU -*- autoconf -*- specification that is processed by Autoconf.
+dnl Copyright 2020, Oath Inc, (d.b.a. Verizon Media)
 dnl Copyright 2018-2019, Oath Inc.
 dnl Licensed under the terms of the Apache-2.0 license.
 dnl See the LICENSE file in https://github.com/yahoo/tunitas-butano/blob/master/LICENSE for terms.
@@ -14,7 +15,7 @@ dnl make check &&
 dnl make install &&
 dnl echo OK DONE
 dnl
-AC_INIT([butano], [1.0.2], [tunitas@verizonmedia.com])
+AC_INIT([butano], [1.0.3], [tunitas@verizonmedia.com])
 TF_INIT(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, AC_PACKAGE_BUGREPORT)
 
 dnl These options are also in the Makefile.am in AUTOMAKE_OPTIONS

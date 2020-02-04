@@ -17,27 +17,36 @@ namespace app::exception {
 }
 #endiv
 #divert <hpp>
-#import tunitas.app.exception.Quitting
+#import tunitas.app.exception.Aspect
+#import tunitas.app.exception.feature.Quitting
 #import std.runtime_error
 #import sys.exits.Code
 #import sys.exits.constants
-class app::exception::Quitting : public tunitas::app::exception::Quitting, public std::runtime_error {
-  struct ancestors {
-    using Aspect = tunitas::app::exception::Quitting;
+class app::exception::Quitting : public tunitas::app::exception::Aspect, public tunitas::app::exception::feature::Quitting, public std::runtime_error {
+  struct Ancestors {
+    using Aspect = tunitas::app::exception::Aspect;
+    using Feature = tunitas::app::exception::feature::Quitting;
     using Exception = std::runtime_error;
   };
-  using Program = std::string; // [[FIXTHIS]] use ::options::Program
+  using Program = std::string; // [[FIXTHIS]] use ::options::Program or ::cli::Program (when ready)
 public:
   inline explicit Quitting(Program, sys::exits::Code = sys::exits::OK);
   auto what() const noexcept -> char const * final;
+  auto code() const noexcept -> sys::exits::Code final;
+  auto stream() const noexcept -> std::ostream & final;
 };
 #endiv
 #divert <ipp>
 app::exception::Quitting::Quitting(Program program, sys::exits::Code code)
-  : ancestors::Aspect{(sys::exits::OK == code ? std::cout : std::cerr), code}
-  , ancestors::Exception{program + ": quitting"}
+  : Ancestors::Aspect{}
+  , Ancestors::Feature{(sys::exits::OK == code ? std::cout : std::cerr), code}
+  , Ancestors::Exception{program + ": quitting"}
 { }
 #endiv
 #divert <cpp>
-auto app::exception::Quitting::what() const noexcept -> char const * { return ancestors::Exception::what(); }
+namespace app::exception {
+  auto Quitting::what() const noexcept -> char const * { return Ancestors::Exception::what(); }
+  auto Quitting::code() const noexcept -> sys::exits::Code { return Ancestors::Feature::code(); }
+  auto Quitting::stream() const noexcept -> std::ostream & { return Ancestors::Feature::stream(); }
+}
 #endiv

@@ -32,6 +32,7 @@ DEVELOPMENT_AREAS = \
   $(module_sys_prefix) \
   $(module_uuid_prefix) \
   $(tunitas_basics_prefix) \
+  $(tunitas_butano_prefix) \
   $(end)
 TESTING_AREAS = \
   $(module_cppunit_prefix) \

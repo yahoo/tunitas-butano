@@ -59,7 +59,7 @@ namespace tunitas::butano::tcf::consent {
     for (auto i(0lu), e(count); e != i; ++i) {
       ret.push_back(type<bool>());
     }
-    return std::move(ret);
+    return ret;
   }
 }
 #endiv

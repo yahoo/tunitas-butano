@@ -17,11 +17,12 @@ bin_random_base64_SOURCES = \
   obj/src/app/random_base64/namespace.cpp \
   obj/src/app/random_base64/options.cpp \
   $(end)
-
+$(bin_random_base64_SOURCES) : obj/src/%.cpp : src/%.xcpp
+	$(TF_V_DIS) $(call TF_DISAGGREGATE_COMPILE, $@)
+	$(TF_V_DUN) test -e $@
 $(scold_cxxdir)/app/random_base64/dependencies.mk:
-	$(AM_V_BB1ST) $(call TF_DISAGGREGATE_COMPILE, $(bin_random_base64_SOURCES))
-	$(AM_V_BB2ND) $(call TF_DEPENDENCIES_COMPILE, $(bin_random_base64_SOURCES))
-	@test -e $@
+	$(AM_V_COM) $(call TF_COMPILE, $(bin_random_base64_SOURCES))
+	$(TF_V_DUN) test -e $@
 include $(scold_cxxdir)/app/random_base64/dependencies.mk
 clean-dependencies::
 	rm -f $(scold_cxxdir)/app/random_base64/dependencies.mk

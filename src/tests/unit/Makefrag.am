@@ -34,10 +34,12 @@ check_bin_unit_SOURCES = \
   obj/src/tests/unit/tcf.Fixture.cpp \
   obj/src/tests/unit/want.Fixture.cpp \
   $(end)
-
+$(check_bin_unit_SOURCES) : obj/src/%.cpp : src/%.xcpp
+	$(TF_V_DIS) $(call TF_DISAGGREGATE_COMPILE, $@)
+	$(TF_V_DUN) test -e $@
 $(scold_cxxdir)/tests/unit/dependencies.mk: Makefile
-	$(AM_V_BB1ST) $(call TF_DISAGGREGATE_COMPILE, $(check_bin_unit_SOURCES))
-	$(AM_V_BB2ND) $(call TF_DEPENDENCIES_COMPILE, $(check_bin_unit_SOURCES))
+	$(TF_V_COM) $(call TF_COMPILE, $(check_bin_unit_SOURCES))
+	$(TF_V_DUN) test -e $@
 include $(scold_cxxdir)/tests/unit/dependencies.mk
 clean-dependencies::
 	rm -f $(scold_cxxdir)/tests/unit/dependencies.mk

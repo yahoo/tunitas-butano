@@ -192,7 +192,7 @@ namespace want::lite::base64 {
         ret.push_back('=');
       }
     }
-    return std::move(ret);
+    return ret;
   }
   auto Encoder::encode(std::uintmax_t value) -> char {
     // See https://tools.ietf.org/html/rfc4648#page-7

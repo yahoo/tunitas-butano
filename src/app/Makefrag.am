@@ -39,10 +39,12 @@ lib_libapp_la_SOURCES = \
   obj/src/app/grammar.a_noun.cpp \
   obj/src/app/grammar.A_Noun.cpp \
   $(end)
+$(lib_libapp_la_SOURCES) : obj/src/%.cpp : src/%.xcpp
+	$(TF_V_DIS) $(call TF_DISAGGREGATE_COMPILE, $@)
+	$(TF_V_DUN) test -e $@
 $(scold_cxxdir)/app/dependencies.mk:
-	$(AM_V_BB1ST) $(call TF_DISAGGREGATE_COMPILE, $(lib_libapp_la_SOURCES))
-	$(AM_V_BB2ND) $(call TF_DEPENDENCIES_COMPILE, $(lib_libapp_la_SOURCES))
-	@test -e $@
+	$(TF_V_COM) $(call TF_COMPILE, $(lib_libapp_la_SOURCES))
+	$(TF_V_DUN) test -e $@
 include $(scold_cxxdir)/app/dependencies.mk
 clean-dependencies::
 	rm -f $(scold_cxxdir)/app/dependencies.mk

@@ -15,7 +15,7 @@ dnl make check &&
 dnl make install &&
 dnl echo OK DONE
 dnl
-AC_INIT([butano], [1.0.3], [tunitas@verizonmedia.com])
+AC_INIT([butano], [1.1.0], [tunitas@verizonmedia.com])
 TF_INIT(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, AC_PACKAGE_BUGREPORT)
 
 dnl These options are also in the Makefile.am in AUTOMAKE_OPTIONS
@@ -38,6 +38,7 @@ TF_COMPONENT_METADIRECTORY_TIERS
 TF_ENABLE_GNU
 TF_ENABLE_GDB
 TF_ENABLE_GCC
+TF_ENABLE_LIBTOOL_NO_INSTALL
 TF_ENABLE_MOCK_BUILD
 
 TF_WITH_STD([scold])

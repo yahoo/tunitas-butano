@@ -19,7 +19,7 @@ AUTOMAKE_OPTIONS = no-define subdir-objects foreign
 default:
 # also configure.ac and HGTW_SUBMODULE_CONFIGURE
 # SUBDIRS = @subdirs@
-include @temerarious_flagship_datadir@/am/build.mk
+include @temerarious_flagship_datadir@/am/build.am
 
 # These match with HGTW_WITH_MODULE in configure.ac
 DEVELOPMENT_AREAS = \
@@ -49,9 +49,7 @@ INSTALLATION_AREAS = \
 
 default: all
 
-module_SOURCE_SET = $(not yet)
-module_BB_SOURCE_SET = \
-  $(warning module_BB_SOURCE_SET is deprecated, instead someday soon, use module_SOURCE_SET) \
+module_SOURCE_SET = \
   $(lib_libtunitas_butano_la_SOURCES) \
   $(lib_libtunitas_butano_generation_la_SOURCES) \
   $(lib_libtunitas_butano_tcf_la_SOURCES) \
@@ -145,10 +143,16 @@ Makefile_nonstd_CHECK_CFLAGS_SET   =
 Makefile_nonstd_CHECK_CXXFLAGS_SET = 
 Makefile_nonstd_CHECK_LDFLAGS_SET  = 
 
-Makefile_CHECK_CPPFLAGS_SET = @CPPFLAGS_cppunit@
-Makefile_CHECK_CFLAGS_SET   = @CFLAGS_cppunit@
-Makefile_CHECK_CXXFLAGS_SET = @CXXFLAGS_cppunit@
-Makefile_CHECK_LDFLAGS_SET  = @LDFLAGS_cppunit@
+#                                                  if    did not substitute away                      then use this
+#                                                  |           |                                      |            else use the substitution
+#                                                  |           |              @CPPFLAGS_no_install@   |            |
+#                                                  |           |              |                       |            |
+#                                                  |           |              |                       |            |
+#                                                  v           v              v                       v            v
+Makefile_CHECK_CPPFLAGS_SET = @CPPFLAGS_cppunit@ $(if $(filter %_no_install@, @CPPFLAGS_no_install@), $(empty),    @CPPFLAGS_no_install@)
+Makefile_CHECK_CFLAGS_SET   =   @CFLAGS_cppunit@ $(if $(filter %_no_install@, @CFLAGS_no_install@),   $(empty),    @CFLAGS_no_install@)
+Makefile_CHECK_CXXFLAGS_SET = @CXXFLAGS_cppunit@ $(if $(filter %_no_install@, @CXXFLAGS_no_install@), $(empty),    @CXXFLAGS_no_install@)
+Makefile_CHECK_LDFLAGS_SET  =  @LDFLAGS_cppunit@ $(if $(filter %_no_install@, @LDFLAGS_no_install@),  -no-install, @LDFLAGS_no_install@)
 
 AM_CPPFLAGS = $(PACKAGE_CPPFLAGS_SET)
 AM_CFLAGS   = $(PACKAGE_CFLAGS_SET)

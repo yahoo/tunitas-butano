@@ -142,7 +142,7 @@ namespace tunitas::butano::tcf::consent::encoding::getter {
     for (auto const &pair : source.vendorConsentBits) {
       ret.at(pair.first) = pair.second;
     }
-    return std::move(ret);
+    return ret;
   }
   template<> template<typename SOURCE> auto Field<DEFAULTCONSENT>::operator()(SOURCE const &source) const -> Result {
     return source.vendorConsentRanges.defaultConsent;

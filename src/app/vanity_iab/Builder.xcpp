@@ -89,7 +89,7 @@ auto app::vanity_iab::Builder::make_bitfield(std::string const &plaintext) ->  B
   for (auto b : dec.disgorge()) {
     ret.push_back(b);
   }
-  return std::move(ret);
+  return ret;
 }
 #import std.isalnum
 auto app::vanity_iab::Builder::ensmoothen(std::string const &plaintext) -> std::string {
@@ -104,6 +104,6 @@ auto app::vanity_iab::Builder::ensmoothen(std::string const &plaintext) -> std::
     }
   }
   ret += '_';
-  return std::move(ret);
+  return ret;
 }
 #endiv

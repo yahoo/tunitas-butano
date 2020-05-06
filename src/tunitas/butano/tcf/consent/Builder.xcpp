@@ -120,7 +120,7 @@ namespace tunitas::butano::tcf::consent {
       consent.setVendorMap(vendorMap);
     }
 #endif
-    return std::move(result);
+    return result;
   }
 }
 #endiv

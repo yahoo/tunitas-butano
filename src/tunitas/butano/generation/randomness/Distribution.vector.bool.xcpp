@@ -39,7 +39,7 @@ namespace tunitas::butano::generation::randomness {
     for (auto e(size), i(e-e); e != i; ++i) {
       ret[i] = subdistribution(engine);
     }
-    return std::move(ret);
+    return ret;
   }
 }
 #endiv

@@ -80,7 +80,7 @@ auto main(int argc, char *argv[]) -> int {
     dump_iab::remain(Argv(&argv[0], &argv[argc]));
     return 0;
   } catch (app::exception::Quitting const &q) {
-    std::cout << q << '\n';
+    std::cout << q.what() << '\n';
     return q.code();
   } catch (std::exception const &e) { 
     std::cerr << dump_iab::NAME << ": error, " << e.what() << '\n';

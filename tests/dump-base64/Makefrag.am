@@ -1,3 +1,7 @@
+# Copyright 2018, 2019, Oath Inc.; Copyright 2020, Verizon Media
+# Licensed under the terms of the Apache-2.0 license.
+# For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
+# For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
 tests_dump_base64_XFAIL_TESTS = \
   $(end)
 tests_dump_base64_TESTS = \

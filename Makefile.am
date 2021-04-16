@@ -50,13 +50,6 @@ INSTALLATION_AREAS = \
 
 default: all
 
-module_SOURCE_SET = \
-  $(lib_libtunitas_butano_la_SOURCES) \
-  $(lib_libtunitas_butano_generation_la_SOURCES) \
-  $(lib_libtunitas_butano_tcf_la_SOURCES) \
-  $(lib_libwant_la_SOURCES) \
-  $(end)
-
 .PHONY: clean-local mostlyclean-local distclean-local
 clean-local mostlyclean-local distclean-local::
 clean-dependencies::
@@ -73,6 +66,13 @@ include src/tunitas/butano/Makefrag.am
 include src/tunitas/butano/generation/Makefrag.am
 include src/tunitas/butano/tcf/Makefrag.am
 include src/want/Makefrag.am
+
+INSTALL_MODULES = \
+  $(lib_libtunitas_butano_la_MODULES) \
+  $(lib_libtunitas_butano_generation_la_MODULES) \
+  $(lib_libtunitas_butano_tcf_la_MODULES) \
+  $(lib_libwant_la_MODULES) \
+  $(end)
 
 bin_PROGRAMS = \
   bin/dump-base64 \
@@ -155,6 +155,7 @@ Makefile_CHECK_CFLAGS_SET   =   @CFLAGS_cppunit@ $(if $(filter %_no_install@, @C
 Makefile_CHECK_CXXFLAGS_SET = @CXXFLAGS_cppunit@ $(if $(filter %_no_install@, @CXXFLAGS_no_install@), $(empty),    @CXXFLAGS_no_install@)
 Makefile_CHECK_LDFLAGS_SET  =  @LDFLAGS_cppunit@ $(if $(filter %_no_install@, @LDFLAGS_no_install@),  -no-install, @LDFLAGS_no_install@)
 
+# these are assembled by .../toolflags.mk within temerarious-flagship (hypogeal-twilight) .../toolflags.mk
 AM_CPPFLAGS = $(PACKAGE_CPPFLAGS_SET)
 AM_CFLAGS   = $(PACKAGE_CFLAGS_SET)
 AM_CXXFLAGS = $(PACKAGE_CXXFLAGS_SET)

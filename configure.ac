@@ -1,7 +1,8 @@
 dnl This is a GNU -*- autoconf -*- specification that is processed by Autoconf.
-dnl Copyright 2018-2019, Oath Inc.
+dnl Copyright 2018, 2019, Oath Inc.; Copyright 2020, Verizon Media
 dnl Licensed under the terms of the Apache-2.0 license.
-dnl See the LICENSE file in https://github.com/yahoo/tunitas-butano/blob/master/LICENSE for terms.
+dnl For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
+dnl For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
 dnl
 dnl Build Instructions are in the nearby README.md
 dnl
@@ -14,7 +15,7 @@ dnl make check &&
 dnl make install &&
 dnl echo OK DONE
 dnl
-AC_INIT([butano], [0.2.0], [tunitas@verizonmedia.com])
+AC_INIT([butano], [1.1.0], [tunitas@verizonmedia.com])
 TF_INIT(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, AC_PACKAGE_BUGREPORT)
 
 dnl These options are also in the Makefile.am in AUTOMAKE_OPTIONS
@@ -37,6 +38,7 @@ TF_COMPONENT_METADIRECTORY_TIERS
 TF_ENABLE_GNU
 TF_ENABLE_GDB
 TF_ENABLE_GCC
+TF_ENABLE_LIBTOOL_NO_INSTALL
 TF_ENABLE_MOCK_BUILD
 
 TF_WITH_STD([scold])

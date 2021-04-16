@@ -1,6 +1,8 @@
 // This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright 2018-2019, Oath Inc.
-// Licensed under the terms of the Apache-2.0 license. See the LICENSE file in https://github.com/yahoo/tunitas-butano/blob/master/LICENSE for terms.
+// Copyright 2019, Oath Inc.; Copyright 2020, Verizon Media
+// Licensed under the terms of the Apache-2.0 license.
+// For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
+// For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
 #divert <fpp>
 #import std.is_unsigned
 namespace app::vanity_iab {
@@ -89,7 +91,7 @@ auto app::vanity_iab::Builder::make_bitfield(std::string const &plaintext) ->  B
   for (auto b : dec.disgorge()) {
     ret.push_back(b);
   }
-  return std::move(ret);
+  return ret;
 }
 #import std.isalnum
 auto app::vanity_iab::Builder::ensmoothen(std::string const &plaintext) -> std::string {
@@ -104,6 +106,6 @@ auto app::vanity_iab::Builder::ensmoothen(std::string const &plaintext) -> std::
     }
   }
   ret += '_';
-  return std::move(ret);
+  return ret;
 }
 #endiv

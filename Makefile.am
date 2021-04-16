@@ -1,7 +1,8 @@
 # This is a GNU -*- Makefile -*- fragment that is included by Automake
-# Copyright 2018-2019, Oath Inc.
+# Copyright 2018, 2019, Oath Inc.; Copyright 2020, Verizon Media
 # Licensed under the terms of the Apache-2.0 license.
-# See the LICENSE file in https://github.com/yahoo/tunitas-butano/blob/master/LICENSE for terms.
+# For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
+# For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
 #
 # [[FIXTHIS]] - ACLOCAL_AMFLAGS is evaluted by automake *before* make even runs
 # It uses /bin/bash eval to evaluate the line ...
@@ -19,7 +20,7 @@ AUTOMAKE_OPTIONS = no-define subdir-objects foreign
 default:
 # also configure.ac and HGTW_SUBMODULE_CONFIGURE
 # SUBDIRS = @subdirs@
-include @temerarious_flagship_datadir@/am/build.mk
+include @temerarious_flagship_datadir@/am/build.am
 
 # These match with HGTW_WITH_MODULE in configure.ac
 DEVELOPMENT_AREAS = \
@@ -32,6 +33,7 @@ DEVELOPMENT_AREAS = \
   $(module_sys_prefix) \
   $(module_uuid_prefix) \
   $(tunitas_basics_prefix) \
+  $(tunitas_butano_prefix) \
   $(end)
 TESTING_AREAS = \
   $(module_cppunit_prefix) \
@@ -47,12 +49,6 @@ INSTALLATION_AREAS = \
   $(end)
 
 default: all
-
-module_SOURCE_SET = $(none)
-module_BB_SOURCE_SET = \
-  $(warning module_BB_SOURCE_SET is deprecated, instead use module_SOURCE_SET) \
-  $(module_SOURCE_SET) \
-  $(end)
 
 .PHONY: clean-local mostlyclean-local distclean-local
 clean-local mostlyclean-local distclean-local::
@@ -70,6 +66,13 @@ include src/tunitas/butano/Makefrag.am
 include src/tunitas/butano/generation/Makefrag.am
 include src/tunitas/butano/tcf/Makefrag.am
 include src/want/Makefrag.am
+
+INSTALL_MODULES = \
+  $(lib_libtunitas_butano_la_MODULES) \
+  $(lib_libtunitas_butano_generation_la_MODULES) \
+  $(lib_libtunitas_butano_tcf_la_MODULES) \
+  $(lib_libwant_la_MODULES) \
+  $(end)
 
 bin_PROGRAMS = \
   bin/dump-base64 \
@@ -141,11 +144,18 @@ Makefile_nonstd_CHECK_CFLAGS_SET   =
 Makefile_nonstd_CHECK_CXXFLAGS_SET = 
 Makefile_nonstd_CHECK_LDFLAGS_SET  = 
 
-Makefile_CHECK_CPPFLAGS_SET = @CPPFLAGS_cppunit@
-Makefile_CHECK_CFLAGS_SET   = @CFLAGS_cppunit@
-Makefile_CHECK_CXXFLAGS_SET = @CXXFLAGS_cppunit@
-Makefile_CHECK_LDFLAGS_SET  = @LDFLAGS_cppunit@
+#                                                  if    did not substitute away                      then use this
+#                                                  |           |                                      |            else use the substitution
+#                                                  |           |              @CPPFLAGS_no_install@   |            |
+#                                                  |           |              |                       |            |
+#                                                  |           |              |                       |            |
+#                                                  v           v              v                       v            v
+Makefile_CHECK_CPPFLAGS_SET = @CPPFLAGS_cppunit@ $(if $(filter %_no_install@, @CPPFLAGS_no_install@), $(empty),    @CPPFLAGS_no_install@)
+Makefile_CHECK_CFLAGS_SET   =   @CFLAGS_cppunit@ $(if $(filter %_no_install@, @CFLAGS_no_install@),   $(empty),    @CFLAGS_no_install@)
+Makefile_CHECK_CXXFLAGS_SET = @CXXFLAGS_cppunit@ $(if $(filter %_no_install@, @CXXFLAGS_no_install@), $(empty),    @CXXFLAGS_no_install@)
+Makefile_CHECK_LDFLAGS_SET  =  @LDFLAGS_cppunit@ $(if $(filter %_no_install@, @LDFLAGS_no_install@),  -no-install, @LDFLAGS_no_install@)
 
+# these are assembled by .../toolflags.mk within temerarious-flagship (hypogeal-twilight) .../toolflags.mk
 AM_CPPFLAGS = $(PACKAGE_CPPFLAGS_SET)
 AM_CFLAGS   = $(PACKAGE_CFLAGS_SET)
 AM_CXXFLAGS = $(PACKAGE_CXXFLAGS_SET)

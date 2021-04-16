@@ -1,7 +1,8 @@
 # This is a GNU -*- Makefile -*- fragment that is included by Automake
-# Copyright 2018-2019, Oath Inc.
+# Copyright 2018, 2019, Oath Inc.; Copyright 2020, Verizon Media
 # Licensed under the terms of the Apache-2.0 license.
-# See the LICENSE file in https://github.com/yahoo/tunitas-butano/blob/master/LICENSE for terms.
+# For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
+# For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
 
 bin_random_iab = bin/random-iab
 bin_random_iab_LDADD = \
@@ -17,11 +18,13 @@ bin_random_iab_SOURCES = \
   obj/src/app/random_iab/namespace.cpp \
   obj/src/app/random_iab/options.cpp \
   $(end)
-
+$(scold_cxxdir)/app/random_iab/dependencies.mk: $(bin_random_iab_SOURCES)
+$(bin_random_iab_SOURCES) : obj/src/%.cpp : src/%.xcpp
+	$(TF_V_DIS) $(call TF_XCPP2CPP, $^)
+	$(TF_V_DONE) test -e $@
 $(scold_cxxdir)/app/random_iab/dependencies.mk:
-	$(AM_V_BB1ST) $(call TF_DISAGGREGATE_COMPILE, $(bin_random_iab_SOURCES))
-	$(AM_V_BB2ND) $(call TF_DEPENDENCIES_COMPILE, $(bin_random_iab_SOURCES))
-	@test -e $@
+	$(TF_V_DEP) $(call TF_DEPENDENCIES, $^)
+	$(TF_V_DONE) test -e $@
 include $(scold_cxxdir)/app/random_iab/dependencies.mk
 clean-dependencies::
 	rm -f $(scold_cxxdir)/app/random_iab/dependencies.mk

@@ -36,7 +36,7 @@ namespace tunitas::butano::tcf::consent {
 #import std.ostream
 #import std.string
 class tunitas::butano::tcf::consent::Object : public object::Defaultable, public tcf::detail::Stringable {
-  using ancestor = object::Defaultable;
+  using Ancestor = object::Defaultable;
 protected:
   // [[FIXTHIS]] ... replace with purpose::Bitfield
   purpose::Map purposesAllowed;

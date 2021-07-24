@@ -43,10 +43,10 @@ namespace app::argv::parser {
 #import app.argv.parser.Basis
 #import app.argv.parser.residual.Aspect
 class app::argv::parser::Sloppy : public Basis, public residual::Aspect {
-  using ancestor = Basis;
+  using Ancestor = Basis;
 public:
   inline explicit Sloppy(Argv a, Name n, Usage u)
-    : ancestor(), sloppy_mode(true), current_mode(true) { parse(a, n, u); }
+    : Ancestor(), sloppy_mode(true), current_mode(true) { parse(a, n, u); }
   inline auto parse_sloppy() -> bool { return sloppy_mode; }
   inline auto parse_strict() -> bool { return !sloppy_mode; }
   inline auto promote_current() -> bool { return current_mode; }

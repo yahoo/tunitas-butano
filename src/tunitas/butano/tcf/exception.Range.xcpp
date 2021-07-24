@@ -20,9 +20,9 @@ namespace tunitas::butano::tcf::exception {
 #import std.uintmax_t
 #import std.pair
 class tunitas::butano::tcf::exception::Range : public std::pair<std::uintmax_t, std::uintmax_t> {
-  using ancestor = std::pair<std::uintmax_t, std::uintmax_t>;
+  using Ancestor = std::pair<std::uintmax_t, std::uintmax_t>;
 public:
   Range () { }
-  using ancestor::pair;
+  using Ancestor::pair;
 };
 #endiv

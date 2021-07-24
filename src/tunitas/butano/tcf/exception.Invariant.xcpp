@@ -26,7 +26,7 @@ namespace tunitas::butano::tcf::exception {
 #import std.runtime_error
 #import std.string
 class tunitas::butano::tcf::exception::Invariant : public std::runtime_error, public tcf::Exception {
-  struct ancestors {
+  struct Ancestors {
     using Exception = std::runtime_error;
     using Aspect = tcf::Exception;
   };
@@ -40,11 +40,11 @@ public:
 #endiv
 #divert <ipp>
 tunitas::butano::tcf::exception::Invariant::Invariant(std::string const &reason)
-  : ancestors::Exception{reason}
+  : Ancestors::Exception{reason}
 { }
 #endiv
 #divert <cpp>
 auto tunitas::butano::tcf::exception::Invariant::what() const noexcept -> char const * {
-  return ancestors::Exception::what();
+  return Ancestors::Exception::what();
 }
 #endiv

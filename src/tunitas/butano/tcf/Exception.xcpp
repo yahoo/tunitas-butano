@@ -13,7 +13,7 @@ namespace tunitas::butano::tcf {
   // Usage:
   //
   //     class some::Exception : public std::invalid_argument, public iab::tcf::Exception {
-  //        using ancestor = std::invalid_argument;
+  //        using Ancestor = std::invalid_argument;
   //     public:
   //        inline ... Exception(...);
   //     };

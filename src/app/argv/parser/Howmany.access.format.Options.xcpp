@@ -9,9 +9,9 @@
 #divert <hpp>
 #import app.argv.parser.format.Options
 class app::argv::parser::Howmany::access::format::Options : public parser::format::Options {
-  using ancestor = parser::format::Options;
+  using Ancestor = parser::format::Options;
 public:
-  using ancestor::Options;
+  using Ancestor::Options;
   // We want Howmany::parse(...) to be able to access the protected member variables.
   friend class Howmany;
 };

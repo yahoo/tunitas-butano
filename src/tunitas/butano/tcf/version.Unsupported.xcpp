@@ -23,7 +23,7 @@ namespace tunitas::butano::tcf::version {
 #import std.string
 #import tunitas.butano.tcf.id.ALL
 class tunitas::butano::tcf::version::Unsupported : public std::out_of_range, public tcf::Exception {
-  struct ancestors {
+  struct Ancestors {
     using Aspect = tcf::Exception;
     using Exception = std::out_of_range;
   };
@@ -40,13 +40,13 @@ private:
 #import std.ostringstream
 namespace tunitas::butano::tcf::version {
   Unsupported::Unsupported()
-    : ancestors::Exception("invalid version")
+    : Ancestors::Exception("invalid version")
   { }
   Unsupported::Unsupported(std::string const &reason)
-    : ancestors::Exception{reason}
+    : Ancestors::Exception{reason}
   { }
   Unsupported::Unsupported(id::version::Protocol offensive)
-    : ancestors::Exception(format(offensive))
+    : Ancestors::Exception(format(offensive))
   { }
   auto Unsupported::format(id::version::Protocol offensive) -> std::string {
     std::ostringstream buf;
@@ -57,6 +57,6 @@ namespace tunitas::butano::tcf::version {
 #endiv
 #divert <cpp>
 auto tunitas::butano::tcf::version::Unsupported::what() const noexcept -> char const * {
-  return ancestors::Exception::what();
+  return Ancestors::Exception::what();
 }
 #endiv

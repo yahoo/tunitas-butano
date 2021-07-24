@@ -42,7 +42,7 @@ namespace app::argv::parser {
 #import std.function
 #import std.ostream
 class app::argv::parser::Unit : public Basis {
-  using ancestor = Basis;
+  using Ancestor = Basis;
 public:
   inline explicit Unit(Argv a, Name n) { parse(a, n); }
 private:

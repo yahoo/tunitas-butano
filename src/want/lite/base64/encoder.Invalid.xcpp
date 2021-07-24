@@ -21,20 +21,20 @@ namespace want::lite::base64::encoder {
 #import std.runtime_error
 #import want.lite.base64.Exception
 class want::lite::base64::encoder::Invalid : public std::runtime_error, public base64::Exception {
-  using ancestor = std::runtime_error;
+  using Ancestor = std::runtime_error;
 public:
   inline Invalid();
-  using ancestor::runtime_error;
+  using Ancestor::runtime_error;
   auto what() const noexcept -> char const * final;
 };
 #endiv
 #divert <ipp>
 want::lite::base64::encoder::Invalid::Invalid()
-  : ancestor("invalid")
+  : Ancestor("invalid")
 { }
 #endiv
 #divert <cpp>
 auto want::lite::base64::encoder::Invalid::what() const noexcept -> char const * {
-  return ancestor::what();
+  return Ancestor::what();
 }
 #endiv

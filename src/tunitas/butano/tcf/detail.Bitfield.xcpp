@@ -28,26 +28,26 @@ namespace tunitas::butano::tcf::detail {
 #import std.forward
 #import std.vector
 template<typename IDENTIFIER, typename NULL_EXCEPTION, typename RANGE_EXCEPTION> class tunitas::butano::tcf::detail::Bitfield : public std::vector<bool> {
-  using ancestor = std::vector<bool>;
+  using Ancestor = std::vector<bool>;
   using Offset = std::size_t;
 public:
   using Index = IDENTIFIER;
-  using Vector = ancestor;  // force its ancestry sense ... as ... static_cast<Bitfield::Vector const &>(expression)
+  using Vector = Ancestor;  // force its ancestry sense ... as ... static_cast<Bitfield::Vector const &>(expression)
   Bitfield() = default;
-  using ancestor::vector;
-  inline explicit Bitfield(Vector const &other) : ancestor(other) { }
-  inline Bitfield(Vector &&other) : ancestor(std::forward<Vector>(other)) { }
+  using Ancestor::vector;
+  inline explicit Bitfield(Vector const &other) : Ancestor(other) { }
+  inline Bitfield(Vector &&other) : Ancestor(std::forward<Vector>(other)) { }
   inline Bitfield(Bitfield const &) = default;
   inline Bitfield(Bitfield &&) = default;
-  using ancestor::operator=;
+  using Ancestor::operator=;
   inline auto operator=(Bitfield const &) -> Bitfield & = default;
   inline auto operator=(Bitfield &&) -> Bitfield & = default;
   // These are rewrapped to guard against (our) Null and Range exceptions
   inline auto at(Index idee) -> reference { return at_wrapped(*this, idee); }
   inline auto at(Index idee) const -> const_reference { return at_wrapped(*this, idee); }
   // These did not throw exceptions on out-of-bounds anyway
-  inline auto operator[](Index idee) -> reference { return ancestor::operator[](debase(idee)); }
-  inline auto operator[](Index idee) const -> const_reference { return ancestor::operator[](debase(idee)); }
+  inline auto operator[](Index idee) -> reference { return Ancestor::operator[](debase(idee)); }
+  inline auto operator[](Index idee) const -> const_reference { return Ancestor::operator[](debase(idee)); }
 private:
   using Null_Exception = NULL_EXCEPTION;
   using Range_Exception = RANGE_EXCEPTION;
@@ -64,7 +64,7 @@ namespace tunitas::butano::tcf::detail {
       // vector<...>::at(...) throws
       // vector<...>::operator[](...) does not throw
       //     rather, it has undefined behavior (segfault, return a vacuous object, etc.)
-      return self.ancestor::at(debase(idee));
+      return self.Ancestor::at(debase(idee));
     } catch (std::out_of_range const &e) {
       throw Range_Exception(e.what());
     } 

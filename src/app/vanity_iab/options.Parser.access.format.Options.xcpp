@@ -9,9 +9,9 @@
 #divert <hpp>
 #import app.argv.parser.format.Options
 class app::vanity_iab::options::Parser::access::format::Options : public argv::parser::format::Options {
-  using ancestor = argv::parser::format::Options;
+  using Ancestor = argv::parser::format::Options;
 public:
-  using ancestor::Options;
+  using Ancestor::Options;
   // We want Howmany::parse(...) to be able to access the protected member variables.
   friend class Parser;
 };

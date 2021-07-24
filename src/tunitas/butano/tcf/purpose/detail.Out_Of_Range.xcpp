@@ -20,10 +20,10 @@ namespace tunitas::butano::tcf::purpose::detail {
 #import tunitas.butano.tcf.exception.detail.Out_Of_Range
 #import tunitas.butano.tcf.id.ALL
 class tunitas::butano::tcf::purpose::detail::Out_Of_Range : public tcf::exception::detail::Out_Of_Range<id::Purpose> {
-  using ancestor = tcf::exception::detail::Out_Of_Range<id::Purpose>;
+  using Ancestor = tcf::exception::detail::Out_Of_Range<id::Purpose>;
 protected:
   ~Out_Of_Range() = default; // still descendants only
 public:
-  using ancestor::Out_Of_Range;
+  using Ancestor::Out_Of_Range;
 };
 #endiv

@@ -16,10 +16,10 @@ namespace tunitas::butano::tcf::consent::encoding {
 #import std.out_of_range
 #import std.string
 class tunitas::butano::tcf::consent::encoding::Invalid : public std::out_of_range, public tcf::Exception {
-  using ancestor = std::out_of_range;
+  using Ancestor = std::out_of_range;
 public:
-  inline Invalid() : ancestor("invalid encoding") { }
-  inline explicit Invalid(std::string const &reason) : ancestor(reason) { }
-  inline auto what() const noexcept -> char const * final { return ancestor::what(); }
+  inline Invalid() : Ancestor("invalid encoding") { }
+  inline explicit Invalid(std::string const &reason) : Ancestor(reason) { }
+  inline auto what() const noexcept -> char const * final { return Ancestor::what(); }
 };
 #endiv

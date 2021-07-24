@@ -19,20 +19,20 @@ namespace want::lite::base64::encoder {
 #import std.invalid_argument
 #import want.lite.base64.Exception
 class want::lite::base64::encoder::Finalized : public std::invalid_argument, public base64::Exception {
-  using ancestor = std::invalid_argument;
+  using Ancestor = std::invalid_argument;
 public:
   inline Finalized();
-  using ancestor::invalid_argument;
+  using Ancestor::invalid_argument;
   auto what() const noexcept -> char const * final;
 };
 #endiv
 #divert <ipp>
 want::lite::base64::encoder::Finalized::Finalized()
-  : ancestor("finalized")
+  : Ancestor("finalized")
 { }
 #endiv
 #divert <cpp>
 auto want::lite::base64::encoder::Finalized::what() const noexcept -> char const * {
-  return ancestor::what();
+  return Ancestor::what();
 }
 #endiv

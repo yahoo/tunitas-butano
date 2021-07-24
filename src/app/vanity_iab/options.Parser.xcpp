@@ -49,7 +49,7 @@ namespace app::vanity_iab::options {
 #import app.argv.parser.residual.Aspect
 #import app.argv.parser.format.Aspect
 class app::vanity_iab::options::Parser : public argv::parser::Basis, public argv::parser::residual::Aspect, public argv::parser::format::Aspect {
-  using ancestor = argv::parser::Basis;
+  using Ancestor = argv::parser::Basis;
 public:
   inline explicit Parser(Argv a) { parse(a); }
 private:

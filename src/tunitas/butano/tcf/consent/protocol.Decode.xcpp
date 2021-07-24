@@ -22,7 +22,7 @@ namespace tunitas::butano::tcf::consent::protocol {
 #import sstream
 #import stdexcept
 class tunitas::butano::tcf::consent::protocol::Decode : public std::runtime_error, public tcf::Exception {
-  using ancestor = std::runtime_error;
+  using Ancestor = std::runtime_error;
 public:
   inline Decode();
   inline explicit Decode(std::string const &reason);
@@ -32,13 +32,13 @@ public:
 #divert <ipp>
 namespace tunitas::butano::tcf::consent::protocol {
   Decode::Decode()
-    : ancestor("decode")
+    : Ancestor("decode")
   { }
   Decode::Decode(std::string const &reason)
-    : ancestor(reason)
+    : Ancestor(reason)
   { }
   auto Decode::what() const noexcept -> char const * {
-    return ancestor::what();
+    return Ancestor::what();
   }
 }
 #endiv

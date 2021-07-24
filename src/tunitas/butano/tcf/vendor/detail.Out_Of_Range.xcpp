@@ -26,10 +26,10 @@ namespace tunitas::butano::tcf::vendor::detail {
 #import tunitas.butano.tcf.exception.detail.Out_Of_Range
 #import tunitas.butano.tcf.id.ALL
 class tunitas::butano::tcf::vendor::detail::Out_Of_Range : public tcf::exception::detail::Out_Of_Range<id::Vendor> { 
-  using ancestor = tcf::exception::detail::Out_Of_Range<id::Vendor>;
+  using Ancestor = tcf::exception::detail::Out_Of_Range<id::Vendor>;
 protected:
   ~Out_Of_Range() = default; // still descendants only
 public:
-  using ancestor::Out_Of_Range;
+  using Ancestor::Out_Of_Range;
 };
 #endiv

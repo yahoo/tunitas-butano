@@ -24,7 +24,7 @@ namespace tunitas::butano::tcf::vendor {
 #import std.runtime_error
 #import std.string
 class tunitas::butano::tcf::vendor::Unknown : public std::runtime_error, public tcf::Exception {
-  using ancestor = std::runtime_error;
+  using Ancestor = std::runtime_error;
 public:
   inline Unknown();
   inline explicit Unknown(std::string const &reason);
@@ -34,13 +34,13 @@ public:
 #divert <ipp>
 namespace tunitas::butano::tcf::vendor {
   Unknown::Unknown()
-    : ancestor("unknown vendor")
+    : Ancestor("unknown vendor")
   { }
   Unknown::Unknown(std::string const &reason)
-    : ancestor(reason)
+    : Ancestor(reason)
   { }
   auto Unknown::what() const noexcept -> char const * {
-    return ancestor::what();
+    return Ancestor::what();
   }
 }
 #endiv

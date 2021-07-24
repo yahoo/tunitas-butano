@@ -26,7 +26,7 @@ namespace app::argv::detail {
 #import std.string
 #import std.deque
 class app::argv::detail::Among : private std::deque<std::string> {
-  using ancestor = std::deque<std::string>;
+  using Ancestor = std::deque<std::string>;
 public:
   template<typename... STRINGS> inline explicit Among(std::string const &first, STRINGS const &...rest);
   inline friend auto detail::operator==(std::string const &candidate, Among const &corpus) -> bool;
@@ -37,7 +37,7 @@ public:
 #import std.is_constructible
 namespace app::argv {
   template<typename... STRINGS> detail::Among::Among(std::string const &first, STRINGS const &...rest)
-    : ancestor{first, rest...} {
+    : Ancestor{first, rest...} {
     constexpr auto ALL_STRINGS = (true && ... && std::is_constructible<std::string, STRINGS>::value);
     static_assert(ALL_STRINGS);
   }

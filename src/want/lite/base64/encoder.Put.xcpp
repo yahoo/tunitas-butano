@@ -21,7 +21,7 @@ namespace want::lite::base64::encoder {
 #import std.string
 #import want.lite.base64.Exception
 class want::lite::base64::encoder::Put : public std::invalid_argument, public base64::Exception {
-  struct ancestors {
+  struct Ancestors {
     using Exception = std::invalid_argument;
     using Aspect = base64::Exception;
   };
@@ -33,14 +33,14 @@ public:
 #endiv
 #divert <ipp>
 want::lite::base64::encoder::Put::Put()
-  : ancestors::Exception("put")
+  : Ancestors::Exception("put")
 { }
 want::lite::base64::encoder::Put::Put(std::string const &reason)
-  : ancestors::Exception(reason)
+  : Ancestors::Exception(reason)
 { }
 #endiv
 #divert <cpp>
 auto want::lite::base64::encoder::Put::what() const noexcept -> char const * {
-  return ancestors::Exception::what();
+  return Ancestors::Exception::what();
 }
 #endiv

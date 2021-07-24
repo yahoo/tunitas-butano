@@ -21,7 +21,7 @@ namespace tunitas::butano::tcf::purpose {
 #import tunitas.butano.tcf.id.ALL
 #import stdexcept
 class tunitas::butano::tcf::purpose::Null : public std::out_of_range, public tcf::Exception {
-  using ancestor = std::out_of_range;
+  using Ancestor = std::out_of_range;
 public:
   inline Null();
   inline auto what() const noexcept -> char const * final;
@@ -30,10 +30,10 @@ public:
 #divert <ipp>
 namespace tunitas::butano::tcf::purpose {
   Null::Null()
-    : ancestor("null purpose")
+    : Ancestor("null purpose")
   { }
   auto Null::what() const noexcept -> char const * {
-    return ancestor::what();
+    return Ancestor::what();
   }
 }
 #endiv

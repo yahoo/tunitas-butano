@@ -24,7 +24,7 @@ namespace tunitas::butano::tcf::version {
 #import sstream
 #import stdexcept
 class tunitas::butano::tcf::version::Invalid : public std::out_of_range, public tcf::Exception {
-  using ancestor = std::out_of_range;
+  using Ancestor = std::out_of_range;
 public:
   inline Invalid();
   inline explicit Invalid(std::string const &reason);
@@ -37,16 +37,16 @@ private:
 #divert <ipp>
 namespace tunitas::butano::tcf::version {
   Invalid::Invalid()
-    : ancestor("invalid version")
+    : Ancestor("invalid version")
   { }
   Invalid::Invalid(std::string const &reason)
-    : ancestor(reason)
+    : Ancestor(reason)
   { }
   Invalid::Invalid(id::version::Protocol offensive, tcf::exception::Range range)
-    : ancestor(format(offensive, range))
+    : Ancestor(format(offensive, range))
   { }
   auto Invalid::what() const noexcept -> char const * {
-    return ancestor::what();
+    return Ancestor::what();
   }
 }
 #import std.ostringstream

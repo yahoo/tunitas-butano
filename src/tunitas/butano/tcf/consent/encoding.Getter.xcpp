@@ -33,7 +33,7 @@ namespace tunitas::butano::tcf::consent::encoding {
 #import tunitas.butano.tcf.consent.protocol.Limits
 namespace tunitas::butano::tcf::consent {
   template<typename SOURCE> class encoding::Getter : public getter::Basis {
-    using ancestor = getter::Basis;
+    using Ancestor = getter::Basis;
   public:
     using Source = SOURCE;
     inline explicit Getter(Source const &);

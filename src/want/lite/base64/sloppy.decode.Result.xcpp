@@ -42,7 +42,7 @@ namespace want::lite::base64::sloppy::packaging::decode_function {
 #import std.tuple
 namespace want::lite::base64::sloppy::packaging {
   class decode_function::Result : public std::tuple<bool, std::size_t, std::string> {
-    using ancestor = std::tuple<bool, std::size_t, std::string>;
+    using Ancestor = std::tuple<bool, std::size_t, std::string>;
   public:
     Result() = default;
     inline Result(bool, std::size_t, std::string);
@@ -67,7 +67,7 @@ namespace want::lite::base64::sloppy::packaging {
 }
 namespace want::lite::base64::sloppy::packaging::decode_function {
   Result::Result(bool b, std::size_t c, std::string s)
-    : ancestor(b, c, std::move(s))
+    : Ancestor(b, c, std::move(s))
   { }
 }
 #endiv

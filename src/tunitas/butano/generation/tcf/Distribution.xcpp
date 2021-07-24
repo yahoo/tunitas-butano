@@ -25,7 +25,7 @@ namespace tunitas::butano::generation::tcf {
 #import tunitas.butano.tcf.consent.protocol.Field
 #import tunitas.butano.tcf.consent.protocol.Polished
 class tunitas::butano::generation::tcf::Distribution : public tcf::distribution::Basis {
-  using ancestor = distribution::Basis;
+  using Ancestor = distribution::Basis;
   using Builder = tunitas::butano::tcf::consent::Builder;
 public:
   inline Distribution();
@@ -88,7 +88,7 @@ namespace tunitas::butano::generation::tcf {
 #import want.timeline.clock.ALL
 namespace tunitas::butano::generation::tcf {
   Distribution::Distribution()
-    : ancestor()
+    : Ancestor()
     , protocol_version(low<singleton::id::version::Protocol, VERSION>(), high<singleton::id::version::Protocol, VERSION>())
     , time(want::timeline::clock::deci::now())
     , platform(low<singleton::id::Platform, CMPID>(), high<singleton::id::Platform, CMPID>())

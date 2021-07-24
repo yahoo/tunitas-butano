@@ -20,7 +20,7 @@ namespace tunitas::butano::tcf::consent::builder {
 #import tunitas.butano.tcf.id.ALL
 #import tunitas.butano.tcf.consent.object.Defaultable
 class tunitas::butano::tcf::consent::builder::Defaultable : public object::Defaultable {
-  using ancestor = object::Defaultable;
+  using Ancestor = object::Defaultable;
 protected:
   ~Defaultable() = default;
 protected:
@@ -31,7 +31,7 @@ protected:
 #divert <ipp>
 #import want.timeline.clock.ALL
 namespace tunitas::butano::tcf::consent::builder {
-  Defaultable::Defaultable(Defaulting) : ancestor() {
+  Defaultable::Defaultable(Defaulting) : Ancestor() {
     version = id::version::Protocol(1);
     cmpId = id::Platform(14);  // Oath's CMP?
     cmpVersion = id::version::Platform(1);

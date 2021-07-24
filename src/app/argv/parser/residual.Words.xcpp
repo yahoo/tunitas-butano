@@ -36,11 +36,11 @@ namespace app::argv::parser::residual {
 #import std.deque
 #import std.string
 class app::argv::parser::residual::Words : public std::deque<std::string> {
-  using ancestor = std::deque<std::string>;
+  using Ancestor = std::deque<std::string>;
 public:
   Words() = default;
-  using ancestor::deque;
-  using ancestor::operator=;
+  using Ancestor::deque;
+  using Ancestor::operator=;
   Words(Words const &) = default;
   Words(Words &&) = default;
   auto operator=(Words const &) -> Words & = default;

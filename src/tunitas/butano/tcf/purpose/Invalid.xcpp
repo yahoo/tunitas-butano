@@ -22,10 +22,10 @@ namespace tunitas::butano::tcf::purpose {
 #divert <hpp>
 #import tunitas.butano.tcf.purpose.detail.Out_Of_Range
 class tunitas::butano::tcf::purpose::Invalid : public detail::Out_Of_Range {
-  using ancestor = detail::Out_Of_Range;
+  using Ancestor = detail::Out_Of_Range;
 public:
   inline Invalid();
-  using ancestor::Out_Of_Range;
+  using Ancestor::Out_Of_Range;
   inline Invalid(Identifier offending_id, tcf::exception::Range range);
 };
 #endiv
@@ -33,10 +33,10 @@ public:
 #import tunitas.butano.tcf.purpose.detail.Out_Of_Range
 namespace tunitas::butano::tcf::purpose {
   Invalid::Invalid()
-    : ancestor("invalid purpose")
+    : Ancestor("invalid purpose")
   { }
   Invalid::Invalid(Identifier offending_id, tcf::exception::Range range)
-    : ancestor(format("Purpose", "invalid", offending_id, range))
+    : Ancestor(format("Purpose", "invalid", offending_id, range))
   { }
 }
 #endiv

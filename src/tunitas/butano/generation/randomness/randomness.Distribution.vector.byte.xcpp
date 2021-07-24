@@ -15,10 +15,10 @@ namespace generation::randomness {
 #import generation.randomness.distribution.Implementation.vector.byte
 namespace generation::randomness {
   template<> struct Distribution<std::vector<std::byte>> : public distribution::Implementation<std::vector<std::byte>, limits::enume::Class<std::byte>, false> {
-    using ancestor = distribution::Implementation<std::vector<std::byte>, limits::enume::Class<std::byte>, false>;
+    using Ancestor = distribution::Implementation<std::vector<std::byte>, limits::enume::Class<std::byte>, false>;
   public:
-    using ancestor::Implementation;
-    using ancestor::operator();
+    using Ancestor::Implementation;
+    using Ancestor::operator();
   };
 }
 #endiv

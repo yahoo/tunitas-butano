@@ -39,7 +39,7 @@ namespace app::argv::parser {
 #import app.argv.parser.residual.Aspect
 #import app.argv.parser.ignore.Aspect
 class app::argv::parser::Dumper : public Basis, public residual::Aspect, public ignore::Aspect {
-  using ancestor = Basis;
+  using Ancestor = Basis;
 public:
   inline explicit Dumper(Argv a, Name n, Usage u) { parse(a, n, u); }
 private:

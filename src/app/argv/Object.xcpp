@@ -28,17 +28,17 @@ namespace app::argv {
 #endiv
 #divert <hpp>
 class app::argv::Object : public std::deque<std::string> {
-  using ancestor = std::deque<std::string>;
+  using Ancestor = std::deque<std::string>;
 public:
   Object() = default;
-  using ancestor::deque;
+  using Ancestor::deque;
   // just like in main(...)
   inline Object(int c, char *v[]);
 };
 #endiv
 #divert <ipp>
 app::argv::Object::Object(int c, char *v[])
-  : ancestor(&v[0], &v[c])
+  : Ancestor(&v[0], &v[c])
 { }
 #endiv
 

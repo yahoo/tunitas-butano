@@ -58,28 +58,28 @@ namespace tunitas::butano::tcf::consent::protocol {
   };
   template<typename ENUM, std::size_t WIDTH, std::uintmax_t MAXIMUM> class datum::Enum : public Width<unsigned, WIDTH, MAXIMUM> {
     // Same as Width, but with more casts to recover the Type as an enum.
-    using ancestor = Width<unsigned, WIDTH, MAXIMUM>;
+    using Ancestor = Width<unsigned, WIDTH, MAXIMUM>;
   public:
     using Type = ENUM;
     using Sized = want::lite::base64::sized::ByType<Type, WIDTH>;
-    inline static constexpr auto min() -> Type { return Type(ancestor::min()); }
-    inline static constexpr auto max() -> Type { return Type(ancestor::max()); }
+    inline static constexpr auto min() -> Type { return Type(Ancestor::min()); }
+    inline static constexpr auto max() -> Type { return Type(Ancestor::max()); }
   };
   template<typename ENUM, std::size_t WIDTH, std::uintmax_t MAXIMUM> class datum::Identifier : public Enum<unsigned, WIDTH, MAXIMUM> {
     // Same as Enum, but has an is_not_null(Type), is_null(Type) test; e.g. id::Purpose(0) is "the null" one.
-    using ancestor = Enum<unsigned, WIDTH, MAXIMUM>;
+    using Ancestor = Enum<unsigned, WIDTH, MAXIMUM>;
   public:
     // test for valid(...() prior to use
-    inline static constexpr auto is_null(typename ancestor::Type candidate) -> bool { return ancestor::min() == candidate; }
-    inline static constexpr auto is_not_null(typename ancestor::Type candidate)-> bool { return !is_null(candidate); }
+    inline static constexpr auto is_null(typename Ancestor::Type candidate) -> bool { return Ancestor::min() == candidate; }
+    inline static constexpr auto is_not_null(typename Ancestor::Type candidate)-> bool { return !is_null(candidate); }
     //
-    inline static constexpr auto begin(with::NullId) -> typename ancestor::Iteratable { return ancestor::min(); }
-    inline static constexpr auto end(with::NullId) -> typename ancestor::Iteratable { return 1+ancestor::max(); }
-    inline static constexpr auto range(with::NullId) -> exception::Range { return exception::Range(ancestor::min(), ancestor::max()); }
+    inline static constexpr auto begin(with::NullId) -> typename Ancestor::Iteratable { return Ancestor::min(); }
+    inline static constexpr auto end(with::NullId) -> typename Ancestor::Iteratable { return 1+Ancestor::max(); }
+    inline static constexpr auto range(with::NullId) -> exception::Range { return exception::Range(Ancestor::min(), Ancestor::max()); }
     //
-    inline static constexpr auto begin(without::NullId) -> typename ancestor::Iteratable { return 1+ancestor::min(); }
-    inline static constexpr auto end(without::NullId) -> typename ancestor::Iteratable { return 1+ancestor::max(); }
-    inline static constexpr auto range(without::NullId) -> exception::Range { return exception::Range(1+ancestor::min(), ancestor::max()); }
+    inline static constexpr auto begin(without::NullId) -> typename Ancestor::Iteratable { return 1+Ancestor::min(); }
+    inline static constexpr auto end(without::NullId) -> typename Ancestor::Iteratable { return 1+Ancestor::max(); }
+    inline static constexpr auto range(without::NullId) -> exception::Range { return exception::Range(1+Ancestor::min(), Ancestor::max()); }
   };
   struct datum::Bit : public Width<bool, 1> { };
 

@@ -18,7 +18,7 @@ namespace tunitas::butano::generation::randomness::distribution {
 namespace tunitas::butano::generation::randomness::distribution {
   template<typename DURATION, typename SPAN_NAME> class Implementation<Point<DURATION>, limits::time::Span<SPAN_NAME, DURATION>, false>
     : public Implementation<typename DURATION::rep, limits::time::Span<SPAN_NAME, DURATION>, false> {
-    using ancestor = Implementation<typename DURATION::rep, limits::time::Span<SPAN_NAME, DURATION>, false>;
+    using Ancestor = Implementation<typename DURATION::rep, limits::time::Span<SPAN_NAME, DURATION>, false>;
     using Span = limits::time::Span<SPAN_NAME, DURATION>;
   public:
     using Duration = DURATION;
@@ -40,16 +40,16 @@ namespace tunitas::butano::generation::randomness::distribution {
 #import tunitas.butano.generation.randomness.distribution.Implementation.integer.ALL
 namespace tunitas::butano::generation::randomness::distribution {
   template<typename D, typename S> Implementation<Point<D>, limits::time::Span<S, D>, false>::Implementation()
-    : ancestor(Span::min().time_since_epoch().count(), Span::max().time_since_epoch().count())
+    : Ancestor(Span::min().time_since_epoch().count(), Span::max().time_since_epoch().count())
   { }
   template<typename D, typename S> Implementation<Point<D>, limits::time::Span<S, D>, false>::Implementation(Point when)
-    : ancestor(Span::min().time_since_epoch().count(), when.time_since_epoch().count())
+    : Ancestor(Span::min().time_since_epoch().count(), when.time_since_epoch().count())
   { }
   template<typename D, typename S> Implementation<Point<D>, limits::time::Span<S, D>, false>::Implementation(Point start, Point finish)
-    : ancestor(start.time_since_epoch().count(), finish.time_since_epoch().count())
+    : Ancestor(start.time_since_epoch().count(), finish.time_since_epoch().count())
   { }
   template<typename D, typename S> auto Implementation<Point<D>, limits::time::Span<S, D>, false>::operator()(Engine &engine) -> Result {
-    return Point(Duration(ancestor::operator()(engine)));
+    return Point(Duration(Ancestor::operator()(engine)));
   }
 }
 #endiv

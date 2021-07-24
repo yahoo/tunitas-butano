@@ -14,10 +14,10 @@ namespace tunitas::butano::generation::randomness {
 #import tunitas.butano.generation.randomness.distribution.Implementation.Encoding
 namespace tunitas::butano::generation::randomness {
   template<> struct Distribution<distribution::implementation::encoding::Class> : public distribution::implementation::Encoding {
-    using ancestor = distribution::implementation::Encoding;
+    using Ancestor = distribution::implementation::Encoding;
   public:
-    using ancestor::Implementation;
-    using ancestor::operator();
+    using Ancestor::Implementation;
+    using Ancestor::operator();
   };
 }
 #endiv

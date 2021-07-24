@@ -23,7 +23,7 @@ namespace tunitas::butano::tcf::consent::protocol {
 #import sstream
 #import cstdint
 class tunitas::butano::tcf::consent::protocol::Length : public std::out_of_range, public tcf::Exception {
-  using ancestor = std::out_of_range;
+  using Ancestor = std::out_of_range;
 public:
   inline Length();
   inline explicit Length(std::string const &reason);
@@ -37,17 +37,17 @@ private:
 #divert <ipp>
 namespace tunitas::butano::tcf::consent::protocol {
   Length::Length()
-    : ancestor("invalid length")
+    : Ancestor("invalid length")
   { }
   Length::Length(std::string const &reason)
-    : ancestor(reason)
+    : Ancestor(reason)
   { }
   // limit name is "hard" or "soft"
   Length::Length(char const *limit_name, char const *field_name, std::uintmax_t limit_value, std::uintmax_t breach_value)
-    : ancestor(format(limit_name, field_name, limit_value, breach_value))
+    : Ancestor(format(limit_name, field_name, limit_value, breach_value))
   { }
   auto Length::what() const noexcept -> char const * {
-    return ancestor::what();
+    return Ancestor::what();
   }
   auto Length::format(char const *limit_name, char const *field_name, std::uintmax_t limit_value, std::uintmax_t breach_value) -> std::string {
     std::ostringstream buf;

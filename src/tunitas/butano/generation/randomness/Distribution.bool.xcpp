@@ -13,10 +13,10 @@ namespace tunitas::butano::generation::randomness {
 #import tunitas.butano.generation.randomness.distribution.Implementation.bool
 namespace tunitas::butano::generation::randomness {
   template<> struct Distribution<bool> : public distribution::implementation::Boolean {
-    using ancestor = distribution::implementation::Boolean;
+    using Ancestor = distribution::implementation::Boolean;
   public:
-    using ancestor::Implementation;
-    using ancestor::operator();
+    using Ancestor::Implementation;
+    using Ancestor::operator();
   };
 }
 #endiv

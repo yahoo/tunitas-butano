@@ -19,12 +19,12 @@ namespace tunitas::butano::generation::randomness::distribution {
 #forward tunitas.butano.generation.randomness.Engine
 namespace tunitas::butano::generation::randomness::distribution {
   template<> class Implementation<bool, limits::Bool, false> : public Implementation<unsigned, limits::numeric::Bound<unsigned, 0, 1>, false> {
-    using ancestor = Implementation<unsigned, limits::numeric::Bound<unsigned, 0, 1>, false>;
+    using Ancestor = Implementation<unsigned, limits::numeric::Bound<unsigned, 0, 1>, false>;
   public:
     using Value = bool;
     Implementation() = default;
-    inline explicit Implementation(Value high) : ancestor((unsigned)high) { }
-    inline Implementation(Value low, Value high) : ancestor((unsigned)low, (unsigned)high) { }
+    inline explicit Implementation(Value high) : Ancestor((unsigned)high) { }
+    inline Implementation(Value low, Value high) : Ancestor((unsigned)low, (unsigned)high) { }
     using Result = Value;
     inline auto operator()(Engine &engine) -> Result;
   };
@@ -33,7 +33,7 @@ namespace tunitas::butano::generation::randomness::distribution {
 #divert <ipp>
 namespace tunitas::butano::generation::randomness::distribution {
   auto Implementation<bool, limits::Bool, false>::operator()(Engine &engine) -> Result {
-    return Result(ancestor::operator()(engine));
+    return Result(Ancestor::operator()(engine));
   }
 }
 #endiv

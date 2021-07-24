@@ -48,17 +48,17 @@ namespace tunitas::butano::generation::randomness::distribution::implementation 
 #import std.is_same
 namespace tunitas::butano::generation::randomness::distribution {
   template<typename RESULT, typename BOUND> class Implementation<RESULT, BOUND, false> : public std::uniform_int_distribution<RESULT> {
-    using ancestor = std::uniform_int_distribution<RESULT>;
+    using Ancestor = std::uniform_int_distribution<RESULT>;
     static_assert(!std::is_enum<RESULT>::value);
     static_assert(!std::is_same<RESULT, bool>::value);
     using Bound = BOUND;
   public:
     using Value = RESULT;
-    inline Implementation() : ancestor{Bound::min(), Bound::max()} { }
-    inline explicit Implementation(Value high) : ancestor{Bound::min(), high} { }
-    inline Implementation(Value low, Value high) : ancestor{low, high} { }
+    inline Implementation() : Ancestor{Bound::min(), Bound::max()} { }
+    inline explicit Implementation(Value high) : Ancestor{Bound::min(), high} { }
+    inline Implementation(Value low, Value high) : Ancestor{low, high} { }
     using Result = Value;
-    using ancestor::operator();
+    using Ancestor::operator();
   };
 }
 #endiv

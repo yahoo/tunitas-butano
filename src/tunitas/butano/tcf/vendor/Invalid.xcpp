@@ -22,18 +22,18 @@ namespace tunitas::butano::tcf::vendor {
 #divert <hpp>
 #import tunitas.butano.tcf.vendor.detail.Out_Of_Range
 class tunitas::butano::tcf::vendor::Invalid : public detail::Out_Of_Range {
-  using ancestor = detail::Out_Of_Range;
+  using Ancestor = detail::Out_Of_Range;
 public:
   inline Invalid();
-  using ancestor::Out_Of_Range;
+  using Ancestor::Out_Of_Range;
   inline Invalid(Identifier offending_id, tcf::exception::Range range);
 };
 #endiv
 #divert <ipp>
 tunitas::butano::tcf::vendor::Invalid::Invalid()
-  : ancestor("invalid vendor")
+  : Ancestor("invalid vendor")
 { }
 tunitas::butano::tcf::vendor::Invalid::Invalid(Identifier offending_id, tcf::exception::Range range)
-  : ancestor(format("Vendor", "invalid", offending_id, range))
+  : Ancestor(format("Vendor", "invalid", offending_id, range))
 { }
 #endiv

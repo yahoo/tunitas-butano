@@ -14,10 +14,10 @@ namespace tunitas::butano::generation::randomness {
 #import tunitas.butano.generation.randomness.distribution.Implementation.byte
 namespace tunitas::butano::generation::randomness {
   template<> struct Distribution<std::byte> : public distribution::implementation::Byte {
-    using ancestor = distribution::implementation::Byte;
+    using Ancestor = distribution::implementation::Byte;
   public:
-    using ancestor::Implementation;
-    using ancestor::operator();
+    using Ancestor::Implementation;
+    using Ancestor::operator();
   };
 }
 #endiv

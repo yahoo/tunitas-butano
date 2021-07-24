@@ -7,7 +7,7 @@
 namespace tunitas::butano::tcf::consent::object {
   //
   // An invariant has failed in the TCF consent object itself.
-  // See the commentariat in the ancestor.
+  // See the commentariat in the Ancestor.
   //
   // Usage:
   //
@@ -20,9 +20,9 @@ namespace tunitas::butano::tcf::consent::object {
 #divert <hpp>
 #import tunitas.butano.tcf.exception.Invariant
 class tunitas::butano::tcf::consent::object::Invariant : public tcf::exception::Invariant {
-  using ancestor = tcf::exception::Invariant;
+  using Ancestor = tcf::exception::Invariant;
 public:
   Invariant() = default;
-  inline explicit Invariant(std::string const &reason) : ancestor{reason} { }
+  inline explicit Invariant(std::string const &reason) : Ancestor{reason} { }
 };
 #endiv

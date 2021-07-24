@@ -41,7 +41,7 @@ namespace tunitas::butano::tcf::consent {
 #import want.javalike.integer.Unsigned
 #import std.optional
 class tunitas::butano::tcf::consent::Builder : public builder::Defaultable {
-  using ancestor = builder::Defaultable;
+  using Ancestor = builder::Defaultable;
 public:
   inline Builder();
   using Result = Object;
@@ -78,10 +78,10 @@ auto tunitas::butano::tcf::consent::buildifier() -> Builder {
 }
 namespace tunitas::butano::tcf::consent {
   Builder::Builder()
-    : ancestor(DEFAULTING)
+    : Ancestor(DEFAULTING)
   { }
   auto Builder::clear() -> void {
-    ancestor::clear();
+    Ancestor::clear();
     purposesAllowed = purpose::Map();
     maxVendorId = 0;
     encodingType = Encoding();

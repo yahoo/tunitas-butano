@@ -52,7 +52,7 @@ namespace app::argv::parser {
 #import std.ostream
 #import std.string
 class app::argv::parser::Howmany : public Basis, public format::Aspect, public prattle::Aspect {
-  using ancestor = Basis;
+  using Ancestor = Basis;
 public:
   inline explicit Howmany(Argv a, Name n) { parse(a, n); }
   using Residual = howmany::Residual;

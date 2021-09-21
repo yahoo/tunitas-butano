@@ -4,9 +4,8 @@
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
 #divert <fpp>
-#import tunitas.app
+#import tunitas.application
 namespace app {
-  // cascade the namespaces
-  using namespace tunitas::app;
+  using namespace tunitas::application; // cascade the namespaces
 }
 #endiv

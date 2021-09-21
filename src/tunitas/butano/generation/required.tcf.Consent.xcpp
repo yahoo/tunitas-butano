@@ -12,7 +12,7 @@ namespace tunitas::butano::generation::required::tcf {
   //
   // The SOURCE of a Tcf Generator is either an Object or String, but nothing else.
   //
-  template<typename SOURCE> concept bool Consent = (std::is_same<SOURCE, tunitas::butano::tcf::consent::String>::value ||
-                                                    std::is_same<SOURCE, tunitas::butano::tcf::consent::Object>::value);
+  template<typename SOURCE> concept Consent = (std::is_same<SOURCE, tunitas::butano::tcf::consent::String>::value ||
+                                               std::is_same<SOURCE, tunitas::butano::tcf::consent::Object>::value);
 }
 #endiv

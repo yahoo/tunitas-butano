@@ -6,6 +6,6 @@
 #divert <fpp>
 #import std.is_integral
 namespace tunitas::butano::generation::required {
-  template<typename INTEGRAL> concept bool Integral = std::is_integral<INTEGRAL>::value;
+  template<typename INTEGRAL> concept Integral = std::is_integral<INTEGRAL>::value;
 }
 #endiv

@@ -62,7 +62,7 @@ TF_WITH_MODULE([rigging]) dnl a.k.a. unit-rigging -> rigging-unit
 
 TF_MSG_VERBOSE([compiler-specific (alphabetical)])
 TF_WITH_NONSTD([cppunit])
-TF_WITH_NONSTD([gcc]) dnl but modern gcc-7.1.0 & beyond is fine
+TF_WITH_NONSTD([gcc]) dnl but modern gcc-12 & beyond is fine
 TF_WITH_NONSTD([jsoncpp]) dnl but modern jsoncpp-1.8.4 is fine
 TF_WITH_NONSTD([libhttpserver])
 

@@ -13,8 +13,9 @@ namespace tests::unit {
 #endiv
 #divert <hpp>
 // Because all test fixtures will need these
-#import cppunit.Test
-#import cppunit.test.Fixture
+#import tests.cppunit.Test
+#import tests.cppunit.test.Fixture
+#import tests.cppunit.ASSERT
 #endiv
 #divert <ipp>
 #import std.string_literals

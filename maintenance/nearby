@@ -162,7 +162,7 @@ elif [[ no != ${with_scold_nearby} ]] ; then
 else
     set_all_defaults_no
 fi
-: ${with_nonstd_gcc:=/exp/gcc/9} # ... WATCHOUT you, the caller must ensure that PATH is set consistenly with this
+: ${with_nonstd_gcc:=/exp/gcc/${GCC:-11}} # ... WATCHOUT you, the caller must ensure that PATH is set consistenly with this
 # check whether this is different than what PATH finds in the natural course.
 if type -p gcc 2>/dev/null ; then
     exe=$(type -p gcc 2>/dev/null)
@@ -177,7 +177,15 @@ fi
 : ${with_nonstd_half:=/opt/nonstd/half} # ..................... REQUIRED because there is no "standard half"
 : ${with_nonstd_jsoncpp:=no} # else /opt/nonstd/jsoncpp # ..... OPTIONAL nowadays
 : ${with_temerarious_flagship:=${with_tunitas_nearby?}/temerarious-flagship}
--: ${with_tunitas_basics:=${with_tunitas_nearby?}/basics}
+: ${with_tunitas_basics:=${with_tunitas_nearby?}/basics}
+#
+: ${CPPFLAGS:=-Wno-cpp}
+: ${CXXFLAGS:=-Wno-attributes -Wno-deprecated-declarations}
+: ${LDFLAGS:=-O0 -ggdb -no-install}
+if type -p nproc 2>/dev/null ; then
+    : ${MAKEFLAGS:=-j$(nproc)}
+fi
+#
 eval \
     ${prefix:+prefix=$prefix} \
     ${with_hypogeal_twilight:+with_hypogeal_twilight=$with_hypogeal_twilight} \
@@ -211,6 +219,6 @@ eval \
     ${with_std_tunitas:+--with-std-tunitas=$with_std_tunitas} \
     ${with_std_scold:+--with-std-scold=$with_std_scold} \
     ${end} &&
-make &&
-make check &&
+make ${MAKEFLAGS:+MAKEFLAGS="$MAKEFLAGS"} ${CPPFLAGS:+CPPFLAGS="$CPPFLAGS"} ${CXXFLAGS:+CXXFLAGS="$CXXFLAGS"} ${LDFLAGS:+LDFLAGS="$LDFLAGS"} &&
+make check ${MAKEFLAGS:+MAKEFLAGS="$MAKEFLAGS"} ${CPPFLAGS:+CPPFLAGS="$CPPFLAGS"} ${CXXFLAGS:+CXXFLAGS="$CXXFLAGS"} ${LDFLAGS:+LDFLAGS="$LDFLAGS"} &&
 echo OK DONE

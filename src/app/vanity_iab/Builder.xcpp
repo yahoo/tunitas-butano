@@ -30,7 +30,7 @@ namespace app::vanity_iab {
   class Builder;
   namespace required::integer {
     // [[FIXTHIS]] move to use nonstd::required::integer::Unsigned in nextgen module-nonstd
-    template<typename UNSIGNED> concept bool Unsigned = std::is_unsigned<UNSIGNED>::value;
+    template<typename UNSIGNED> concept Unsigned = std::is_unsigned<UNSIGNED>::value;
   }
 }
 #endiv
@@ -68,8 +68,6 @@ template<> auto app::vanity_iab::Builder::build<app::vanity_iab::Builder::Object
   auto bf = make_bitfield(ensmoothen(plaintext_message)); // reminder: these things (bf) use 1-based indexing.
   auto const yahooinc_id = vendor::Definition<vendor::YAHOOINC>::vendor_id();
   auto const yahooinc_pos = (std::size_t) yahooinc_id;
-  [[deprecated("prefer yahooinc_id")]] auto const oath_id = yahooinc_id;
-  [[deprecated("prefer yahooinc_pos")]] auto const oath_pos = yahooinc_pos;
   for (auto i(bf.size()), e(yahooinc_pos); i <= e; ++i) {
     bf.push_back(false);
   }

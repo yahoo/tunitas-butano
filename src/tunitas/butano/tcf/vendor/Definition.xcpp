@@ -1,19 +1,19 @@
 // This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright 2019, Oath Inc.; Copyright 2020, Verizon Media
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
 #divert <fpp>
 namespace tunitas::butano::tcf::vendor {
-  enum Known { OATH = 25 };
+  enum Known { YAHOOINC = 25 };
   template<Known> struct Definition;
-  template<> struct Definition<OATH>;
+  template<> struct Definition<YAHOOINC>;
 }
 #endiv
 #divert <hpp>
 #import tunitas.butano.tcf.id.ALL
 namespace tunitas::butano::tcf::vendor {
-  template<> struct Definition<OATH> {
+  template<> struct Definition<YAHOOINC> {
     inline constexpr static auto const the_iab_promises_promises_that_numbers_will_never_ever_be_reallocated = true;
     inline static constexpr auto vendor_id() -> id::Vendor { return id::Vendor(25); }
     // IAB_STORAGE_ACCESS_OF_INFORMATION
@@ -21,7 +21,7 @@ namespace tunitas::butano::tcf::vendor {
     [[deprecated("instead use storage()")]] inline static constexpr auto device() { return storage(); }
     // IAB_PERSONALIZATION
     inline static constexpr auto p13n() -> id::Purpose { return id::Purpose(2); }
-    // And Oath asserts Legitimate Interest over the rest of the purposes. So no need.
+    // And Yahoo asserts Legitimate Interest over the rest of the purposes. So no need.
   };
 }
 #endiv

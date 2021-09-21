@@ -18,7 +18,7 @@ namespace tunitas::butano {
   //     ...
   //     throw Version{"program"};
   //     ...
-  //   } catch (tunitas::app::exception::Generic const &g) {
+  //   } catch (tunitas::application::exception::Generic const &g) {
   //     g.stream() << g << '\n';
   //     return g.code();          ... equivalently ::exit(g.code());
   //   }
@@ -27,14 +27,14 @@ namespace tunitas::butano {
 }
 #endiv
 #divert <hpp>
-#import tunitas.app.exception.Version
-#import tunitas.app.exception.Messaging
+#import tunitas.application.exception.Version
+#import tunitas.application.exception.Messaging
 #import std.string
 #import std.exception
-class tunitas::butano::Version : public tunitas::app::exception::Version, public tunitas::app::exception::Messaging, public std::exception {
+class tunitas::butano::Version : public tunitas::application::exception::Version, public tunitas::application::exception::Messaging, public std::exception {
   struct Ancestors {
-    using Version = tunitas::app::exception::Version;
-    using Messaging = tunitas::app::exception::Messaging;
+    using Version = tunitas::application::exception::Version;
+    using Messaging = tunitas::application::exception::Messaging;
     using Exception = std::exception;
   };
 public:

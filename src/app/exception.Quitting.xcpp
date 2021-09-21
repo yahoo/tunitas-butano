@@ -19,15 +19,15 @@ namespace app::exception {
 }
 #endiv
 #divert <hpp>
-#import tunitas.app.exception.Aspect
-#import tunitas.app.exception.feature.Quitting
+#import tunitas.application.exception.Aspect
+#import tunitas.application.exception.feature.Quitting
 #import std.runtime_error
 #import sys.exits.Code
 #import sys.exits.constants
-class app::exception::Quitting : public tunitas::app::exception::Aspect, public tunitas::app::exception::feature::Quitting, public std::runtime_error {
+class app::exception::Quitting : public tunitas::application::exception::Aspect, public tunitas::application::exception::feature::Quitting, public std::runtime_error {
   struct Ancestors {
-    using Aspect = tunitas::app::exception::Aspect;
-    using Feature = tunitas::app::exception::feature::Quitting;
+    using Aspect = tunitas::application::exception::Aspect;
+    using Feature = tunitas::application::exception::feature::Quitting;
     using Exception = std::runtime_error;
   };
   using Program = std::string; // [[FIXTHIS]] use ::options::Program or ::cli::Program (when ready)

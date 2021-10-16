@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -30,7 +30,7 @@ namespace app::vanity_iab {
   class Builder;
   namespace required::integer {
     // [[FIXTHIS]] move to use nonstd::required::integer::Unsigned in nextgen module-nonstd
-    template<typename UNSIGNED> concept bool Unsigned = std::is_unsigned<UNSIGNED>::value;
+    template<typename UNSIGNED> concept Unsigned = std::is_unsigned<UNSIGNED>::value;
   }
 }
 #endiv
@@ -66,12 +66,12 @@ template<> auto app::vanity_iab::Builder::build<app::vanity_iab::Builder::Object
   using namespace tunitas::butano::tcf::consent::protocol; // MAXVENDORID, et al.
   using namespace tunitas::butano::tcf;
   auto bf = make_bitfield(ensmoothen(plaintext_message)); // reminder: these things (bf) use 1-based indexing.
-  auto const oath_id = vendor::Definition<vendor::OATH>::vendor_id();
-  auto const oath_pos = (std::size_t) oath_id;
-  for (auto i(bf.size()), e(oath_pos); i <= e; ++i) {
+  auto const yahooinc_id = vendor::Definition<vendor::YAHOOINC>::vendor_id();
+  auto const yahooinc_pos = (std::size_t) yahooinc_id;
+  for (auto i(bf.size()), e(yahooinc_pos); i <= e; ++i) {
     bf.push_back(false);
   }
-  // [[FIXTHIS]] construct the default consent so that Oath gets consented, whatever the message was.
+  // [[FIXTHIS]] construct the default consent so that Yahoo gets consented, whatever the message was.
   rebob.accept<MAXVENDORID>(bf.size());
   rebob.accept<ENCODINGTYPE>(consent::BITS);
   rebob.accept<BITFIELD>(std::move(bf));

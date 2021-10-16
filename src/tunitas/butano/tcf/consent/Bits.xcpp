@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -27,7 +27,7 @@ namespace tunitas::butano::tcf::consent {
 #import want.javalike.Map
 #import want.javalike.Boolean
 class tunitas::butano::tcf::consent::Bits : public want::javalike::Map<id::Vendor, want::javalike::Boolean>, public tcf::detail::Stringable {
-  using ancestor = want::javalike::Map<id::Vendor, want::javalike::Boolean>;
+  using Ancestor = want::javalike::Map<id::Vendor, want::javalike::Boolean>;
   using BLimits = protocol::Limits<protocol::Datum<protocol::BITFIELD>>;
   using VLimits = protocol::Limits<id::Vendor>;
 public:
@@ -41,9 +41,9 @@ protected:
 #endiv
 #divert <ipp>
 namespace tunitas::butano::tcf::consent {
-  Bits::Bits(Defaulting) : ancestor() {
+  Bits::Bits(Defaulting) : Ancestor() {
     // Same as consent::Ranges, nearby
-    ancestor &self(*this);
+    Ancestor &self(*this);
     // WATCHOUT - don't go over BLimits::width() because the Builder won't accept it
     for (auto i(VLimits::begin(without::NULLID)), e(VLimits::end(without::NULLID)); e != i && i <= BLimits::width(); ++i) {
       id::Vendor const v = id::Vendor(i);
@@ -52,12 +52,12 @@ namespace tunitas::butano::tcf::consent {
   }
   // This is the java way to say it
   auto Bits::get(id::Vendor i) const -> bool {
-    auto const e = ancestor::end();
-    auto const f = ancestor::find(i);
+    auto const e = Ancestor::end();
+    auto const f = Ancestor::find(i);
     return e != f && f->second;
   }
   auto Bits::put(id::Vendor i, bool b) -> void {
-    ancestor &self(*this);
+    Ancestor &self(*this);
     if (0 == (int)i) {
       throw vendor::Null();
     }

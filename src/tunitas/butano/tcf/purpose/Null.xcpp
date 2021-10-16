@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -21,7 +21,7 @@ namespace tunitas::butano::tcf::purpose {
 #import tunitas.butano.tcf.id.ALL
 #import stdexcept
 class tunitas::butano::tcf::purpose::Null : public std::out_of_range, public tcf::Exception {
-  using ancestor = std::out_of_range;
+  using Ancestor = std::out_of_range;
 public:
   inline Null();
   inline auto what() const noexcept -> char const * final;
@@ -30,10 +30,10 @@ public:
 #divert <ipp>
 namespace tunitas::butano::tcf::purpose {
   Null::Null()
-    : ancestor("null purpose")
+    : Ancestor("null purpose")
   { }
   auto Null::what() const noexcept -> char const * {
-    return ancestor::what();
+    return Ancestor::what();
   }
 }
 #endiv

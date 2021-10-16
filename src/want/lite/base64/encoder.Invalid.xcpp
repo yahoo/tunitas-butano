@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -21,20 +21,20 @@ namespace want::lite::base64::encoder {
 #import std.runtime_error
 #import want.lite.base64.Exception
 class want::lite::base64::encoder::Invalid : public std::runtime_error, public base64::Exception {
-  using ancestor = std::runtime_error;
+  using Ancestor = std::runtime_error;
 public:
   inline Invalid();
-  using ancestor::runtime_error;
+  using Ancestor::runtime_error;
   auto what() const noexcept -> char const * final;
 };
 #endiv
 #divert <ipp>
 want::lite::base64::encoder::Invalid::Invalid()
-  : ancestor("invalid")
+  : Ancestor("invalid")
 { }
 #endiv
 #divert <cpp>
 auto want::lite::base64::encoder::Invalid::what() const noexcept -> char const * {
-  return ancestor::what();
+  return Ancestor::what();
 }
 #endiv

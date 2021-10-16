@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -25,23 +25,23 @@ namespace tunitas::butano::tcf::consent::encoding {
                               want::lite::base64::sized::ByType<typename protocol::Limits<protocol::Datum<FIELD>>::Type,
                                                                 protocol::Limits<protocol::Datum<FIELD>>::width()>> {
     // Ummm ... First of all.  Wow. Second of all.  Wow.
-    // The type-and-width system is much more easily expressed in the ancestor scope as Limits.
-    using ancestor = field::Prototype<FIELD,
+    // The type-and-width system is much more easily expressed in the Ancestor scope as Limits.
+    using Ancestor = field::Prototype<FIELD,
                                       want::lite::base64::sized::ByType<typename protocol::Limits<protocol::Datum<FIELD>>::Type,
                                                                         protocol::Limits<protocol::Datum<FIELD>>::width()>>;
   public:
-    using ancestor::Prototype;
+    using Ancestor::Prototype;
     // Get a Concept! SOURCE is consent::Object or consent::Builder
-    template<typename SOURCE> inline auto operator()(SOURCE const &) const -> typename ancestor::Result;
+    template<typename SOURCE> inline auto operator()(SOURCE const &) const -> typename Ancestor::Result;
   };
   template<> class getter::Field<protocol::BITFIELD> 
     : public field::Prototype<protocol::BITFIELD, protocol::Limits<protocol::Datum<protocol::BITFIELD>>::Sized> {
     // Here we need a slightly different type than the one the default Prototype provides.
-    using ancestor = field::Prototype<protocol::BITFIELD, protocol::Limits<protocol::Datum<protocol::BITFIELD>>::Sized>;
+    using Ancestor = field::Prototype<protocol::BITFIELD, protocol::Limits<protocol::Datum<protocol::BITFIELD>>::Sized>;
   public:
-    using ancestor::Prototype;
+    using Ancestor::Prototype;
     // Get a Concept! SOURCE is consent::Object or consent::Builder
-    template<typename SOURCE> inline auto operator()(SOURCE const &) const -> ancestor::Result;
+    template<typename SOURCE> inline auto operator()(SOURCE const &) const -> Ancestor::Result;
   };
 }
 #forward tunitas.butano.tcf.consent.Object

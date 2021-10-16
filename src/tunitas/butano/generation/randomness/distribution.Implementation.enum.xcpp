@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -24,12 +24,12 @@ namespace tunitas::butano::generation::randomness::distribution {
   template<typename ENUM, ENUM LOW, ENUM HIGH> class Implementation<ENUM, limits::enume::Class<ENUM, LOW, HIGH>, true>
     : public Implementation<unsigned, limits::numeric::Bound<unsigned, (unsigned) limits::enume::Class<ENUM, LOW, HIGH>::min(), (unsigned) limits::enume::Class<ENUM, LOW, HIGH>::max()>, false> {
     // [[FIXTHIS]] sloppy ... what if the enum class is bigger than 32-bit unsigned?
-    using ancestor = Implementation<unsigned, limits::numeric::Bound<unsigned, (unsigned) limits::enume::Class<ENUM, LOW, HIGH>::min(), (unsigned) limits::enume::Class<ENUM, LOW, HIGH>::max()>, false>;
+    using Ancestor = Implementation<unsigned, limits::numeric::Bound<unsigned, (unsigned) limits::enume::Class<ENUM, LOW, HIGH>::min(), (unsigned) limits::enume::Class<ENUM, LOW, HIGH>::max()>, false>;
   public:
     using Value = ENUM;
     Implementation() = default;
-    inline explicit Implementation(Value high) : ancestor((unsigned)high) { }
-    inline Implementation(Value low, Value high) : ancestor((unsigned)low, (unsigned)high) { }
+    inline explicit Implementation(Value high) : Ancestor((unsigned)high) { }
+    inline Implementation(Value low, Value high) : Ancestor((unsigned)low, (unsigned)high) { }
     using Result = Value;
     inline auto operator()(Engine &engine) -> Result;
   };
@@ -38,7 +38,7 @@ namespace tunitas::butano::generation::randomness::distribution {
 #divert <ipp>
 namespace tunitas::butano::generation::randomness::distribution {
   template<typename E, E L, E H> auto Implementation<E, limits::enume::Class<E, L, H>, true>::operator()(Engine &engine) -> Result {
-    return Result(ancestor::operator()(engine));
+    return Result(Ancestor::operator()(engine));
   }
 }
 #endiv

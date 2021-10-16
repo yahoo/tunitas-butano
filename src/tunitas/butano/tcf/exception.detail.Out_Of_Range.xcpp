@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -34,7 +34,7 @@ namespace tunitas::butano::tcf::exception::detail {
 #import std.string
 namespace tunitas::butano::tcf::exception {
   template<typename IDENTIFIER> class detail::Out_Of_Range : public std::out_of_range, public tcf::Exception {
-    using ancestor = std::out_of_range;
+    using Ancestor = std::out_of_range;
   protected:
     ~Out_Of_Range() = default; // descendants only
   public:
@@ -50,8 +50,8 @@ namespace tunitas::butano::tcf::exception {
 #divert <ipp>
 #import std.ostringstream
 namespace tunitas::butano::tcf::exception::detail {
-  template<typename _> Out_Of_Range<_>::Out_Of_Range() : ancestor("out of range") { }
-  template<typename _> Out_Of_Range<_>::Out_Of_Range(std::string const &reason) : ancestor(reason) { }
+  template<typename _> Out_Of_Range<_>::Out_Of_Range() : Ancestor("out of range") { }
+  template<typename _> Out_Of_Range<_>::Out_Of_Range(std::string const &reason) : Ancestor(reason) { }
   template<typename _> auto Out_Of_Range<_>::format(char const *capitalized_identifier_adjective, char const *offensiveness_adverb, Identifier offending_id, tcf::exception::Range range) -> std::string {
     std::ostringstream buf;
     buf << capitalized_identifier_adjective << " id: " << offending_id << " is " << offensiveness_adverb << ". "
@@ -62,6 +62,6 @@ namespace tunitas::butano::tcf::exception::detail {
 #endiv
 #divert <tpp>
 namespace tunitas::butano::tcf::exception::detail {
-  template<typename _> auto Out_Of_Range<_>::what() const noexcept -> char const * { return ancestor::what(); }
+  template<typename _> auto Out_Of_Range<_>::what() const noexcept -> char const * { return Ancestor::what(); }
 }
 #endiv

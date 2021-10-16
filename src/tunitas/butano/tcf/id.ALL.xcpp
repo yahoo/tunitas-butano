@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -66,7 +66,7 @@ namespace tunitas::butano::tcf::id {
   using Vendor   = integer::Enum<std::uint16_t, uniqueness::Vendor>;
   namespace version {
     using Platform   = integer::Enum<std::uint32_t, uniqueness::Platform>;
-    // Oath's platform is #1, and perennially on v1.0
+    // Yahoo's platform is #1, and perennially on v1.0
     namespace platform { inline constexpr auto CURRENT = Platform(1); } 
     using Protocol   = integer::Enum<std::uint32_t, uniqueness::Protocol>;
     // This software artifact supports IAB TCF v1
@@ -76,7 +76,7 @@ namespace tunitas::butano::tcf::id {
   }
 #endif
   namespace version {
-    namespace platform { inline constexpr auto CURRENT = Platform(1); } // Oath's platform is #1, and perennially on v1.0
+    namespace platform { inline constexpr auto CURRENT = Platform(1); } // Yahoo's platform is #1, and perennially on v1.0
     namespace protocol { inline constexpr auto CURRENT = Protocol(1); } // This software artifact supports IAB TCF v1
     // There is no "current" vendor list; it changes constantly, nay, hourly.
   }

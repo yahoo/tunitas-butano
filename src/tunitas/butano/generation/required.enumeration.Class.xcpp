@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -9,13 +9,13 @@ namespace tunitas::butano::generation::required::enumeration {
   //
   // An enum class of the C++ Language, Right and Proper
   //
-  template<typename ENUM> concept bool Class = std::is_enum<ENUM>::value;
+  template<typename ENUM> concept Class = std::is_enum<ENUM>::value;
   //
   // Deprecated ... really ...  Blik.  You don't want these
   // A boxed enumeration; an class pretending to be an enumeration.
   namespace deprecated {
-    template<typename BOXED> concept bool Boxed = requires(BOXED boxed) {
-      // enum Thingy { ... };
+    template<typename BOXED> concept Boxed = requires(BOXED boxed) {
+                                                                    // enum Thingy { ... };
       // e.g. javalike::Enum<Thingy>
       typename BOXED::Value;
     };

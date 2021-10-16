@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -39,7 +39,7 @@ namespace app::argv::parser {
 #import app.argv.parser.residual.Aspect
 #import app.argv.parser.ignore.Aspect
 class app::argv::parser::Dumper : public Basis, public residual::Aspect, public ignore::Aspect {
-  using ancestor = Basis;
+  using Ancestor = Basis;
 public:
   inline explicit Dumper(Argv a, Name n, Usage u) { parse(a, n, u); }
 private:

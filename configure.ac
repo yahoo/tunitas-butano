@@ -1,5 +1,5 @@
 dnl This is a GNU -*- autoconf -*- specification that is processed by Autoconf.
-dnl Yahoo Inc. 2021
+dnl Copyright Yahoo Inc, 2021.
 dnl Licensed under the terms of the Apache-2.0 license.
 dnl For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 dnl For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -15,7 +15,7 @@ dnl make check &&
 dnl make install &&
 dnl echo OK DONE
 dnl
-AC_INIT([butano], [1.1.0], [tunitas@yahooinc.com])
+AC_INIT([butano], [1.2.0], [tunitas@yahooinc.com])
 TF_INIT(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, AC_PACKAGE_BUGREPORT)
 
 dnl These options are also in the Makefile.am in AUTOMAKE_OPTIONS
@@ -62,7 +62,7 @@ TF_WITH_MODULE([rigging]) dnl a.k.a. unit-rigging -> rigging-unit
 
 TF_MSG_VERBOSE([compiler-specific (alphabetical)])
 TF_WITH_NONSTD([cppunit])
-TF_WITH_NONSTD([gcc]) dnl but modern gcc-7.1.0 & beyond is fine
+TF_WITH_NONSTD([gcc]) dnl but modern gcc-12 & beyond is fine
 TF_WITH_NONSTD([jsoncpp]) dnl but modern jsoncpp-1.8.4 is fine
 TF_WITH_NONSTD([libhttpserver])
 

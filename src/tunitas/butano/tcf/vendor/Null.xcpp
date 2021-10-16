@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -19,9 +19,9 @@ namespace tunitas::butano::tcf::vendor {
 #divert <hpp>
 #import tunitas.butano.tcf.vendor.detail.Out_Of_Range
 class tunitas::butano::tcf::vendor::Null : public detail::Out_Of_Range {
-  using ancestor = detail::Out_Of_Range;
+  using Ancestor = detail::Out_Of_Range;
 public:
-  inline Null() : ancestor("null vendor") { }
-  using ancestor::Out_Of_Range;
+  inline Null() : Ancestor("null vendor") { }
+  using Ancestor::Out_Of_Range;
 };
 #endiv

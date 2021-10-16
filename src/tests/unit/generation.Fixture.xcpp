@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -7,10 +7,7 @@
 namespace tests::unit::generation { class Fixture; }
 #endiv
 #divert <hpp>
-#import cppunit.Test
-#import cppunit.test.Fixture
-class tests::unit::generation::Fixture : public cppunit::test::Fixture {
-public:
+struct tests::unit::generation::Fixture : public cppunit::test::Fixture {
   auto test_base64() -> void;
   auto test_tcf_String() -> void;
   auto test_tcf_Object() -> void;
@@ -103,45 +100,46 @@ auto tests::unit::generation::Fixture::test_uuid_Distribution() -> void {
 #import std.byte
 #import std.uint8_t
 #import std.uint16_t
-#import unit.rigging.suite.Stream
-#import unit.rigging.suite.call
-#import unit.rigging.suite.add
 auto tests::unit::generation::Fixture::suite() -> cppunit::Test * {
-  using namespace ::unit::rigging::suite;
-  Stream series("generation");
+  using namespace rigging::suite;
+  auto series = Stream{"generation"};
   series << call("base64", &Fixture::test_base64)
-    ;
-  {
-    Stream tcf("tcf");
-    tcf << call("Object", &Fixture::test_tcf_Object)
-        << call("String", &Fixture::test_tcf_String)
-      ;
-    series << add(tcf.release());
-  } {
-    Stream ran("randomness");
-    {
-      Stream dis("Distribution");
-      dis << call("char", &Fixture::test_randomness_Distribution<char>)
-          << call("byte", &Fixture::test_randomness_Distribution<std::byte>)
-          << call("uint8_t", &Fixture::test_randomness_Distribution<std::uint8_t>)
-          << call("unsigned char", &Fixture::test_randomness_Distribution<unsigned char>)
-          << call("uint16_t", &Fixture::test_randomness_Distribution<std::uint16_t>)
-        ;
-      ran << add(dis.release());
-    }
-    series << call("Engine", &Fixture::test_randomness_Engine)
-      ;
-  } {
-    Stream tcf("tcf");
-    tcf << call("Distribution", &Fixture::test_tcf_Distribution)
-      ;
-    series << add(tcf.release());
-  } {
-    Stream uui("uuid");
-    uui << call("Distribution", &Fixture::test_uuid_Distribution)
-      ;
-    series << add(uui.release());
-  }
-  return series.release();
+         << []{
+              auto tcf = Stream{"tcf"};
+              tcf << call("Object", &Fixture::test_tcf_Object)
+                  << call("String", &Fixture::test_tcf_String)
+                  << END;
+              return tcf;
+            }()
+         << []{
+              auto ran = Stream{"randomness"};
+              ran << []{
+                       auto dis = Stream{"Distribution"};
+                       dis << call("char", &Fixture::test_randomness_Distribution<char>)
+                           << call("byte", &Fixture::test_randomness_Distribution<std::byte>)
+                           << call("uint8_t", &Fixture::test_randomness_Distribution<std::uint8_t>)
+                           << call("unsigned char", &Fixture::test_randomness_Distribution<unsigned char>)
+                           << call("uint16_t", &Fixture::test_randomness_Distribution<std::uint16_t>)
+                           << END;
+                       return dis;
+                     }()
+                  << call("Engine", &Fixture::test_randomness_Engine)
+                  << END;
+              return ran;
+            }()
+         << []{
+              auto tcf = Stream{"tcf"};
+              tcf << call("Distribution", &Fixture::test_tcf_Distribution)
+                  << END;
+              return tcf;
+            }()
+         << []{
+              auto uui = Stream{"uuid"};
+              uui << call("Distribution", &Fixture::test_uuid_Distribution)
+                  << END;
+              return uui;
+            }()
+         << END;
+  return finalize(series);
 }
 #endiv

@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -49,7 +49,7 @@ namespace app::vanity_iab::options {
 #import app.argv.parser.residual.Aspect
 #import app.argv.parser.format.Aspect
 class app::vanity_iab::options::Parser : public argv::parser::Basis, public argv::parser::residual::Aspect, public argv::parser::format::Aspect {
-  using ancestor = argv::parser::Basis;
+  using Ancestor = argv::parser::Basis;
 public:
   inline explicit Parser(Argv a) { parse(a); }
 private:

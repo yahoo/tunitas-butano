@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -13,10 +13,10 @@
 namespace tunitas::butano::generation {
   template<typename RESULT, typename BOUND> struct randomness::Distribution : public distribution::Implementation<RESULT, BOUND, (std::is_same<bool, RESULT>::value || std::is_enum<RESULT>::value)> {
     //               distribution::Implementation<RESULT, BOUND, (std::is_same<bool, RESULT>::value || std::is_enum<RESULT>::value)>
-    using ancestor = distribution::Implementation<RESULT, BOUND, (std::is_same<bool, RESULT>::value || std::is_enum<RESULT>::value)>;
+    using Ancestor = distribution::Implementation<RESULT, BOUND, (std::is_same<bool, RESULT>::value || std::is_enum<RESULT>::value)>;
   public:
-    using ancestor::Implementation;
-    using ancestor::operator();
+    using Ancestor::Implementation;
+    using Ancestor::operator();
     static_assert(std::is_same<RESULT, decltype(std::declval<Distribution>()(std::declval<Engine &>()))>::value);
   };
 }

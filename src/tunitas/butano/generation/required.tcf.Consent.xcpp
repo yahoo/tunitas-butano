@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -12,7 +12,7 @@ namespace tunitas::butano::generation::required::tcf {
   //
   // The SOURCE of a Tcf Generator is either an Object or String, but nothing else.
   //
-  template<typename SOURCE> concept bool Consent = (std::is_same<SOURCE, tunitas::butano::tcf::consent::String>::value ||
-                                                    std::is_same<SOURCE, tunitas::butano::tcf::consent::Object>::value);
+  template<typename SOURCE> concept Consent = (std::is_same<SOURCE, tunitas::butano::tcf::consent::String>::value ||
+                                               std::is_same<SOURCE, tunitas::butano::tcf::consent::Object>::value);
 }
 #endiv

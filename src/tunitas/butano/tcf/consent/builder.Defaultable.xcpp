@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -20,7 +20,7 @@ namespace tunitas::butano::tcf::consent::builder {
 #import tunitas.butano.tcf.id.ALL
 #import tunitas.butano.tcf.consent.object.Defaultable
 class tunitas::butano::tcf::consent::builder::Defaultable : public object::Defaultable {
-  using ancestor = object::Defaultable;
+  using Ancestor = object::Defaultable;
 protected:
   ~Defaultable() = default;
 protected:
@@ -31,9 +31,9 @@ protected:
 #divert <ipp>
 #import want.timeline.clock.ALL
 namespace tunitas::butano::tcf::consent::builder {
-  Defaultable::Defaultable(Defaulting) : ancestor() {
+  Defaultable::Defaultable(Defaulting) : Ancestor() {
     version = id::version::Protocol(1);
-    cmpId = id::Platform(14);  // Oath's CMP?
+    cmpId = id::Platform(14);  // Yahoo's CMP?
     cmpVersion = id::version::Platform(1);
     consentScreen = id::Screen(0); // because we don't care
     consentLanguage = id::Language(269);  // English "en"

@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -21,12 +21,12 @@ namespace tunitas::butano::generation::randomness::distribution {
 #import std.uint8_t
 namespace tunitas::butano::generation::randomness::distribution {
   template<> class Implementation<std::byte, limits::Unbound<std::byte>, true> : public Implementation<unsigned, limits::numeric::Bound<std::uint8_t, 0x0, 0xff>, false> {
-    using ancestor = Implementation<unsigned, limits::numeric::Bound<std::uint8_t, 0x0, 0xff>, false>;
+    using Ancestor = Implementation<unsigned, limits::numeric::Bound<std::uint8_t, 0x0, 0xff>, false>;
   public:
     using Value = std::byte;
     Implementation() = default;
-    inline explicit Implementation(Value high) : ancestor{0u, (unsigned)high} { }
-    inline Implementation(Value low, Value high) : ancestor{(unsigned)low, (unsigned)high} { }
+    inline explicit Implementation(Value high) : Ancestor{0u, (unsigned)high} { }
+    inline Implementation(Value low, Value high) : Ancestor{(unsigned)low, (unsigned)high} { }
     using Result = Value;
     inline auto operator()(Engine &engine) -> Result;
   };
@@ -35,7 +35,7 @@ namespace tunitas::butano::generation::randomness::distribution {
 #divert <ipp>
 namespace tunitas::butano::generation::randomness::distribution {
   auto Implementation<std::byte, limits::Unbound<std::byte>, true>::operator()(Engine &engine) -> Result {
-    return Result(ancestor::operator()(engine));
+    return Result(Ancestor::operator()(engine));
   }
 }
 #endiv

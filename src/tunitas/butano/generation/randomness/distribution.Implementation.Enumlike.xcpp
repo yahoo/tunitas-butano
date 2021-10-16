@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -22,12 +22,12 @@ namespace tunitas::butano::generation::randomness::distribution {
   //
   template<typename INT> class Implementation<Enum<INT>, limits::enume::Classlike<Enum<INT>>, true>
     : public Implementation<INT, limits::numeric::Bound<INT, (INT) limits::enume::Classlike<Enum<INT>>::min(), (INT) limits::enume::Classlike<Enum<INT>>::max()>, false> {
-    using ancestor = Implementation<INT, limits::numeric::Bound<INT, (INT) limits::enume::Classlike<Enum<INT>>::min(), (INT) limits::enume::Classlike<Enum<INT>>::max()>, false>;
+    using Ancestor = Implementation<INT, limits::numeric::Bound<INT, (INT) limits::enume::Classlike<Enum<INT>>::min(), (INT) limits::enume::Classlike<Enum<INT>>::max()>, false>;
   public:
     using Value = Enum<INT>;
     Implementation() = default;
-    inline explicit Implementation(Value high) : ancestor((INT)high) { }
-    inline Implementation(Value low, Value high) : ancestor((INT) low, (INT)high) { }
+    inline explicit Implementation(Value high) : Ancestor((INT)high) { }
+    inline Implementation(Value low, Value high) : Ancestor((INT) low, (INT)high) { }
     using Result = Value;
     inline auto operator()(Engine &engine) -> Result;
   };
@@ -37,7 +37,7 @@ namespace tunitas::butano::generation::randomness::distribution {
 #import tunitas.butano.generation.randomness.Engine
 namespace tunitas::butano::generation::randomness::distribution {
   template<typename I> auto Implementation<Enum<I>, limits::enume::Classlike<Enum<I>>, true>::operator()(Engine &engine) -> Result {
-    return Result(ancestor::operator()(engine));
+    return Result(Ancestor::operator()(engine));
   }
 }
 #endiv

@@ -1,5 +1,5 @@
-// This is -*- c++ -*- nearly C++23 with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
-// Copyright Yahoo Inc. 2021.
+// This is -*- c++ -*- nearly C++2a with Modules TS but in the S.C.O.L.D. stylings that are so popular these days.
+// Copyright Yahoo Inc, 2021.
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
@@ -19,23 +19,24 @@ namespace app::exception {
 }
 #endiv
 #divert <hpp>
-#import tunitas.app.exception.Aspect
-#import tunitas.app.exception.feature.Quitting
+#import tunitas.application.exception.Aspect
+#import tunitas.application.exception.feature.Quitting
 #import std.runtime_error
 #import sys.exits.Code
 #import sys.exits.constants
-class app::exception::Quitting : public tunitas::app::exception::Aspect, public tunitas::app::exception::feature::Quitting, public std::runtime_error {
+class app::exception::Quitting : public tunitas::application::exception::Aspect, public tunitas::application::exception::feature::Quitting, public std::runtime_error {
   struct Ancestors {
-    using Aspect = tunitas::app::exception::Aspect;
-    using Feature = tunitas::app::exception::feature::Quitting;
+    using Aspect = tunitas::application::exception::Aspect;
+    using Feature = tunitas::application::exception::feature::Quitting;
     using Exception = std::runtime_error;
   };
   using Program = std::string; // [[FIXTHIS]] use ::options::Program or ::cli::Program (when ready)
 public:
   inline explicit Quitting(Program, sys::exits::Code = sys::exits::OK);
-  auto what() const noexcept -> char const * final;
-  auto code() const noexcept -> sys::exits::Code final;
-  auto stream() const noexcept -> std::ostream & final;
+  auto what() const noexcept -> char const * override final;
+  auto stream() const noexcept -> std::ostream & override final;
+  auto code() const noexcept -> sys::exits::Code override final;
+  auto exit() const noexcept -> sys::exits::Code override final;
 };
 #endiv
 #divert <ipp>
@@ -48,7 +49,8 @@ app::exception::Quitting::Quitting(Program program, sys::exits::Code code)
 #divert <cpp>
 namespace app::exception {
   auto Quitting::what() const noexcept -> char const * { return Ancestors::Exception::what(); }
-  auto Quitting::code() const noexcept -> sys::exits::Code { return Ancestors::Feature::code(); }
   auto Quitting::stream() const noexcept -> std::ostream & { return Ancestors::Feature::stream(); }
+  auto Quitting::code() const noexcept -> sys::exits::Code { return Ancestors::Feature::code(); }
+  auto Quitting::exit() const noexcept -> sys::exits::Code { return Ancestors::Feature::code(); }
 }
 #endiv

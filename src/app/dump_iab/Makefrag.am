@@ -3,28 +3,9 @@
 # Licensed under the terms of the Apache-2.0 license.
 # For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 # For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
-
-bin_dump_iab = bin/dump-iab
-bin_dump_iab_LDADD = \
-  $(lib_libtunitas_butano_tcf_la) \
-  $(lib_libapp_la) \
-  -ltunitas-app \
-  -loptions-module \
+#
+app_dump_iab_SUBSOURCES = \
+  noinst/obj/src/app/dump_iab/main.cpp \
+  noinst/obj/src/app/dump_iab/namespace.cpp \
+  noinst/obj/src/app/dump_iab/options.cpp \
   $(end)
-bin_dump_iab_LDFLAGS = $(PACKAGE_LDFLAGS_SET)
-bin_dump_iab_MODULES = $(call TF_SOURCEStoMODULES, $(bin_dump_iab_SOURCES))
-bin_dump_iab_SOURCES = \
-  obj/src/app/dump_iab/main.cpp \
-  obj/src/app/dump_iab/namespace.cpp \
-  obj/src/app/dump_iab/options.cpp \
-  $(end)
-$(scold_cxxdir)/app/dump_iab/dependencies.mk: $(bin_dump_iab_SOURCES)
-$(bin_dump_iab_SOURCES) : obj/src/%.cpp : src/%.xcpp
-	$(TF_V_DIS) $(call TF_XCPP2CPP, $^)
-	$(TF_V_DONE) test -e $@
-$(scold_cxxdir)/app/dump_iab/dependencies.mk:
-	$(TF_V_DEP) $(call TF_DEPENDENCIES, $^)
-	$(TF_V_DONE) test -e $@
-include $(scold_cxxdir)/app/dump_iab/dependencies.mk
-clean-dependencies::
-	rm -f $(scold_cxxdir)/app/dump_iab/dependencies.mk

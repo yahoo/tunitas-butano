@@ -3,51 +3,35 @@
 # Licensed under the terms of the Apache-2.0 license.
 # For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 # For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
-
-# merely a convenience library
-lib_libapp_la = lib/libapp.la
-lib_libapp_la_LIBADD = $(none)
-lib_libapp_la_LDFLAGS = $(PACKAGE_LDFLAGS_SET)
-lib_libapp_la_MODULES = $(call TF_SOURCEStoMODULES, $(lib_libapp_la_SOURCES))
-lib_libapp_la_SOURCES = \
-  obj/src/app/namespace.cpp \
-  obj/src/app/Argv.cpp \
+#
+app_SUBSOURCES = \
+  noinst/obj/src/app/namespace.cpp \
+  noinst/obj/src/app/Argv.cpp \
   \
-  obj/src/app/argv/namespace.cpp \
-  obj/src/app/argv/among.cpp \
-  obj/src/app/argv/detail.Among.cpp \
-  obj/src/app/argv/Object.cpp \
+  noinst/obj/src/app/argv/namespace.cpp \
+  noinst/obj/src/app/argv/among.cpp \
+  noinst/obj/src/app/argv/detail.Among.cpp \
+  noinst/obj/src/app/argv/Object.cpp \
   \
-  obj/src/app/argv/parser/namespace.cpp \
-  obj/src/app/argv/parser/Basis.cpp \
-  obj/src/app/argv/parser/Demonstrator.cpp \
-  obj/src/app/argv/parser/Dumper.cpp \
-  obj/src/app/argv/parser/format.Aspect.cpp \
-  obj/src/app/argv/parser/format.Options.cpp \
-  obj/src/app/argv/parser/howmany.Residual.cpp \
-  obj/src/app/argv/parser/Howmany.cpp \
-  obj/src/app/argv/parser/Howmany.access.format.Options.cpp \
-  obj/src/app/argv/parser/ignore.Aspect.cpp \
-  obj/src/app/argv/parser/prattle.Aspect.cpp \
-  obj/src/app/argv/parser/prattle.Options.cpp \
-  obj/src/app/argv/parser/residual.Aspect.cpp \
-  obj/src/app/argv/parser/residual.Words.cpp \
-  obj/src/app/argv/parser/Sloppy.cpp \
-  obj/src/app/argv/parser/Unit.cpp \
+  noinst/obj/src/app/argv/parser/namespace.cpp \
+  noinst/obj/src/app/argv/parser/Basis.cpp \
+  noinst/obj/src/app/argv/parser/Demonstrator.cpp \
+  noinst/obj/src/app/argv/parser/Dumper.cpp \
+  noinst/obj/src/app/argv/parser/format.Aspect.cpp \
+  noinst/obj/src/app/argv/parser/format.Options.cpp \
+  noinst/obj/src/app/argv/parser/howmany.Residual.cpp \
+  noinst/obj/src/app/argv/parser/Howmany.cpp \
+  noinst/obj/src/app/argv/parser/Howmany.access.format.Options.cpp \
+  noinst/obj/src/app/argv/parser/ignore.Aspect.cpp \
+  noinst/obj/src/app/argv/parser/prattle.Aspect.cpp \
+  noinst/obj/src/app/argv/parser/prattle.Options.cpp \
+  noinst/obj/src/app/argv/parser/residual.Aspect.cpp \
+  noinst/obj/src/app/argv/parser/residual.Words.cpp \
+  noinst/obj/src/app/argv/parser/Sloppy.cpp \
+  noinst/obj/src/app/argv/parser/Unit.cpp \
   \
-  obj/src/app/exception.Quitting.cpp \
+  noinst/obj/src/app/exception.Quitting.cpp \
   \
-  obj/src/app/grammar.a_noun.cpp \
-  obj/src/app/grammar.A_Noun.cpp \
+  noinst/obj/src/app/grammar.a_noun.cpp \
+  noinst/obj/src/app/grammar.A_Noun.cpp \
   $(end)
-$(scold_cxxdir)/app/dependencies.mk: $(lib_libapp_la_SOURCES)
-$(lib_libapp_la_SOURCES) : obj/src/%.cpp : src/%.xcpp
-	$(TF_V_DIS) $(call TF_XCPP2CPP, $^)
-	$(TF_V_DONE) test -e $@
-$(scold_cxxdir)/app/dependencies.mk:
-	$(TF_V_DEP) $(call TF_DEPENDENCIES, $^)
-	$(TF_V_DONE) test -e $@
-include $(scold_cxxdir)/app/dependencies.mk
-clean-dependencies::
-	rm -f $(scold_cxxdir)/app/dependencies.mk
-#end

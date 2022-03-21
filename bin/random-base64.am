@@ -1,0 +1,23 @@
+# This is a GNU -*- Makefile -*- fragment that is included by Automake
+# Copyright Yahoo Inc, 2022.
+# Licensed under the terms of the Apache-2.0 license.
+# For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
+# For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
+#
+bin_random_base64 = bin/random-base64$(error REMOVE)
+bin_random_base64_CPPFLAGS = $(PACKAGE_CPPFLAGS_SET)
+bin_random_base64_CXXFLAGS = $(PACKAGE_CXXFLAGS_SET)
+bin_random_base64_LDFLAGS = $(PACKAGE_LDFLAGS_SET)
+bin_random_base64_LDADD = noinst/lib/libapp-random-base64.la
+bin_random_base64_SOURCES = noinst/obj/src/app/random_base64/c.main.cpp
+$(bin_random_base64_SOURCES) : disco_objdir=noinst/obj
+$(bin_random_base64_SOURCES) : scold_objdir=$(disco_objdir)
+$(bin_random_base64_SOURCES) : noinst/obj/src/%.cpp : src/%.xcpp
+	$(TF_V_DIS) $(call TF_XCPP2CPP, $^)
+	$(TF_V_DONE) test -e $@
+$(tf_noinst_mkdir)/random-base64.mk: $(bin_random_base64_SOURCES)
+$(tf_noinst_mkdir)/random-base64.mk:
+	$(TF_V_DEP) $(call TF_DEPENDENCIES, $^)
+	$(TF_V_DONE) test -e $@
+include $(tf_noinst_mkdir)/random-base64.mk
+clean-dependencies:: ; rm -f $(tf_noinst_mkdir)/random-base64.mk

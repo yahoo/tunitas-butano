@@ -15,7 +15,7 @@ dnl make check &&
 dnl make install &&
 dnl echo OK DONE
 dnl
-AC_INIT([butano], [1.2.0], [tunitas@yahooinc.com])
+AC_INIT([butano], [1.3.0], [tunitas@yahooinc.com])
 TF_INIT(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, AC_PACKAGE_BUGREPORT)
 
 dnl These options are also in the Makefile.am in AUTOMAKE_OPTIONS
@@ -49,6 +49,7 @@ TF_WITH_SUBSYSTEM([tunitas-basics], [], [The Tunitas Basics])
 
 # and mention in $(DEVELOPMENT_AREAS) in Makefile.am
 TF_WITH_MODULE([json])
+TF_WITH_MODULE([langu])
 TF_WITH_MODULE([nonstd])
 TF_WITH_MODULE([options])
 TF_WITH_MODULE([posix])

@@ -1,0 +1,23 @@
+# This is a GNU -*- Makefile -*- fragment that is included by Automake
+# Copyright Yahoo Inc, 2022.
+# Licensed under the terms of the Apache-2.0 license.
+# For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
+# For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
+#
+bin_random_iab = bin/random-iab$(error REMOVE)
+bin_random_iab_CPPFLAGS = $(PACKAGE_CPPFLAGS_SET)
+bin_random_iab_CXXFLAGS = $(PACKAGE_CXXFLAGS_SET)
+bin_random_iab_LDFLAGS = $(PACKAGE_LDFLAGS_SET)
+bin_random_iab_LDADD = noinst/lib/libapp-random-iab.la
+bin_random_iab_SOURCES = noinst/obj/src/app/random_iab/c.main.cpp
+$(bin_random_iab_SOURCES) : disco_objdir=noinst/obj
+$(bin_random_iab_SOURCES) : scold_objdir=$(disco_objdir)
+$(bin_random_iab_SOURCES) : noinst/obj/src/%.cpp : src/%.xcpp
+	$(TF_V_DIS) $(call TF_XCPP2CPP, $^)
+	$(TF_V_DONE) test -e $@
+$(tf_noinst_mkdir)/random-iab.mk: $(bin_random_iab_SOURCES)
+$(tf_noinst_mkdir)/random-iab.mk:
+	$(TF_V_DEP) $(call TF_DEPENDENCIES, $^)
+	$(TF_V_DONE) test -e $@
+include $(tf_noinst_mkdir)/random-iab.mk
+clean-dependencies:: ; rm -f $(tf_noinst_mkdir)/random-iab.mk

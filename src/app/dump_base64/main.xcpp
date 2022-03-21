@@ -3,142 +3,162 @@
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
+#divert <fpp>
+namespace app::dump_base64 {
+  namespace package_main {
+    namespace body::exported { }
+    namespace interface = body::exported;
+  }
+  using namespace package_main::interface;
+}
+#endiv
 #divert <hpp>
 #import app.Argv
 #import std.ostream
 #import std.string
-namespace app::dump_base64 {
-  auto remain(Argv) -> void;
+namespace app::dump_base64::package_main::body {
+  namespace exported {
+    inline auto main(int, char *[]) -> int;
+    auto main(Argv) -> int;
+  }
   auto usage(std::string const &, std::ostream &) -> void;
   auto write_success(std::string const &raw_byte_string) -> void;
 }
 #endiv
-#divert <cpp>
-auto app::dump_base64::usage(std::string const &name, std::ostream &out) -> void {
-  out << "usage: " << name << " [ ...options...] { base64 ... }\n"
-      << "\n"
-      << "options:\n"
-      << "--verbose                        emit gratuitous prattle explaining the ongoing activities.\n"
-      << "--quiet                          shut. up.  (independent of --verbose)\n"
-      << "\n"
-      << "example: BOKXjmcOKXjmcAOABAENACAAAAAAU8A ... etc.\n";
+#divert <ipp>
+#import app.exception.Quitting
+#import std.cerr
+#import std.exception
+namespace app::dump_base64::package_main {
+  auto interface::main(int argc, char *argv[]) -> int try {
+    return main({argc, argv});
+  } catch (app::exception::Quitting const &q) {
+    q.stream() << q.what() << '\n';
+    return q.code();
+  } catch (std::exception const &e) {
+    std::cerr << NAME << ": error, " << e.what() << '\n';
+    return 1;
+  }
 }
+#endiv
+#divert <cpp>
 #import app.exception.Quitting
 #import app.argv.parser.Demonstrator
 #import want.lite.base64.ALL
-auto app::dump_base64::remain(Argv av) -> void {
-  argv::parser::Demonstrator pa(std::move(av), NAME, &usage);
-  bool failure(false);
-  using want::lite::base64::decode;
-  for (auto word : pa.residual()) {
-    if constexpr (true) {
-      auto fixed = want::lite::base64::sloppy::decode(word);
-      if (!ok(fixed)) {
-        std::cerr << NAME << ": warning, the base64 is irredeemable, trying to decode it anyway\n";
-      } else if (value(fixed) != word) {
-        auto const thismany = count(fixed);
-        auto const nouns = 1 == thismany ? "character" : "characters";
-        std::cerr << NAME << ": warning, the base64 is redeemable only after appending " << thismany << " '=' " << nouns << ", continuing\n";
-        word = value(std::move(fixed));
-      }
-      auto const pure = decode(word);
-      write_success(pure);
-    } else {
-      //
-      // [[FIXTHIS]] - this code is arguably wrong as it can wind up adding more than two '='
-      // to the string in an attempt to remediate it.  The code above Does The Right Thing(tm).
-      // This code should be abandoned & deleted in favor of the above.
-      //
-      std::string specimen0, specimen1, specimen2;
-      //            success:
-      //            failure:
-      std::cout << "  given: " << word << '\n';
-      using Exception = want::lite::base64::Exception;
-      try {
-        // Ahem ... this is raw unencoded base64, so you may need to pipe this to /usr/bin/od
-        specimen0 = word;
-        auto const pure = decode(specimen0);
+namespace app::dump_base64::package_main {
+  auto interface::main(Argv av) -> int {
+    argv::parser::Demonstrator pa(std::move(av), NAME, &usage);
+    bool failure(false);
+    using want::lite::base64::decode;
+    for (auto word : pa.residual()) {
+      if constexpr (true) {
+        auto fixed = want::lite::base64::sloppy::decode(word);
+        if (!ok(fixed)) {
+          std::cerr << NAME << ": warning, the base64 is irredeemable, trying to decode it anyway\n";
+        } else if (value(fixed) != word) {
+          auto const thismany = count(fixed);
+          auto const nouns = 1 == thismany ? "character" : "characters";
+          std::cerr << NAME << ": warning, the base64 is redeemable only after appending " << thismany << " '=' " << nouns << ", continuing\n";
+          word = value(std::move(fixed));
+        }
+        auto const pure = decode(word);
         write_success(pure);
-      } catch (Exception const &e) {
-        // Try with another '=' (append one)
+      } else {
+        //
+        // [[FIXTHIS]] - this code is arguably wrong as it can wind up adding more than two '='
+        // to the string in an attempt to remediate it.  The code above Does The Right Thing(tm).
+        // This code should be abandoned & deleted in favor of the above.
+        //
+        std::string specimen0, specimen1, specimen2;
+        //            success:
+        //            failure:
+        std::cout << "  given: " << word << '\n';
+        using Exception = want::lite::base64::Exception;
         try {
-          specimen1 = specimen0 + '=';
-          auto const pure = decode(specimen1);
-          std::cerr << NAME << ": warning, had to append '=' to attain correctness on " << specimen0 << "\n... continuing\n";
-          std::cout << "  again: " << specimen1 << '\n';
+          // Ahem ... this is raw unencoded base64, so you may need to pipe this to /usr/bin/od
+          specimen0 = word;
+          auto const pure = decode(specimen0);
           write_success(pure);
         } catch (Exception const &e) {
-          // Try with yet another '=' (append two)
+          // Try with another '=' (append one)
           try {
-            specimen2 = specimen1 + '=';
-            auto const pure = decode(specimen2);
-            std::cerr << NAME << ": warning, had to append '==' to attain correctness on " << specimen0 << "\n... continuing\n";
-            std::cout << "  again: " << specimen2 << '\n';
+            specimen1 = specimen0 + '=';
+            auto const pure = decode(specimen1);
+            std::cerr << NAME << ": warning, had to append '=' to attain correctness on " << specimen0 << "\n... continuing\n";
+            std::cout << "  again: " << specimen1 << '\n';
             write_success(pure);
           } catch (Exception const &e) {
-            // Nothing we can do.  The outer catch will catch and recover
-            failure = true;
-            std::cout << "tried: " << specimen0
-                      << "\ntried: " << specimen1
-                      << "\ntried: " << specimen2
-                      << "\nfailure, after all that by reason of " << e.what() << ", BASE64 decodification fails.\n";
+            // Try with yet another '=' (append two)
+            try {
+              specimen2 = specimen1 + '=';
+              auto const pure = decode(specimen2);
+              std::cerr << NAME << ": warning, had to append '==' to attain correctness on " << specimen0 << "\n... continuing\n";
+              std::cout << "  again: " << specimen2 << '\n';
+              write_success(pure);
+            } catch (Exception const &e) {
+              // Nothing we can do.  The outer catch will catch and recover
+              failure = true;
+              std::cout << "tried: " << specimen0
+                        << "\ntried: " << specimen1
+                        << "\ntried: " << specimen2
+                        << "\nfailure, after all that by reason of " << e.what() << ", BASE64 decodification fails.\n";
+            }
           }
         }
       }
     }
-  }
-  if (failure) {
-    std::cerr << NAME << ": error, there were problems in decoding the BASE64 samples.\n";
-    throw exception::Quitting{NAME, sys::exits::FAIL};
-  }
-}
-#import std.exception
-auto main(int argc, char *argv[]) -> int {
-  using namespace app;
-  try {
-    dump_base64::remain(Argv(&argv[0], &argv[argc]));
+    if (failure) {
+      std::cerr << NAME << ": error, there were problems in decoding the BASE64 samples.\n";
+      throw exception::Quitting{NAME, sys::exits::FAIL};
+    }
     return 0;
-  } catch (app::exception::Quitting const &q) {
-    std::cout << q.what() << '\n';
-    return q.code();
-  } catch (std::exception const &e) { 
-    std::cerr << dump_base64::NAME << ": error, " << e.what() << '\n';
-    return 1;
   }
 }
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <system_error>
-auto app::dump_base64::write_success(std::string const &raw_byte_string) -> void {
-  std::cout << "success:\n" << std::flush;
-  int fds[2];
-  if (0 != pipe(fds)) {
-    throw std::system_error(errno, std::system_category());
-  }
-  switch (fork()) {
-  case -1: // ourselves
-    {
+namespace app::dump_base64::package_main {
+#warning FIXTHIS instead use cli::pipe:To or specialize cli::program::Program<OD> for our usage here
+  auto body::write_success(std::string const &raw_byte_string) -> void {
+    std::cout << "success:\n" << std::flush;
+    int fds[2];
+    if (0 != pipe(fds)) {
       throw std::system_error(errno, std::system_category());
     }
-    break;
-  case 0: // child
-    {
-      close(fds[1]);
-      dup2(fds[0], 0);
-      close(fds[0]);
-      execlp("od", "od", "-c", (char *)(nullptr));
+    switch (fork()) {
+    case -1: // ourselves
+      {
+        throw std::system_error(errno, std::system_category());
+      }
+      break;
+    case 0: // child
+      {
+        close(fds[1]);
+        dup2(fds[0], 0);
+        close(fds[0]);
+        execlp("od", "od", "-c", (char *)(nullptr));
+      }
+      break;
+    default: // ourselves
+      {
+        close(fds[0]);
+        write(fds[1], raw_byte_string.data(), raw_byte_string.size());
+        close(fds[1]);
+        int status(0);
+        wait(&status);
+      }
+      break;
     }
-    break;
-  default: // ourselves
-    {
-      close(fds[0]);
-      write(fds[1], raw_byte_string.data(), raw_byte_string.size());
-      close(fds[1]);
-      int status(0);
-      wait(&status);
-    }
-    break;
+  }
+  auto body::usage(std::string const &name, std::ostream &out) -> void {
+    out << "usage: " << name << " [ ...options...] { base64 ... }\n"
+        << "\n"
+        << "options:\n"
+        << "--verbose                        emit gratuitous prattle explaining the ongoing activities.\n"
+        << "--quiet                          shut. up.  (independent of --verbose)\n"
+        << "\n"
+        << "example: BOKXjmcOKXjmcAOABAENACAAAAAAU8A ... etc.\n";
   }
 }
 #endiv

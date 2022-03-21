@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -p
 # Copyright Yahoo Inc, 2021.
 # Licensed under the terms of the Apache-2.0 license.
 # For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
@@ -127,6 +127,7 @@ function set_all_defaults_no() {
     : ${with_hypogeal_twilight:=${with_std_scold?}} # not needed in after hypogeal-twilight >= 0.43 or 0.44 or so
     : ${with_module_half:=no}
     : ${with_module_json:=no}
+    : ${with_module_langu:=no}
     : ${with_module_nonstd:=no}
     : ${with_module_options:=no}
     : ${with_module_posix:=no}
@@ -140,6 +141,7 @@ function set_all_defaults_relatively() {
     : ${with_hypogeal_twilight:=$1/hypogeal-twilight}
     : ${with_module_half:=$1/module-half}
     : ${with_module_json:=$1/module-json}
+    : ${with_module_langu:=$1/module-langu}
     : ${with_module_nonstd:=$1/module-nonstd}
     : ${with_module_options:=$1/module-options}
     : ${with_module_posix:=$1/module-posix}
@@ -207,6 +209,7 @@ eval \
     ${with_nonstd_half:+--with-nonstd-half=$with_nonstd_half} \
     ${with_module_json:+--with-module-json=$with_module_json} \
     ${with_nonstd_jsoncpp:+--with-nonstd-jsoncpp=$with_nonstd_jsoncpp} \
+    ${with_module_langu:+--with-module-langu=$with_module_langu} \
     ${with_module_nonstd:+--with-module-nonstd=$with_module_nonstd} \
     ${with_module_options:+--with-module-options=$with_module_options} \
     ${with_module_posix:+--with-module-posix=$with_module_posix} \

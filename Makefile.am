@@ -18,34 +18,32 @@ ACLOCAL_AMFLAGS = -I m4
 AUTOMAKE_OPTIONS = no-define subdir-objects foreign
 
 default:
+include tests/Makefrag.am
+include @temerarious_flagship_datadir@/am/build.am
+
 # also configure.ac and HGTW_SUBMODULE_CONFIGURE
 # SUBDIRS = @subdirs@
-include @temerarious_flagship_datadir@/am/build.am
 
 # These match with HGTW_WITH_MODULE in configure.ac
 DEVELOPMENT_AREAS = \
+  $(module_cli_core_prefix) \
   $(module_json_prefix) \
-  $(module_options_prefix) \
+  $(module_langu_prefix) \
   $(module_nonstd_prefix) \
-  $(module_posix_prefix) \
-  $(module_std_prefix) \
-  $(module_string_prefix) \
   $(module_sys_prefix) \
-  $(module_uuid_prefix) \
   $(tunitas_basics_prefix) \
-  $(tunitas_butano_prefix) \
+  $(deprecated_DEVELOPMENT_AREAS) \
   $(end)
 TESTING_AREAS = \
-  $(module_cppunit_prefix) \
-  $(module_rigging_prefix) \
+  $(module_rigging_core_prefix) \
+  $(deprecated_TESTING_AREAS) \
   $(end)
 INSTALLATION_AREAS = \
-  $(nonstd_cppunit_prefix) \
   $(nonstd_gcc_prefix) \
   $(nonstd_jsoncpp_prefix) \
-  $(nonstd_libhttpserver_prefix) \
   $(std_scold_prefix) \
   $(std_tunitas_prefix) \
+  $(deprecated_INSTALLATION_AREAS) \
   $(end)
 
 default: all
@@ -55,23 +53,33 @@ clean-local mostlyclean-local distclean-local::
 clean-dependencies::
 clean-local:: clean-dependencies
 
-include src/app/Makefrag.am
-include src/app/dump_base64/Makefrag.am
-include src/app/dump_iab/Makefrag.am
-include src/app/random_base64/Makefrag.am
-include src/app/random_iab/Makefrag.am
-include src/app/vanity_iab/Makefrag.am
-include src/tests/unit/Makefrag.am
-include src/tunitas/butano/Makefrag.am
-include src/tunitas/butano/generation/Makefrag.am
-include src/tunitas/butano/tcf/Makefrag.am
-include src/want/Makefrag.am
+include bin/dump-base64.am
+include noinst/lib/libapp-dump-base64.am
+include bin/dump-iab.am
+include noinst/lib/libapp-dump-iab.am
+include bin/random-base64.am
+include noinst/lib/libapp-random-base64.am
+include bin/random-iab.am
+include noinst/lib/libapp-random-iab.am
+
+include bin/vanity-iab.am
+include noinst/lib/libapp-vanity-iab.am
+
+include noinst/lib/libapp.am
+include check/bin/unit.am
+include noinst/lib/libwant.am
+include noinst/lib/libtunitas-butano.am
+include noinst/lib/libtunitas-butano-generation.am
+include noinst/lib/libtunitas-butano-tcf.am
+include lib/libtunitas-butano.am
+include lib/libtunitas-butano-generation.am
+include lib/libtunitas-butano-tcf.am
 
 INSTALL_MODULES = \
-  $(lib_libtunitas_butano_la_MODULES) \
-  $(lib_libtunitas_butano_generation_la_MODULES) \
-  $(lib_libtunitas_butano_tcf_la_MODULES) \
-  $(lib_libwant_la_MODULES) \
+  $(noinst_lib_libtunitas_butano_la_MODULES) \
+  $(noinst_lib_libtunitas_butano_generation_la_MODULES) \
+  $(noinst_lib_libtunitas_butano_tcf_la_MODULES) \
+  $(noinst_lib_libwant_la_MODULES) \
   $(end)
 
 bin_PROGRAMS = \
@@ -81,40 +89,25 @@ bin_PROGRAMS = \
   bin/random-iab \
   bin/vanity-iab \
   $(end)
+# WATCHOUT - these installable libraries MUST be in this order to congeal the rpath dependencies upon installation
 lib_LTLIBRARIES = \
-  $(lib_libtunitas_butano_la) \
-  $(lib_libtunitas_butano_generation_la) \
-  $(lib_libtunitas_butano_tcf_la) \
+  lib/libtunitas-butano-tcf.la \
+  lib/libtunitas-butano-generation.la \
   $(end)
 noinst_LTLIBRARIES = \
-  $(lib_libwant_la) \
-  $(lib_libapp_la) \
+  noinst/lib/libwant.la \
+  noinst/lib/libapp.la \
+  noinst/lib/libapp-vanity-iab.la \
+  noinst/lib/libapp-random-iab.la \
+  noinst/lib/libapp-random-base64.la \
+  noinst/lib/libapp-dump-iab.la \
+  noinst/lib/libapp-dump-base64.la \
+  noinst/lib/libtunitas-butano-generation.la \
+  noinst/lib/libtunitas-butano-tcf.la \
+  noinst/lib/libtunitas-butano.la \
   $(end)
 check_PROGRAMS = \
-  $(check_bin_unit) \
-  $(end)
-
-include tests/dump-base64/Makefrag.am
-include tests/dump-iab/Makefrag.am
-include tests/random-base64/Makefrag.am
-include tests/random-iab/Makefrag.am
-include tests/vanity-iab/Makefrag.am
-include tests/unit/Makefrag.am
-XFAIL_TESTS = \
-  $(tests_unit_XFAIL_TESTS) \
-  $(tests_dump_base64_XFAIL_TESTS) \
-  $(tests_dump_iab_XFAIL_TESTS) \
-  $(tests_random_base64_XFAIL_TESTS) \
-  $(tests_random_iab_XFAIL_TESTS) \
-  $(tests_vanity_iab_XFAIL_TESTS) \
-  $(end)
-TESTS = \
-  $(tests_unit_TESTS) \
-  $(tests_dump_base64_TESTS) \
-  $(tests_dump_iab_TESTS) \
-  $(tests_random_base64_TESTS) \
-  $(tests_random_iab_TESTS) \
-  $(tests_vanity_iab_TESTS) \
+  check/bin/unit \
   $(end)
 
 # --- Mostly boilerplate beyond here
@@ -122,12 +115,15 @@ TESTS = \
 # -Wall      ... the language isn't complete without it
 # -std=c++1y ... as close to C++14 and beyond as we can get
 # -std=c++1z ... as close to C++17 and beyond as we can get
+# -std=c++2a ... as close to C++20 and beyond as we can get
+# -std=c++2b ... as close to C++23 and beyond as we can get
+# -std=c++2c ... as close to C++26 and beyond as we can get
 # -ggdb      ... and recall that -ggdb and -O2 don't play well together
 
-Makefile_COMPILER_CPPFLAGS_SET =
-Makefile_COMPILER_CFLAGS_SET   = -Wall @CFLAGS_gcc@   @CFLAGS_gdb@
+Makefile_COMPILER_CPPFLAGS_SET =       @CPPFLAGS_gcc@ @CPPFLAGS_gdb@
+Makefile_COMPILER_CFLAGS_SET   = -Wall   @CFLAGS_gcc@   @CFLAGS_gdb@
 Makefile_COMPILER_CXXFLAGS_SET = -Wall @CXXFLAGS_gcc@ @CXXFLAGS_gdb@
-Makefile_COMPILER_LDFLAGS_SET  = -Wall @LDFLAGS_gcc@  @LDFLAGS_gdb@
+Makefile_COMPILER_LDFLAGS_SET  = -Wall  @LDFLAGS_gcc@  @LDFLAGS_gdb@
 
 Makefile_nonstd_PACKAGE_CPPFLAGS_SET = 
 Makefile_nonstd_PACKAGE_CFLAGS_SET   = 
@@ -161,3 +157,20 @@ AM_CFLAGS   = $(PACKAGE_CFLAGS_SET)
 AM_CXXFLAGS = $(PACKAGE_CXXFLAGS_SET)
 AM_LDFLAGS  = $(V_LDFLAGS_avoid.VERBOSE_Veq$(V))
 AM_LIBTOOLFLAGS = $(V_LIBTOOLFLAGS_VERBOSE_Veq$(V))
+
+deprecated_DEVELOPMENT_AREAS = \
+  $(module_cli_prefix) \
+  $(module_options_prefix) \
+  $(module_posix_prefix) \
+  $(module_std_prefix) \
+  $(module_string_prefix) \
+  $(module_uuid_prefix) \
+  $(end)
+deprecated_TESTING_AREAS = \
+  $(module_cppunit_prefix) \
+  $(module_rigging_prefix) \
+  $(end)
+deprecated_INSTALLATION_AREAS = \
+  $(nonstd_cppunit_prefix) \
+  $(nonstd_libhttpserver_prefix) \
+  $(end)

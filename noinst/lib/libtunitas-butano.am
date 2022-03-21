@@ -1,0 +1,27 @@
+# This is a GNU -*- Makefile -*- fragment that is included by Automake
+# Copyright Yahoo Inc, 2022.
+# Licensed under the terms of the Apache-2.0 license.
+# For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
+# For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
+#
+noinst_lib_libtunitas_butano_la_CPPFLAGS = $(PACKAGE_CPPFLAGS_SET)
+noinst_lib_libtunitas_butano_la_CXXFLAGS = $(PACKAGE_CXXFLAGS_SET)
+noinst_lib_libtunitas_butano_la_LDFLAGS = $(PACKAGE_LDFLAGS_SET)
+# [[FIXTHIS]] - -ltunitas-app is required here because tunitas::butano::Version uses it
+# [[FIXTHIS]] - need a way to provide tunitas-butano that doesn't need the TXUI of -ltuintas-app
+noinst_lib_libtunitas_butano_la_LIBADD = \
+  noinst/lib/libwant.la \
+  -ltunitas-app \
+  $(end)
+noinst_lib_libtunitas_butano_la_MODULES = $(call TF_SOURCEStoMODULES, $(noinst_lib_libtunitas_butano_la_SOURCES))
+noinst_lib_libtunitas_butano_la_SOURCES = $(tunitas_butano_SUBSOURCES)
+include src/tunitas/butano/Makefrag.am
+$(noinst_lib_libtunitas_butano_la_SOURCES) : obj/src/%.cpp : src/%.xcpp
+	$(TF_V_DIS) $(call TF_XCPP2CPP, $<)
+	$(TF_V_DONE) test -e $@
+$(tf_noinst_mkdir)/libtunitas-butano.mk: $(noinst_lib_libtunitas_butano_la_SOURCES)
+$(tf_noinst_mkdir)/libtunitas-butano.mk:
+	$(TF_V_DEP) $(call TF_DEPENDENCIES, $^)
+	$(TF_V_DONE) test -e $@
+include $(tf_noinst_mkdir)/libtunitas-butano.mk
+clean-dependencies:: ; rm -f $(tf_noinst_mkdir)/libtunitas-butano.mk

@@ -37,8 +37,9 @@ public:
 };
 #endiv
 #divert <ipp>
+#import std.max
 app::argv::Object::Object(int c, char *v[])
-  : Ancestor(&v[0], &v[c])
+  : Ancestor(&v[0], &v[std::max(0, c)])
 { }
 #endiv
 

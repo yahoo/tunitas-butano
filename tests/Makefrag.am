@@ -1,0 +1,29 @@
+# This is a GNU -*- Makefile -*- fragment that is included by Automake
+# Copyright Yahoo Inc, 2022.
+# Licensed under the terms of the Apache-2.0 license.
+# For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
+# For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
+#
+XFAIL_TESTS = \
+  $(tests_unit_XFAIL_TESTS) \
+  $(tests_dump_base64_XFAIL_TESTS) \
+  $(tests_dump_iab_XFAIL_TESTS) \
+  $(tests_random_base64_XFAIL_TESTS) \
+  $(tests_random_iab_XFAIL_TESTS) \
+  $(tests_vanity_iab_XFAIL_TESTS) \
+  $(end)
+TESTS = \
+  $(tests_unit_TESTS) \
+  $(tests_dump_base64_TESTS) \
+  $(tests_dump_iab_TESTS) \
+  $(tests_random_base64_TESTS) \
+  $(tests_random_iab_TESTS) \
+  $(tests_vanity_iab_TESTS) \
+  $(end)
+#
+include tests/dump-base64/Makefrag.am
+include tests/dump-iab/Makefrag.am
+include tests/random-base64/Makefrag.am
+include tests/random-iab/Makefrag.am
+include tests/vanity-iab/Makefrag.am
+include tests/unit/Makefrag.am

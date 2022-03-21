@@ -3,52 +3,67 @@
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
+#divert <fpp>
+namespace app::random_base64 {
+  namespace package_main {
+    namespace body::exported { }
+    namespace interface = body::exported;
+  }
+  using namespace package_main::interface;
+}
+#endiv
 #divert <hpp>
 #import app.Argv
 #import std.ostream
 #import std.string
-namespace app::random_base64 {
-  auto remain(Argv) -> void;
-  auto usage(std::string const &, std::ostream &) -> void;
+namespace app::random_base64::package_main::body {
+  namespace exported {
+    inline auto main(int, char *[]) -> int;
+    auto main(Argv) -> int;
+  }
+  auto usage(std::string const &, std::ostream &) -> void = delete; // meaning not implemented "yet"
+}
+#endiv
+#divert <ipp>
+#import app.exception.Quitting
+#import std.cerr
+#import std.exception
+namespace app::random_base64::package_main {
+  auto interface::main(int argc, char *argv[]) -> int try {
+    return main({argc, argv});
+  } catch (app::exception::Quitting const &q) {
+    q.stream() << q.what() << '\n';
+    return q.code();
+  } catch (std::exception const &e) {
+    std::cerr << NAME << ": error, " << e.what() << '\n';
+    return 1;
+  }
 }
 #endiv
 #divert <cpp>
 #import app.argv.parser.Howmany
 #import tunitas.butano.generation.base64.Generator
-#import std.cerr
 #import std.cout
 #import std.seed_seq
 #import want.lite.base64.decode
-auto app::random_base64::remain(Argv av) -> void {
-  argv::parser::Howmany pa(av, NAME);
-  auto const residual = pa.residual();
-  auto const &spontaneous = residual.seed();
-  std::seed_seq seeder(spontaneous.begin(), spontaneous.end());
-  tunitas::butano::generation::base64::Generator generator(seeder);
-  for (unsigned e(residual.count()), i(e-e); e != i; ++i) {
-    auto const generated = generator();
-    if (pa.format_raw()) {
-      // This is going to vomit raw bytes onto your screen (you don't really want that, do you?)
-      std::cout << want::lite::base64::decode(generated);
-    } else {
-      // --dump and --native are the same thing
-      std::cout << generated << '\n';
+namespace app::random_base64::package_main {
+  auto interface::main(Argv av) -> int {
+    argv::parser::Howmany pa(av, NAME); // [[FIXTHIS]] ... pass the application-specific &usage herein
+    auto const residual = pa.residual();
+    auto const &spontaneous = residual.seed();
+    std::seed_seq seeder(spontaneous.begin(), spontaneous.end());
+    tunitas::butano::generation::base64::Generator generator(seeder);
+    for (unsigned e(residual.count()), i(e-e); e != i; ++i) {
+      auto const generated = generator();
+      if (pa.format_raw()) {
+        // This is going to vomit raw bytes onto your screen (you don't really want that, do you?)
+        std::cout << want::lite::base64::decode(generated);
+      } else {
+        // --dump and --native are the same thing
+        std::cout << generated << '\n';
+      }
     }
-  }
-}
-#import app.exception.Quitting
-#import std.exception
-auto main(int argc, char *argv[]) -> int {
-  using namespace app;
-  try {
-    random_base64::remain(Argv(&argv[0], &argv[argc]));
     return 0;
-  } catch (app::exception::Quitting const &q) {
-    std::cout << q.what() << '\n';
-    return q.code();
-  } catch (std::exception const &e) {
-    std::cerr << random_base64::NAME << ": error, " << e.what() << '\n';
-    return 1;
   }
 }
 #endiv

@@ -3,20 +3,50 @@
 // Licensed under the terms of the Apache-2.0 license.
 // For terms, see the LICENSE file at https://github.com/yahoo/tunitas-butano/blob/master/LICENSE
 // For terms, see the LICENSE file at https://git.tunitas.technology/all/components/butano/tree/LICENSE
+#divert <fpp>
+namespace app::dump_iab {
+  namespace package_main {
+    namespace body::exported { }
+    namespace interface = body::exported;
+  }
+  using namespace package_main::interface;
+}
+#endiv
 #divert <hpp>
 #import app.Argv
 #import std.ostream
 #import std.string
-namespace app::dump_iab {
-  auto remain(Argv) -> void;
+namespace app::dump_iab::package_main::body {
+  namespace exported {
+    inline auto main(int, char *[]) -> int;
+    auto main(Argv) -> int;
+  }
   auto usage(std::string const &, std::ostream &) -> void;
 }
 #endiv
+#divert <ipp>
+#import app.exception.Quitting
+#import std.cerr
+#import std.exception
+namespace app::dump_iab::package_main {
+  auto interface::main(int argc, char *argv[]) -> int try {
+    return main({argc, argv});
+  } catch (app::exception::Quitting const &q) {
+    q.stream() << q.what() << '\n';
+    return q.code();
+  } catch (std::exception const &e) {
+    std::cerr << NAME << ": error, " << e.what() << '\n';
+    return 1;
+  }
+}
+#endiv
 #divert <cpp>
-auto app::dump_iab::usage(std::string const &name, std::ostream &out) -> void {
-  out << "usage: " << name << " { base64 ... }\n"
-      << "\n"
-      << "example: BOKXjmcOKXjmcAOABAENACAAAAAAU8A ... etc.\n";
+namespace app::dump_iab::package_main {
+  auto body::usage(std::string const &name, std::ostream &out) -> void {
+    out << "usage: " << name << " { base64 ... }\n"
+        << "\n"
+        << "example: BOKXjmcOKXjmcAOABAENACAAAAAAU8A ... etc.\n";
+  }
 }
 #import app.argv.parser.Dumper
 #import app.exception.Quitting
@@ -29,64 +59,50 @@ auto app::dump_iab::usage(std::string const &name, std::ostream &out) -> void {
 #import tunitas.butano.tcf.format.dump
 #import want.lite.base64.decode
 #import want.lite.base64.sloppy.decode
-auto app::dump_iab::remain(Argv av) -> void {
-  argv::parser::Dumper pa(std::move(av), NAME, &usage);
-  bool failure(false);
-  for (auto word : pa.residual()) {
-    //            success:
-    //            failure:
-    std::cout << "  given: " << word << '\n';
-    try {
-      auto fixed = want::lite::base64::sloppy::decode(word);
-      if (!ok(fixed)) {
-        std::cerr << "warning: the base64 specimen is irredeemable, trying to decode it anyway\n";
-      } else if (value(fixed) != word) {
-        auto const thismany = count(fixed);
-        auto const nouns = 1 == thismany ? "character" : "characters";
-        std::cerr << NAME << ": warning, the base64 specimen " << value(fixed) << " was only redeemable after appending " << thismany << " '=' " << nouns << ", continuing\n";
-        word = value(std::move(fixed));
-      }
-      auto const obj = tunitas::butano::tcf::consent::decode(word);
-      std::cout << "success: " << tunitas::butano::tcf::format::dump(obj) << '\n';
-    } catch (...) {
-      failure = true;
-      std::string reason = "no reason given";
+namespace app::dump_iab::package_main {
+  auto interface::main(Argv av) -> int {
+    argv::parser::Dumper pa(std::move(av), NAME, &usage);
+    bool failure(false);
+    for (auto residual=pa.residual(); auto word : residual) {
+      //            success:
+      //            failure:
+      std::cout << "  given: " << word << '\n';
       try {
-        throw;
-      } catch (tunitas::base64::Exception const &e) {
-        reason = "a base64 decoding failure " + std::string(e.what());
-      } catch (tunitas::butano::tcf::Exception const &e) {
-        reason = "an IAB TCF decoding failure " + std::string(e.what());
-      } catch (std::exception const &e) {
-        reason = "some problem " + std::string(e.what());
+        auto fixed = want::lite::base64::sloppy::decode(word);
+        if (!ok(fixed)) {
+          std::cerr << "warning: the base64 specimen is irredeemable, trying to decode it anyway\n";
+        } else if (value(fixed) != word) {
+          auto const thismany = count(fixed);
+          auto const nouns = 1 == thismany ? "character" : "characters";
+          std::cerr << NAME << ": warning, the base64 specimen " << value(fixed) << " was only redeemable after appending " << thismany << " '=' " << nouns << ", continuing\n";
+          word = value(std::move(fixed));
+        }
+        auto const obj = tunitas::butano::tcf::consent::decode(word);
+        std::cout << "success: " << tunitas::butano::tcf::format::dump(obj) << '\n';
+      } catch (...) {
+        failure = true;
+        std::string reason = "no reason given";
+        try {
+          throw;
+        } catch (tunitas::base64::Exception const &e) {
+          reason = "a base64 decoding failure " + std::string(e.what());
+        } catch (tunitas::butano::tcf::Exception const &e) {
+          reason = "an IAB TCF decoding failure " + std::string(e.what());
+        } catch (std::exception const &e) {
+          reason = "some problem " + std::string(e.what());
+        }
+        std::cout << "failure: reason " << reason << ", no interpretation as an IAB TCF\n";
       }
-      std::cout << "failure: reason " << reason << ", no interpretation as an IAB TCF\n";
     }
-  }
-  if (failure) {
-    std::cerr << NAME << ": error, there were problems in parsing the IAB TCF examples\n";
-    if (pa.ignore_errors()) {
-    std::cerr << NAME << ": notice, there were errors but exiting successfully anyway because of --ignore-errors\n";
-    } else {
-      throw exception::Quitting{NAME, sys::exits::FAIL};
+    if (failure) {
+      std::cerr << NAME << ": error, there were problems in parsing the IAB TCF examples\n";
+      if (pa.ignore_errors()) {
+      std::cerr << NAME << ": notice, there were errors but exiting successfully anyway because of --ignore-errors\n";
+      } else {
+        throw exception::Quitting{NAME, sys::exits::FAIL};
+      }
     }
-  }
-}
-#import app.exception.Quitting
-#import std.cerr
-#import std.cout
-#import std.exception
-auto main(int argc, char *argv[]) -> int {
-  using namespace app;
-  try {
-    dump_iab::remain(Argv(&argv[0], &argv[argc]));
     return 0;
-  } catch (app::exception::Quitting const &q) {
-    std::cout << q.what() << '\n';
-    return q.code();
-  } catch (std::exception const &e) { 
-    std::cerr << dump_iab::NAME << ": error, " << e.what() << '\n';
-    return 1;
   }
 }
 #endiv
